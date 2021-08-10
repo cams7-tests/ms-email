@@ -46,11 +46,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Page<EmailModel> findAll(Pageable pageable) {
+        //inserir manipulação de dados/regras
         return  emailRepository.findAll(pageable);
     }
 
     @Override
     public Optional<EmailModel> findById(UUID emailId) {
+        //inserir manipulação de dados/regras
         return emailRepository.findById(emailId);
     }
 }
