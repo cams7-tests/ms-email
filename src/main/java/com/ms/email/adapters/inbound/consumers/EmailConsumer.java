@@ -1,7 +1,7 @@
 package com.ms.email.adapters.inbound.consumers;
 
 import com.ms.email.adapters.inbound.dtos.EmailDto;
-import com.ms.email.application.entities.EmailModel;
+import com.ms.email.application.domain.Email;
 import com.ms.email.application.ports.EmailService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
@@ -17,9 +17,9 @@ public class EmailConsumer {
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void listen(@Payload EmailDto emailDto) {
-        EmailModel emailModel = new EmailModel();
-        BeanUtils.copyProperties(emailDto, emailModel);
-        emailService.sendEmail(emailModel);
-        System.out.println("Email Status: " + emailModel.getStatusEmail().toString());
+        Email email = new Email();
+        BeanUtils.copyProperties(emailDto, email);
+        emailService.sendEmail(email);
+        System.out.println("Email Status: " + email.getStatusEmail().toString());
     }
 }
