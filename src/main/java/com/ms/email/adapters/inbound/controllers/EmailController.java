@@ -3,18 +3,18 @@ package com.ms.email.adapters.inbound.controllers;
 
 import com.ms.email.adapters.inbound.dtos.EmailDto;
 import com.ms.email.application.domain.Email;
+import com.ms.email.application.domain.PageInfo;
 import com.ms.email.application.ports.EmailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,13 +28,15 @@ public class EmailController {
     public ResponseEntity<Email> sendingEmail(@RequestBody @Valid EmailDto emailDto) {
         Email email = new Email();
         BeanUtils.copyProperties(emailDto, email);
-        emailService.sendEmail(email);
-        return new ResponseEntity<>(email, HttpStatus.CREATED);
+        return new ResponseEntity<>(emailService.sendEmail(email), HttpStatus.CREATED);
     }
 
     @GetMapping("/emails")
     public ResponseEntity<Page<Email>> getAllEmails(@PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC) Pageable pageable){
-        return new ResponseEntity<>(emailService.findAll(pageable), HttpStatus.OK);
+        PageInfo pageInfo = new PageInfo();
+        BeanUtils.copyProperties(pageable, pageInfo);
+        List<Email> emailList = emailService.findAll(pageInfo);
+        return new ResponseEntity<>(new PageImpl<Email>(emailList, pageable, emailList.size()), HttpStatus.OK);
     }
 
     @GetMapping("/emails/{emailId}")

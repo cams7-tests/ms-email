@@ -1,14 +1,14 @@
 package com.ms.email.application.services;
 
 import com.ms.email.application.domain.Email;
+import com.ms.email.application.domain.PageInfo;
 import com.ms.email.application.domain.enums.StatusEmail;
 import com.ms.email.application.ports.EmailRepository;
 import com.ms.email.application.ports.EmailService;
 import com.ms.email.application.ports.SendEmailService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,9 +36,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Page<Email> findAll(Pageable pageable) {
+    public List<Email> findAll(PageInfo pageInfo) {
         //inserir manipulação de dados/regras
-        return  emailRepository.findAll(pageable);
+        return  emailRepository.findAll(pageInfo);
     }
 
     @Override

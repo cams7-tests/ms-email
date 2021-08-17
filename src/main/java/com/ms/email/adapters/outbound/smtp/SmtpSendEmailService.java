@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class SmtpSendEmailService implements SendEmailService {
 
     @Autowired
-    private JavaMailSender emailSender;
+    JavaMailSender emailSender;
 
     @Override
     public void sendEmailSmtp(Email email) {
