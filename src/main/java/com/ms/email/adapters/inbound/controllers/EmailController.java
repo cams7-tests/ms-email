@@ -1,10 +1,10 @@
 package com.ms.email.adapters.inbound.controllers;
 
 
-import com.ms.email.adapters.inbound.dtos.EmailDto;
+import com.ms.email.adapters.dtos.EmailDto;
 import com.ms.email.application.domain.Email;
 import com.ms.email.application.domain.PageInfo;
-import com.ms.email.application.ports.EmailService;
+import com.ms.email.application.ports.EmailServicePort;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -22,26 +22,26 @@ import java.util.UUID;
 public class EmailController {
 
     @Autowired
-    EmailService emailService;
+    EmailServicePort emailServicePort;
 
     @PostMapping("/sending-email")
     public ResponseEntity<Email> sendingEmail(@RequestBody @Valid EmailDto emailDto) {
         Email email = new Email();
         BeanUtils.copyProperties(emailDto, email);
-        return new ResponseEntity<>(emailService.sendEmail(email), HttpStatus.CREATED);
+        return new ResponseEntity<>(emailServicePort.sendEmail(email), HttpStatus.CREATED);
     }
 
     @GetMapping("/emails")
     public ResponseEntity<Page<Email>> getAllEmails(@PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC) Pageable pageable){
         PageInfo pageInfo = new PageInfo();
         BeanUtils.copyProperties(pageable, pageInfo);
-        List<Email> emailList = emailService.findAll(pageInfo);
+        List<Email> emailList = emailServicePort.findAll(pageInfo);
         return new ResponseEntity<>(new PageImpl<Email>(emailList, pageable, emailList.size()), HttpStatus.OK);
     }
 
     @GetMapping("/emails/{emailId}")
     public ResponseEntity<Object> getOneEmail(@PathVariable(value="emailId") UUID emailId){
-        Optional<Email> emailModelOptional = emailService.findById(emailId);
+        Optional<Email> emailModelOptional = emailServicePort.findById(emailId);
         if(!emailModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
         }else {

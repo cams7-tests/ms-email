@@ -1,4 +1,4 @@
-package com.ms.email.adapters.inbound.dtos;
+package com.ms.email.adapters.dtos;
 
 import lombok.Data;
 

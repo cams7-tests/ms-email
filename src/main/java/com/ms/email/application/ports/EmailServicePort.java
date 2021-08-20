@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface EmailService {
+public interface EmailServicePort {
 
     Email sendEmail(Email email);
     List<Email> findAll(PageInfo pageInfo);

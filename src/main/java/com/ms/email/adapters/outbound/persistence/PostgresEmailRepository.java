@@ -3,7 +3,7 @@ package com.ms.email.adapters.outbound.persistence;
 import com.ms.email.adapters.outbound.persistence.entities.EmailEntity;
 import com.ms.email.application.domain.Email;
 import com.ms.email.application.domain.PageInfo;
-import com.ms.email.application.ports.EmailRepository;
+import com.ms.email.application.ports.EmailRepositoryPort;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Primary
-public class PostgresEmailRepository implements EmailRepository {
+public class PostgresEmailRepository implements EmailRepositoryPort {
 
     private final SpringDataPostgresEmailRepository emailRepository;
 

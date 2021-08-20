@@ -1,14 +1,14 @@
 package com.ms.email.adapters.outbound.smtp;
 
 import com.ms.email.application.domain.Email;
-import com.ms.email.application.ports.SendEmailService;
+import com.ms.email.application.ports.SendEmailServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SmtpSendEmailService implements SendEmailService {
+public class SmtpSendEmailService implements SendEmailServicePort {
 
     @Autowired
     JavaMailSender emailSender;

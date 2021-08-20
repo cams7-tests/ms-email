@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface EmailRepository {
+public interface EmailRepositoryPort {
 
     Email save(Email email);
     List<Email> findAll(PageInfo pageInfo);

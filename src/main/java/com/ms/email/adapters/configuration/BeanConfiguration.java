@@ -1,8 +1,8 @@
 package com.ms.email.adapters.configuration;
 
 import com.ms.email.EmailApplication;
-import com.ms.email.application.ports.EmailRepository;
-import com.ms.email.application.ports.SendEmailService;
+import com.ms.email.application.ports.EmailRepositoryPort;
+import com.ms.email.application.ports.SendEmailServicePort;
 import com.ms.email.application.services.EmailServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    EmailServiceImpl emailServiceImpl(EmailRepository repository, SendEmailService sendEmailService) {
-        return new EmailServiceImpl(repository, sendEmailService);
+    EmailServiceImpl emailServiceImpl(EmailRepositoryPort repository, SendEmailServicePort sendEmailServicePort) {
+        return new EmailServiceImpl(repository, sendEmailServicePort);
     }
 
     @Bean
