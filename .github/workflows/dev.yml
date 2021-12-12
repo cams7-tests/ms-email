@@ -22,7 +22,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          cache: maven
+#          cache: maven
           
       - name: Cache SonarCloud packages
         uses: actions/cache@v2
@@ -30,6 +30,13 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+          
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze
         env:
