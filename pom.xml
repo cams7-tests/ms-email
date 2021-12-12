@@ -13,9 +13,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Message Service</name>
 	<description>Demo of Message Service</description>
+	
 	<properties>
-		<java.version>11</java.version>
+	  <java.version>11</java.version>
+	  <sonar.organization>cams7-tests</sonar.organization>
+	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
