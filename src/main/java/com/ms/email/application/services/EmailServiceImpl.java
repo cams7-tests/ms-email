@@ -22,7 +22,8 @@ public class EmailServiceImpl implements EmailServicePort {
         this.sendEmailServicePort = sendEmailServicePort;
     }
 
-    @Override
+    @SuppressWarnings("finally")
+	@Override
     public Email sendEmail(Email email) {
         email.setSendDateEmail(LocalDateTime.now());
         try{
