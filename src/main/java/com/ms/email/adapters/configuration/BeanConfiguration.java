@@ -13,13 +13,14 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackageClasses = EmailApplication.class)
 public class BeanConfiguration {
 
-    @Bean
-    EmailServiceImpl emailServiceImpl(EmailRepositoryPort repository, SendEmailServicePort sendEmailServicePort) {
-        return new EmailServiceImpl(repository, sendEmailServicePort);
-    }
+  @Bean
+  EmailServiceImpl emailServiceImpl(
+      EmailRepositoryPort repository, SendEmailServicePort sendEmailServicePort) {
+    return new EmailServiceImpl(repository, sendEmailServicePort);
+  }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
 }

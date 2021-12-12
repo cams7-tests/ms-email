@@ -10,16 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class SmtpSendEmailService implements SendEmailServicePort {
 
-    @Autowired
-    JavaMailSender emailSender;
+  @Autowired JavaMailSender emailSender;
 
-    @Override
-    public void sendEmailSmtp(Email email) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(email.getEmailFrom());
-        message.setTo(email.getEmailTo());
-        message.setSubject(email.getSubject());
-        message.setText(email.getText());
-        emailSender.send(message);
-    }
+  @Override
+  public void sendEmailSmtp(Email email) {
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setFrom(email.getEmailFrom());
+    message.setTo(email.getEmailTo());
+    message.setSubject(email.getSubject());
+    message.setText(email.getText());
+    emailSender.send(message);
+  }
 }

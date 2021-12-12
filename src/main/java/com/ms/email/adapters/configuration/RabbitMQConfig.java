@@ -1,6 +1,5 @@
 package com.ms.email.adapters.configuration;
 
-
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -12,26 +11,26 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${spring.rabbitmq.queue}")
-    private String queue;
+  @Value("${spring.rabbitmq.queue}")
+  private String queue;
 
-    @Value("${rabbitmq.uri}")
-    private String uri;
+  @Value("${rabbitmq.uri}")
+  private String uri;
 
-    @Bean
-    public ConnectionFactory rabbitConnectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setUri(uri);
-        return connectionFactory;
-    }
+  @Bean
+  public ConnectionFactory rabbitConnectionFactory() {
+    CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+    connectionFactory.setUri(uri);
+    return connectionFactory;
+  }
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queue, true);
-    }
+  @Bean
+  public Queue queue() {
+    return new Queue(queue, true);
+  }
 
-    @Bean
-    public Jackson2JsonMessageConverter messageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
+  @Bean
+  public Jackson2JsonMessageConverter messageConverter() {
+    return new Jackson2JsonMessageConverter();
+  }
 }
