@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.infra.outbound.smtp;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
-import br.cams7.tests.ms.core.ports.SendEmailServicePort;
+import br.cams7.tests.ms.core.ports.out.SendEmailServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

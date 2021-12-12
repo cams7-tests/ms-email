@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.infra.inbound.consumers;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
-import br.cams7.tests.ms.core.ports.EmailServicePort;
+import br.cams7.tests.ms.core.ports.in.SendEmailUseCase;
 import br.cams7.tests.ms.infra.dtos.EmailDto;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
@@ -12,19 +12,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailConsumer {
 
-  private final EmailServicePort emailServicePort;
+  private final SendEmailUseCase sendEmailUseCase;
 
   @Autowired
-  EmailConsumer(EmailServicePort emailServicePort) {
+  EmailConsumer(SendEmailUseCase sendEmailUseCase) {
     super();
-    this.emailServicePort = emailServicePort;
+    this.sendEmailUseCase = sendEmailUseCase;
   }
 
   @RabbitListener(queues = "${spring.rabbitmq.queue}")
   void listen(@Payload final EmailDto emailDto) {
     EmailEntity email = new EmailEntity();
     BeanUtils.copyProperties(emailDto, email);
-    emailServicePort.sendEmail(email);
+    sendEmailUseCase.sendEmail(email);
     System.out.println("Email Status: " + email.getStatusEmail().toString());
   }
 }

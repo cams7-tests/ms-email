@@ -2,7 +2,7 @@ package br.cams7.tests.ms.infra.outbound.persistence;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.domain.PageInfo;
-import br.cams7.tests.ms.core.ports.EmailRepositoryPort;
+import br.cams7.tests.ms.core.ports.out.EmailRepositoryPort;
 import br.cams7.tests.ms.infra.outbound.persistence.models.EmailModel;
 import java.util.List;
 import java.util.Optional;
