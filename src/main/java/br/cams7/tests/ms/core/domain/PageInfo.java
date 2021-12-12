@@ -1,23 +1,14 @@
 package br.cams7.tests.ms.core.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
 public class PageInfo {
 
   private int pageNumber;
   private int pageSize;
-
-  public int getPageNumber() {
-    return pageNumber;
-  }
-
-  public void setPageNumber(int pageNumber) {
-    this.pageNumber = pageNumber;
-  }
-
-  public int getPageSize() {
-    return pageSize;
-  }
-
-  public void setPageSize(int pageSize) {
-    this.pageSize = pageSize;
-  }
 }

@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.outbound.persistence.entities;
+package br.cams7.tests.ms.infra.outbound.persistence.models;
 
 import br.cams7.tests.ms.core.domain.StatusEmail;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "TB_EMAIL")
-public class EmailEntity implements Serializable {
+public class EmailModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
