@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: 127.0.0.1
+    port: 2525
+    username: ms@tests.cams7.br
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+  rabbitmq:
+    queue: ms.email
+  
+database:
+  config:
+    url: jdbc:postgresql://localhost:15432/ms_email
+    username: ms_email
+    password: ms_email
+    
+rabbitmq:
+  uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672
