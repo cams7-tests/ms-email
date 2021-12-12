@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.cams7.tests</groupId>
-	<artifactId>ms-email</artifactId>
+	<artifactId>ms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-email</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Message Service</name>
+	<description>Demo of Message Service</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
