@@ -22,7 +22,7 @@ public class EmailConsumer {
   @RabbitListener(queues = "${spring.rabbitmq.queue}")
   void listen(@Payload final EmailDTO dto) {
     EmailEntity email = sendEmailUseCase.sendEmail(getEmail(dto));
-    System.out.println("Email Status: " + email.getStatusEmail());
+    System.out.println("Email Status: " + email.getEmailStatus());
   }
 
   private static EmailVO getEmail(EmailDTO dto) {

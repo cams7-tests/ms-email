@@ -1,7 +1,6 @@
 package br.cams7.tests.ms.infra.persistence.model;
 
 import br.cams7.tests.ms.core.domain.EmailStatusEnum;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.*;
@@ -9,22 +8,32 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "TB_EMAIL")
-public class EmailModel implements Serializable {
-  private static final long serialVersionUID = 1L;
+@Table(name = "tb_email")
+public class EmailModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id_email")
   private UUID emailId;
 
+  @Column(name = "owner_ref")
   private String ownerRef;
+
+  @Column(name = "email_from")
   private String emailFrom;
+
+  @Column(name = "email_to")
   private String emailTo;
+
+  @Column(name = "subject")
   private String subject;
 
-  @Column(columnDefinition = "TEXT")
+  @Column(name = "text", columnDefinition = "TEXT")
   private String text;
 
-  private LocalDateTime sendDateEmail;
-  private EmailStatusEnum statusEmail;
+  @Column(name = "email_sent_date")
+  private LocalDateTime emailSentDate;
+
+  @Column(name = "email_status")
+  private EmailStatusEnum emailStatus;
 }

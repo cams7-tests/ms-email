@@ -1,6 +1,5 @@
 package br.cams7.tests.ms.core.domain;
 
-import br.cams7.tests.ms.core.common.SelfValidating;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ import lombok.With;
 @Builder
 @With
 @EqualsAndHashCode(callSuper = false)
-public class EmailEntity extends SelfValidating<EmailEntity> {
+public class EmailEntity {
 
   private UUID emailId;
   private String ownerRef;
@@ -24,6 +23,6 @@ public class EmailEntity extends SelfValidating<EmailEntity> {
   private String emailTo;
   private String subject;
   private String text;
-  private LocalDateTime sendDateEmail;
-  private EmailStatusEnum statusEmail;
+  private LocalDateTime emailSentDate;
+  private EmailStatusEnum emailStatus;
 }

@@ -24,12 +24,12 @@ public class SendEmailUseCaseImpl implements SendEmailUseCase {
   @Override
   public EmailEntity sendEmail(EmailVO vo) {
     EmailEntity email = MODEL_MAPPER.map(vo, EmailEntity.class);
-    email.setSendDateEmail(LocalDateTime.now());
+    email.setEmailSentDate(LocalDateTime.now());
     try {
       sendEmailService.sendEmail(email);
-      email.setStatusEmail(SENT);
+      email.setEmailStatus(SENT);
     } catch (SendEmailException e) {
-      email.setStatusEmail(ERROR);
+      email.setEmailStatus(ERROR);
     } finally {
       email = save(email);
     }
