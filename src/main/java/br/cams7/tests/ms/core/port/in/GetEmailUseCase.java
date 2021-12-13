@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.core.ports.in;
+package br.cams7.tests.ms.core.port.in;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import java.util.Optional;

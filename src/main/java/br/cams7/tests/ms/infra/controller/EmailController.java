@@ -1,15 +1,14 @@
-package br.cams7.tests.ms.infra.controllers;
+package br.cams7.tests.ms.infra.controller;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
-import br.cams7.tests.ms.core.domain.PageInfo;
-import br.cams7.tests.ms.core.ports.in.GetAllEmailsUseCase;
-import br.cams7.tests.ms.core.ports.in.GetEmailUseCase;
-import br.cams7.tests.ms.core.ports.in.SendEmailUseCase;
-import br.cams7.tests.ms.infra.dtos.EmailDto;
+import br.cams7.tests.ms.core.port.in.EmailVO;
+import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
+import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
+import br.cams7.tests.ms.core.port.in.PageDTO;
+import br.cams7.tests.ms.core.port.in.SendEmailUseCase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -40,8 +39,8 @@ public class EmailController {
   }
 
   @PostMapping("/sending-email")
-  ResponseEntity<EmailEntity> sendingEmail(@RequestBody @Valid final EmailDto emailDto) {
-    return new ResponseEntity<>(sendEmailUseCase.sendEmail(getEmail(emailDto)), HttpStatus.CREATED);
+  ResponseEntity<EmailEntity> sendingEmail(@RequestBody final EmailRequestDTO dto) {
+    return new ResponseEntity<>(sendEmailUseCase.sendEmail(getEmail(dto)), HttpStatus.CREATED);
   }
 
   @GetMapping("/emails")
@@ -63,11 +62,18 @@ public class EmailController {
     }
   }
 
-  private EmailEntity getEmail(EmailDto emailDto) {
-    return modelMapper.map(emailDto, EmailEntity.class);
+  private static EmailVO getEmail(EmailRequestDTO dto) {
+    EmailVO email =
+        new EmailVO(
+            dto.getOwnerRef(),
+            dto.getEmailFrom(),
+            dto.getEmailTo(),
+            dto.getSubject(),
+            dto.getText());
+    return email;
   }
 
-  private PageInfo getPage(Pageable pageable) {
-    return modelMapper.map(pageable, PageInfo.class);
+  private PageDTO getPage(Pageable pageable) {
+    return modelMapper.map(pageable, PageDTO.class);
   }
 }

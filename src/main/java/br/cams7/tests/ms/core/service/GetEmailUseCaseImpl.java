@@ -1,8 +1,8 @@
-package br.cams7.tests.ms.core.services;
+package br.cams7.tests.ms.core.service;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
-import br.cams7.tests.ms.core.ports.in.GetEmailUseCase;
-import br.cams7.tests.ms.core.ports.out.EmailRepository;
+import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
+import br.cams7.tests.ms.core.port.out.EmailRepository;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

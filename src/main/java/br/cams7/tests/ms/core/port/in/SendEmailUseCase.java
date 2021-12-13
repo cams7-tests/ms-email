@@ -1,8 +1,8 @@
-package br.cams7.tests.ms.core.ports.in;
+package br.cams7.tests.ms.core.port.in;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 
 public interface SendEmailUseCase {
 
-  EmailEntity sendEmail(EmailEntity email);
+  EmailEntity sendEmail(EmailVO email);
 }

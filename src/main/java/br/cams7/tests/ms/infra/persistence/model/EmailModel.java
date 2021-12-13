@@ -1,6 +1,6 @@
-package br.cams7.tests.ms.infra.persistence.models;
+package br.cams7.tests.ms.infra.persistence.model;
 
-import br.cams7.tests.ms.core.domain.StatusEmail;
+import br.cams7.tests.ms.core.domain.EmailStatusEnum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -26,5 +26,5 @@ public class EmailModel implements Serializable {
   private String text;
 
   private LocalDateTime sendDateEmail;
-  private StatusEmail statusEmail;
+  private EmailStatusEnum statusEmail;
 }

@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.infra.persistence;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
-import br.cams7.tests.ms.core.domain.PageInfo;
-import br.cams7.tests.ms.core.ports.out.EmailRepository;
-import br.cams7.tests.ms.infra.persistence.models.EmailModel;
+import br.cams7.tests.ms.core.port.in.PageDTO;
+import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.infra.persistence.model.EmailModel;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Primary
-public class SqlEmailRepository implements EmailRepository {
+public class SQLEmailRepository implements EmailRepository {
 
-  private final SpringDataSqlEmailRepository emailRepository;
+  private final SpringDataSQLEmailRepository emailRepository;
   private final ModelMapper modelMapper;
 
   @Autowired
-  SqlEmailRepository(SpringDataSqlEmailRepository emailRepository, ModelMapper modelMapper) {
+  SQLEmailRepository(SpringDataSQLEmailRepository emailRepository, ModelMapper modelMapper) {
     super();
     this.emailRepository = emailRepository;
     this.modelMapper = modelMapper;
@@ -36,8 +36,8 @@ public class SqlEmailRepository implements EmailRepository {
   }
 
   @Override
-  public List<EmailEntity> findAll(PageInfo pageInfo) {
-    Pageable pageable = PageRequest.of(pageInfo.getPageNumber(), pageInfo.getPageSize());
+  public List<EmailEntity> findAll(PageDTO page) {
+    Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize());
     return emailRepository.findAll(pageable).stream()
         .map(model -> modelMapper.map(model, EmailEntity.class))
         .collect(Collectors.toList());
