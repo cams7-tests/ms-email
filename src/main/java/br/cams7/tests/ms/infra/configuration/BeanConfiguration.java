@@ -4,11 +4,11 @@ import br.cams7.tests.ms.EmailApplication;
 import br.cams7.tests.ms.core.ports.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.ports.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.ports.in.SendEmailUseCase;
-import br.cams7.tests.ms.core.ports.out.EmailRepositoryPort;
-import br.cams7.tests.ms.core.ports.out.SendEmailServicePort;
-import br.cams7.tests.ms.core.services.GetAllEmailsService;
-import br.cams7.tests.ms.core.services.GetEmailService;
-import br.cams7.tests.ms.core.services.SendEmailService;
+import br.cams7.tests.ms.core.ports.out.EmailRepository;
+import br.cams7.tests.ms.core.ports.out.SendEmailService;
+import br.cams7.tests.ms.core.services.GetAllEmailsUseCaseImpl;
+import br.cams7.tests.ms.core.services.GetEmailUseCaseImpl;
+import br.cams7.tests.ms.core.services.SendEmailUseCaseImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,19 +19,18 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
   @Bean
-  SendEmailUseCase sendEmail(
-      EmailRepositoryPort repository, SendEmailServicePort sendEmailServicePort) {
-    return new SendEmailService(repository, sendEmailServicePort);
+  SendEmailUseCase sendEmail(EmailRepository emailRepository, SendEmailService sendEmailService) {
+    return new SendEmailUseCaseImpl(emailRepository, sendEmailService);
   }
 
   @Bean
-  GetAllEmailsUseCase getAllEmails(EmailRepositoryPort repository) {
-    return new GetAllEmailsService(repository);
+  GetAllEmailsUseCase getAllEmails(EmailRepository emailRepository) {
+    return new GetAllEmailsUseCaseImpl(emailRepository);
   }
 
   @Bean
-  GetEmailUseCase getEmail(EmailRepositoryPort repository) {
-    return new GetEmailService(repository);
+  GetEmailUseCase getEmail(EmailRepository emailRepository) {
+    return new GetEmailUseCaseImpl(emailRepository);
   }
 
   @Bean

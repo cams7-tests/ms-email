@@ -5,22 +5,22 @@ import static br.cams7.tests.ms.core.domain.StatusEmail.SENT;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.ports.in.SendEmailUseCase;
-import br.cams7.tests.ms.core.ports.out.EmailRepositoryPort;
-import br.cams7.tests.ms.core.ports.out.SendEmailServicePort;
+import br.cams7.tests.ms.core.ports.out.EmailRepository;
+import br.cams7.tests.ms.core.ports.out.SendEmailService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SendEmailService implements SendEmailUseCase {
+public class SendEmailUseCaseImpl implements SendEmailUseCase {
 
-  private final EmailRepositoryPort emailRepositoryPort;
-  private final SendEmailServicePort sendEmailServicePort;
+  private final EmailRepository emailRepository;
+  private final SendEmailService sendEmailService;
 
   @Override
   public EmailEntity sendEmail(EmailEntity email) {
     email.setSendDateEmail(LocalDateTime.now());
     try {
-      sendEmailServicePort.sendEmailSmtp(email);
+      sendEmailService.sendEmailSmtp(email);
       email.setStatusEmail(SENT);
     } catch (Exception e) {
       email.setStatusEmail(ERROR);
@@ -31,6 +31,6 @@ public class SendEmailService implements SendEmailUseCase {
   }
 
   private EmailEntity save(EmailEntity email) {
-    return emailRepositoryPort.save(email);
+    return emailRepository.save(email);
   }
 }

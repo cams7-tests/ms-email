@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.outbound.persistence.models;
+package br.cams7.tests.ms.infra.persistence.models;
 
 import br.cams7.tests.ms.core.domain.StatusEmail;
 import java.io.Serializable;

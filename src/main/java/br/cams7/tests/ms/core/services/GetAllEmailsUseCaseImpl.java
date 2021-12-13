@@ -1,21 +1,20 @@
 package br.cams7.tests.ms.core.services;
 
-
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.domain.PageInfo;
 import br.cams7.tests.ms.core.ports.in.GetAllEmailsUseCase;
-import br.cams7.tests.ms.core.ports.out.EmailRepositoryPort;
+import br.cams7.tests.ms.core.ports.out.EmailRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GetAllEmailsService implements GetAllEmailsUseCase {
+public class GetAllEmailsUseCaseImpl implements GetAllEmailsUseCase {
 
-  private final EmailRepositoryPort emailRepositoryPort;
+  private final EmailRepository emailRepository;
 
   @Override
   public List<EmailEntity> findAll(PageInfo pageInfo) {
     // inserir manipulação de dados/regras
-    return emailRepositoryPort.findAll(pageInfo);
+    return emailRepository.findAll(pageInfo);
   }
 }

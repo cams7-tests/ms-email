@@ -1,14 +1,13 @@
-package br.cams7.tests.ms.infra.outbound.persistence;
+package br.cams7.tests.ms.infra.persistence;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.domain.PageInfo;
-import br.cams7.tests.ms.core.ports.out.EmailRepositoryPort;
-import br.cams7.tests.ms.infra.outbound.persistence.models.EmailModel;
+import br.cams7.tests.ms.core.ports.out.EmailRepository;
+import br.cams7.tests.ms.infra.persistence.models.EmailModel;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -16,14 +15,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 @Primary
-public class SqlEmailRepository implements EmailRepositoryPort {
+public class SqlEmailRepository implements EmailRepository {
 
   private final SpringDataSqlEmailRepository emailRepository;
+  private final ModelMapper modelMapper;
 
-  @Autowired private ModelMapper modelMapper;
+  @Autowired
+  SqlEmailRepository(SpringDataSqlEmailRepository emailRepository, ModelMapper modelMapper) {
+    super();
+    this.emailRepository = emailRepository;
+    this.modelMapper = modelMapper;
+  }
 
   @Override
   public EmailEntity save(EmailEntity entity) {
