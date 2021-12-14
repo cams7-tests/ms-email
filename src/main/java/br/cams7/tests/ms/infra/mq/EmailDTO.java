@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.mq.consumer;
+package br.cams7.tests.ms.infra.mq;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
