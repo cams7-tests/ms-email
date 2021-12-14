@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.persistence;
+package br.cams7.tests.ms.infra.persistence.repository;
 
 import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.in.PageDTO;

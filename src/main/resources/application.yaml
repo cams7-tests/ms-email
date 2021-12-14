@@ -16,14 +16,13 @@ spring:
           auth: true
           starttls:
             enable: false
-  rabbitmq:
-    queue: ms.email
   
 database:
-  config:
-    url: jdbc:postgresql://localhost:15432/ms_email
-    username: ms_email
-    password: ms_email
+  url: jdbc:postgresql://localhost:15432/ms_email
+  username: ms_email
+  password: ms_email
     
 rabbitmq:
   uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672
+  queue: ms-queue
+  exchange: ms-exchange

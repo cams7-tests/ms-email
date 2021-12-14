@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.persistence;
+package br.cams7.tests.ms.infra.persistence.repository;
 
 import br.cams7.tests.ms.infra.persistence.model.EmailModel;
 import java.util.UUID;

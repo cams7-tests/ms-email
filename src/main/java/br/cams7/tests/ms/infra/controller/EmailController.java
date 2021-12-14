@@ -5,7 +5,8 @@ import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.PageDTO;
-import br.cams7.tests.ms.core.port.in.SendEmailUseCase;
+import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
+import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,27 +21,37 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class EmailController {
 
-  private final SendEmailUseCase sendEmailUseCase;
+  private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase;
+  private final SendEmailToQueueUseCase sendEmailToQueueUseCase;
   private final GetAllEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
   private final ModelMapper modelMapper;
 
   @Autowired
   EmailController(
-      SendEmailUseCase sendEmailUseCase,
+      SendEmailDirectlyUseCase sendEmailDirectlyUseCase,
+      SendEmailToQueueUseCase sendEmailToQueueUseCase,
       GetAllEmailsUseCase getAllEmailsUseCase,
       GetEmailUseCase getEmailUseCase,
       ModelMapper modelMapper) {
     super();
-    this.sendEmailUseCase = sendEmailUseCase;
+    this.sendEmailDirectlyUseCase = sendEmailDirectlyUseCase;
+    this.sendEmailToQueueUseCase = sendEmailToQueueUseCase;
     this.getAllEmailsUseCase = getAllEmailsUseCase;
     this.getEmailUseCase = getEmailUseCase;
     this.modelMapper = modelMapper;
   }
 
-  @PostMapping("/sending-email")
-  ResponseEntity<EmailEntity> sendingEmail(@RequestBody final EmailRequestDTO dto) {
-    return new ResponseEntity<>(sendEmailUseCase.sendEmail(getEmail(dto)), HttpStatus.CREATED);
+  @PostMapping("/send-email-directly")
+  ResponseEntity<EmailEntity> sendingEmailDirectly(@RequestBody final EmailRequestDTO dto) {
+    return new ResponseEntity<>(
+        sendEmailDirectlyUseCase.sendEmail(getEmail(dto)), HttpStatus.CREATED);
+  }
+
+  @PostMapping("/send-email-to-queue")
+  ResponseEntity<Void> sendingEmail(@RequestBody final EmailRequestDTO dto) {
+    sendEmailToQueueUseCase.sendEmail(getEmail(dto));
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @GetMapping("/emails")

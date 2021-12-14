@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DatabaseConfig {
 
-  @Value("${database.config.url}")
+  @Value("${database.url}")
   private String url;
 
-  @Value("${database.config.username}")
+  @Value("${database.username}")
   private String username;
 
-  @Value("${database.config.password}")
+  @Value("${database.password}")
   private String password;
 
   @Bean
