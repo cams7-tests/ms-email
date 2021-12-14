@@ -76,7 +76,7 @@ public class EmailController {
   private static EmailVO getEmail(EmailRequestDTO dto) {
     EmailVO email =
         new EmailVO(
-            dto.getOwnerRef(),
+            dto.getIdentificationNumber(),
             dto.getEmailFrom(),
             dto.getEmailTo(),
             dto.getSubject(),

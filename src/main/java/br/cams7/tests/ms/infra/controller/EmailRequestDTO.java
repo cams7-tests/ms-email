@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class EmailRequestDTO {
 
-  private String ownerRef;
+  private String identificationNumber;
   private String emailFrom;
   private String emailTo;
   private String subject;

@@ -26,3 +26,8 @@ rabbitmq:
   uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672
   queue: ms-queue
   exchange: ms-exchange
+  
+api:
+  check:
+    identificationNumber: 
+      url: http://localhost:3000

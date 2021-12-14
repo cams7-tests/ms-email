@@ -1,0 +1,28 @@
+{
+  "serasa": [
+    {
+      "cpf": "56317992002",
+      "status": "APPROVED"
+    },
+    {
+      "cpf": "06744839012",
+      "status": "NOT_APPROVED"
+    },
+    {
+      "cpf": "46384730081",
+      "status": "APPROVED"
+    },
+    {
+      "cpf": "11944560068",
+      "status": "NOT_APPROVED"
+    },
+    {
+      "cpf": "40668252065",
+      "status": "NOT_APPROVED"
+    },
+    {
+      "cpf": "45537498073",
+      "status": "APPROVED"
+    }
+  ]
+}
