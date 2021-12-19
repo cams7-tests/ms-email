@@ -1,9 +1,8 @@
 package br.cams7.tests.ms.core.service;
 
-import static br.cams7.tests.ms.core.domain.EmailStatusEnum.ERROR;
-import static br.cams7.tests.ms.core.domain.EmailStatusEnum.SENT;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
@@ -11,6 +10,7 @@ import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.EmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
+import br.cams7.tests.ms.domain.EmailEntity;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

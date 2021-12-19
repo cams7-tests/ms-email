@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.infra.controller;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
+import br.cams7.tests.ms.domain.EmailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

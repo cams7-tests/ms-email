@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.mq;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
+import br.cams7.tests.ms.domain.EmailEntity;
 import javax.validation.ConstraintViolationException;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

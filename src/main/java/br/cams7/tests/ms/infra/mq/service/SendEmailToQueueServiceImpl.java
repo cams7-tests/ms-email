@@ -1,8 +1,8 @@
 /** */
 package br.cams7.tests.ms.infra.mq.service;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
+import br.cams7.tests.ms.domain.EmailEntity;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

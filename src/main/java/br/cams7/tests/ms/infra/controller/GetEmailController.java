@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.infra.controller;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
 import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
-import br.cams7.tests.ms.core.port.in.PageDTO;
+import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.domain.PageDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

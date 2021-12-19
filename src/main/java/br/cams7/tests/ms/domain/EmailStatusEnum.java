@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.core.domain;
+package br.cams7.tests.ms.domain;
 
 public enum EmailStatusEnum {
   PROCESSING,

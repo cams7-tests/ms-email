@@ -1,6 +1,6 @@
 package br.cams7.tests.ms.core.port.in;
 
-import br.cams7.tests.ms.core.domain.EmailEntity;
+import br.cams7.tests.ms.domain.EmailEntity;
 
 public interface SendEmailDirectlyUseCase {
 
