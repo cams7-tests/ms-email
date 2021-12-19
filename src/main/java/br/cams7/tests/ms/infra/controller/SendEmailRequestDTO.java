@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EmailRequestDTO {
+public class SendEmailRequestDTO {
 
   private String identificationNumber;
   private String emailFrom;
