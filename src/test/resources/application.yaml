@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  mail:
+    host: 127.0.0.1
+    port: 25
+    username: test
+    password:
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      
+database:
+  url: jdbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  username: sa
+  password:
+
+rabbitmq:
+  uri: amqp://rabbitmq:test@127.0.0.1:5672
+  queue: test
+  exchange: test
+  
+api:
+  check:
+    identificationNumber: 
+      url: test
+
