@@ -13,27 +13,27 @@ public class EmailModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id_email")
+  @Column(name = "id_email", nullable = false)
   private UUID emailId;
 
-  @Column(name = "owner_ref")
+  @Column(name = "owner_ref", nullable = false)
   private String ownerRef;
 
-  @Column(name = "email_from")
+  @Column(name = "email_from", nullable = false)
   private String emailFrom;
 
-  @Column(name = "email_to")
+  @Column(name = "email_to", nullable = false)
   private String emailTo;
 
-  @Column(name = "subject")
+  @Column(name = "subject", nullable = false)
   private String subject;
 
-  @Column(name = "text", columnDefinition = "TEXT")
+  @Column(name = "text", columnDefinition = "TEXT", nullable = false)
   private String text;
 
-  @Column(name = "email_sent_date")
+  @Column(name = "email_sent_date", nullable = false)
   private LocalDateTime emailSentDate;
 
-  @Column(name = "email_status")
+  @Column(name = "email_status", nullable = false)
   private EmailStatusEnum emailStatus;
 }
