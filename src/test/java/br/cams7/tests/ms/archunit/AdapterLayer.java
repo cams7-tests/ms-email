@@ -8,21 +8,21 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Adapters extends BaseLayer {
+public class AdapterLayer extends BaseLayer {
 
   private final List<String> incomingAdapterPackages = new ArrayList<>();
   private final List<String> outgoingAdapterPackages = new ArrayList<>();
 
-  Adapters(String basePackage, HexagonalArchitecture parentContext) {
+  AdapterLayer(String basePackage, HexagonalArchitecture parentContext) {
     super(basePackage, parentContext);
   }
 
-  public Adapters outgoing(String packageName) {
+  public AdapterLayer outgoing(String packageName) {
     incomingAdapterPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
     return this;
   }
 
-  public Adapters incoming(String packageName) {
+  public AdapterLayer incoming(String packageName) {
     outgoingAdapterPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
     return this;
   }

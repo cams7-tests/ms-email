@@ -10,21 +10,21 @@ import java.util.List;
 
 public class ApplicationLayer extends BaseLayer {
 
-  private final List<String> incomingPortsPackages = new ArrayList<>();
-  private final List<String> outgoingPortsPackages = new ArrayList<>();
+  private final List<String> incomingPortPackages = new ArrayList<>();
+  private final List<String> outgoingPortPackages = new ArrayList<>();
   private final List<String> servicePackages = new ArrayList<>();
 
-  public ApplicationLayer(String basePackage, HexagonalArchitecture parentContext) {
+  ApplicationLayer(String basePackage, HexagonalArchitecture parentContext) {
     super(basePackage, parentContext);
   }
 
   public ApplicationLayer incomingPorts(String packageName) {
-    incomingPortsPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
+    incomingPortPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
     return this;
   }
 
   public ApplicationLayer outgoingPorts(String packageName) {
-    outgoingPortsPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
+    outgoingPortPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
     return this;
   }
 
@@ -33,15 +33,15 @@ public class ApplicationLayer extends BaseLayer {
     return this;
   }
 
-  public void incomingAndOutgoingPortsDoNotDependOnEachOther(JavaClasses classes) {
-    denyAnyDependency(incomingPortsPackages, outgoingPortsPackages, classes);
-    denyAnyDependency(outgoingPortsPackages, incomingPortsPackages, classes);
+  void incomingAndOutgoingPortsDoNotDependOnEachOther(JavaClasses classes) {
+    denyAnyDependency(incomingPortPackages, outgoingPortPackages, classes);
+    denyAnyDependency(outgoingPortPackages, incomingPortPackages, classes);
   }
 
   List<String> allPackages() {
     List<String> allPackages = new ArrayList<>();
-    allPackages.addAll(incomingPortsPackages);
-    allPackages.addAll(outgoingPortsPackages);
+    allPackages.addAll(incomingPortPackages);
+    allPackages.addAll(outgoingPortPackages);
     allPackages.addAll(servicePackages);
     return allPackages;
   }

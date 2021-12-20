@@ -1,8 +1,8 @@
 package br.cams7.tests.ms;
 
+import static br.cams7.tests.ms.archunit.HexagonalArchitecture.boundedContext;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-import br.cams7.tests.ms.archunit.HexagonalArchitecture;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
 
@@ -10,9 +10,9 @@ public class DependencyRuleTests {
 
   @Test
   void validateRegistrationContextArchitecture() {
-    HexagonalArchitecture.boundedContext("br.cams7.tests.ms")
+    boundedContext("br.cams7.tests.ms")
         .withDomainLayer("domain")
-        .withAdaptersLayer("infra")
+        .withAdapterLayer("infra")
         .incoming("controller")
         .outgoing("persistence")
         .and()

@@ -12,7 +12,7 @@ import java.util.List;
 public class HexagonalArchitecture {
 
   private final String basePackage;
-  private Adapters adapters;
+  private AdapterLayer adapterLayer;
   private ApplicationLayer applicationLayer;
   private String configurationPackage;
   private List<String> domainPackages = new ArrayList<>();
@@ -21,13 +21,14 @@ public class HexagonalArchitecture {
     return new HexagonalArchitecture(basePackage);
   }
 
-  public HexagonalArchitecture(String basePackage) {
+  private HexagonalArchitecture(String basePackage) {
     this.basePackage = basePackage;
   }
 
-  public Adapters withAdaptersLayer(String adaptersPackage) {
-    this.adapters = new Adapters(getFullQualifiedPackage(basePackage, adaptersPackage), this);
-    return this.adapters;
+  public AdapterLayer withAdapterLayer(String adaptersPackage) {
+    this.adapterLayer =
+        new AdapterLayer(getFullQualifiedPackage(basePackage, adaptersPackage), this);
+    return this.adapterLayer;
   }
 
   public HexagonalArchitecture withDomainLayer(String domainPackage) {
@@ -48,17 +49,17 @@ public class HexagonalArchitecture {
 
   private void domainDoesNotDependOnOtherPackages(JavaClasses classes) {
     denyAnyDependency(
-        this.domainPackages, Collections.singletonList(adapters.getBasePackage()), classes);
+        this.domainPackages, Collections.singletonList(adapterLayer.getBasePackage()), classes);
     denyAnyDependency(
         this.domainPackages, Collections.singletonList(applicationLayer.getBasePackage()), classes);
   }
 
   public void check(JavaClasses classes) {
-    this.adapters.doesNotContainEmptyPackages();
-    this.adapters.dontDependOnEachOther(classes);
-    this.adapters.doesNotDependOn(this.configurationPackage, classes);
+    this.adapterLayer.doesNotContainEmptyPackages();
+    this.adapterLayer.dontDependOnEachOther(classes);
+    this.adapterLayer.doesNotDependOn(this.configurationPackage, classes);
     this.applicationLayer.doesNotContainEmptyPackages();
-    this.applicationLayer.doesNotDependOn(this.adapters.getBasePackage(), classes);
+    this.applicationLayer.doesNotDependOn(this.adapterLayer.getBasePackage(), classes);
     this.applicationLayer.doesNotDependOn(this.configurationPackage, classes);
     this.applicationLayer.incomingAndOutgoingPortsDoNotDependOnEachOther(classes);
     this.domainDoesNotDependOnOtherPackages(classes);
