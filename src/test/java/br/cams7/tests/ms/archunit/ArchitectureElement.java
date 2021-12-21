@@ -8,7 +8,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
-import java.util.List;
+import java.util.Set;
 
 public final class ArchitectureElement {
 
@@ -30,12 +30,8 @@ public final class ArchitectureElement {
     return packageName + "..";
   }
 
-  static void denyDependency(JavaClasses classes) {
-    denyDependency("br.cams7.tests.ms.domain", "br.cams7.tests.ms.core", classes);
-  }
-
   static void denyAnyDependency(
-      List<String> fromPackages, List<String> toPackages, JavaClasses classes) {
+      Set<String> fromPackages, Set<String> toPackages, JavaClasses classes) {
     for (String fromPackage : fromPackages) {
       for (String toPackage : toPackages) {
         denyDependency(fromPackage, toPackage, classes);
@@ -55,7 +51,7 @@ public final class ArchitectureElement {
     return new ClassFileImporter().importPackages(packageName);
   }
 
-  static void denyEmptyPackages(List<String> packages) {
+  static void denyEmptyPackages(Set<String> packages) {
     for (String packageName : packages) {
       denyEmptyPackage(packageName);
     }

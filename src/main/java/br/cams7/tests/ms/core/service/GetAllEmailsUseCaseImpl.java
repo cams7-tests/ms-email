@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.core.service;
 
+import br.cams7.tests.ms.core.common.PageDTO;
 import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.port.out.EmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.PageDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 

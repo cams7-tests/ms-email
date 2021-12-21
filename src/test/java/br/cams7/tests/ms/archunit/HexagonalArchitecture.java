@@ -5,9 +5,9 @@ import static br.cams7.tests.ms.archunit.ArchitectureElement.denyAnyDependency;
 import static br.cams7.tests.ms.archunit.ArchitectureElement.getFullQualifiedPackage;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HexagonalArchitecture {
 
@@ -15,7 +15,7 @@ public class HexagonalArchitecture {
   private AdapterLayer adapterLayer;
   private ApplicationLayer applicationLayer;
   private String configurationPackage;
-  private List<String> domainPackages = new ArrayList<>();
+  private final Set<String> domainPackages = new HashSet<>();
 
   public static HexagonalArchitecture boundedContext(String basePackage) {
     return new HexagonalArchitecture(basePackage);
@@ -49,9 +49,9 @@ public class HexagonalArchitecture {
 
   private void domainDoesNotDependOnOtherPackages(JavaClasses classes) {
     denyAnyDependency(
-        this.domainPackages, Collections.singletonList(adapterLayer.getBasePackage()), classes);
+        this.domainPackages, Collections.singleton(adapterLayer.getBasePackage()), classes);
     denyAnyDependency(
-        this.domainPackages, Collections.singletonList(applicationLayer.getBasePackage()), classes);
+        this.domainPackages, Collections.singleton(applicationLayer.getBasePackage()), classes);
   }
 
   public void check(JavaClasses classes) {
@@ -60,7 +60,6 @@ public class HexagonalArchitecture {
     this.adapterLayer.doesNotDependOn(this.configurationPackage, classes);
     this.applicationLayer.doesNotContainEmptyPackages();
     this.applicationLayer.doesNotDependOn(this.adapterLayer.getBasePackage(), classes);
-    this.applicationLayer.doesNotDependOn(this.configurationPackage, classes);
     this.applicationLayer.incomingAndOutgoingPortsDoNotDependOnEachOther(classes);
     this.domainDoesNotDependOnOtherPackages(classes);
   }

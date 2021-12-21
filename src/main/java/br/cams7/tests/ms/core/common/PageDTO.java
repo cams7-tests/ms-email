@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.domain;
+package br.cams7.tests.ms.core.common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

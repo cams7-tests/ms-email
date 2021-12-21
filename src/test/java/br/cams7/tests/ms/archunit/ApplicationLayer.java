@@ -5,14 +5,14 @@ import static br.cams7.tests.ms.archunit.ArchitectureElement.denyAnyDependency;
 import static br.cams7.tests.ms.archunit.ArchitectureElement.getFullQualifiedPackage;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ApplicationLayer extends BaseLayer {
 
-  private final List<String> incomingPortPackages = new ArrayList<>();
-  private final List<String> outgoingPortPackages = new ArrayList<>();
-  private final List<String> servicePackages = new ArrayList<>();
+  private final Set<String> incomingPortPackages = new HashSet<>();
+  private final Set<String> outgoingPortPackages = new HashSet<>();
+  private final Set<String> servicePackages = new HashSet<>();
 
   ApplicationLayer(String basePackage, HexagonalArchitecture parentContext) {
     super(basePackage, parentContext);
@@ -38,8 +38,8 @@ public class ApplicationLayer extends BaseLayer {
     denyAnyDependency(outgoingPortPackages, incomingPortPackages, classes);
   }
 
-  List<String> allPackages() {
-    List<String> allPackages = new ArrayList<>();
+  Set<String> allPackages() {
+    Set<String> allPackages = new HashSet<>();
     allPackages.addAll(incomingPortPackages);
     allPackages.addAll(outgoingPortPackages);
     allPackages.addAll(servicePackages);

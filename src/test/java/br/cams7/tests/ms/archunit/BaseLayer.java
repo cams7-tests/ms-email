@@ -4,7 +4,7 @@ import static br.cams7.tests.ms.archunit.ArchitectureElement.denyDependency;
 import static br.cams7.tests.ms.archunit.ArchitectureElement.denyEmptyPackages;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ public abstract class BaseLayer {
     return basePackage;
   }
 
-  public void doesNotDependOn(String packageName, JavaClasses classes) {
+  void doesNotDependOn(String packageName, JavaClasses classes) {
     denyDependency(getBasePackage(), packageName, classes);
   }
 
@@ -30,5 +30,5 @@ public abstract class BaseLayer {
     denyEmptyPackages(allPackages());
   }
 
-  abstract List<String> allPackages();
+  abstract Set<String> allPackages();
 }

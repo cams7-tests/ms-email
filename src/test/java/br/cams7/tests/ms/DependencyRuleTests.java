@@ -1,7 +1,6 @@
 package br.cams7.tests.ms;
 
 import static br.cams7.tests.ms.archunit.HexagonalArchitecture.boundedContext;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
@@ -10,29 +9,26 @@ public class DependencyRuleTests {
 
   @Test
   void validateRegistrationContextArchitecture() {
-    boundedContext("br.cams7.tests.ms")
+    boundedContext(EmailApplication.class.getPackageName())
         .withDomainLayer("domain")
         .withAdapterLayer("infra")
         .incoming("controller")
-        .outgoing("persistence")
+        .incoming("mq")
+        .outgoing("persistence.repository")
+        // .outgoing("persistence.model")
+        .outgoing("smtp")
+        .outgoing("mq.service")
+        .outgoing("client")
+        // .outgoing("client.response")
         .and()
         .withApplicationLayer("core")
         .services("service")
         .incomingPorts("port.in")
+        .incomingPorts("port.in.exception")
         .outgoingPorts("port.out")
+        .outgoingPorts("port.out.exception")
         .and()
-        .withConfiguration("configuration")
+        .withConfiguration("infra.configuration")
         .check(new ClassFileImporter().importPackages("br.cams7.tests.."));
-  }
-
-  @Test
-  void testPackageDependencies() {
-    noClasses()
-        .that()
-        .resideInAPackage("br.cams7.tests.ms.domain..")
-        .should()
-        .dependOnClassesThat()
-        .resideInAnyPackage("br.cams7.tests.ms.core..")
-        .check(new ClassFileImporter().importPackages("br.cams7.tests.ms.."));
   }
 }

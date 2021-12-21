@@ -5,37 +5,37 @@ import static br.cams7.tests.ms.archunit.ArchitectureElement.denyDependency;
 import static br.cams7.tests.ms.archunit.ArchitectureElement.getFullQualifiedPackage;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AdapterLayer extends BaseLayer {
 
-  private final List<String> incomingAdapterPackages = new ArrayList<>();
-  private final List<String> outgoingAdapterPackages = new ArrayList<>();
+  private final Set<String> incomingAdapterPackages = new HashSet<>();
+  private final Set<String> outgoingAdapterPackages = new HashSet<>();
 
   AdapterLayer(String basePackage, HexagonalArchitecture parentContext) {
     super(basePackage, parentContext);
   }
 
   public AdapterLayer outgoing(String packageName) {
-    incomingAdapterPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
-    return this;
-  }
-
-  public AdapterLayer incoming(String packageName) {
     outgoingAdapterPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
     return this;
   }
 
-  List<String> allPackages() {
-    List<String> allAdapters = new ArrayList<>();
+  public AdapterLayer incoming(String packageName) {
+    incomingAdapterPackages.add(getFullQualifiedPackage(getBasePackage(), packageName));
+    return this;
+  }
+
+  Set<String> allPackages() {
+    Set<String> allAdapters = new HashSet<>();
     allAdapters.addAll(incomingAdapterPackages);
     allAdapters.addAll(outgoingAdapterPackages);
     return allAdapters;
   }
 
   void dontDependOnEachOther(JavaClasses classes) {
-    List<String> allAdapters = allPackages();
+    Set<String> allAdapters = allPackages();
     for (String adapter1 : allAdapters) {
       for (String adapter2 : allAdapters) {
         if (!adapter1.equals(adapter2)) {
