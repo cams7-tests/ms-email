@@ -45,6 +45,19 @@ public class GetEmailUseCaseTests {
   }
 
   @Test
+  @DisplayName("findById throws error when pass null email id")
+  void findById_ThrowsError_WhenPassNullEmailId() {
+    doThrow(new NullPointerException()).when(emailRepository).findById(null);
+
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          getEmailUseCase.findById(null);
+        });
+    verify(emailRepository, times(1)).findById(null);
+  }
+
+  @Test
   @DisplayName("findById throws error when empty don't find email")
   void findById_ThrowsError_WhenDontFindEmail() {
     doThrow(new RuntimeException()).when(emailRepository).findById(EMAIL_ID_CAPTOR.capture());
