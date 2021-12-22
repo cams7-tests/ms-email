@@ -3,11 +3,15 @@ package br.cams7.tests.ms.core.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.EmailVOTestData;
@@ -20,11 +24,16 @@ import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailEntityTestData;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(LocalDateTime.class)
 public class SendEmailDirectlyUseCaseTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
@@ -32,58 +41,64 @@ public class SendEmailDirectlyUseCaseTests {
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
-  private final EmailRepository emailRepository = Mockito.mock(EmailRepository.class);
-  private final SendEmailService sendEmailService = Mockito.mock(SendEmailService.class);
+  private final EmailRepository emailRepository = mock(EmailRepository.class);
+  private final SendEmailService sendEmailService = mock(SendEmailService.class);
   private final CheckIdentificationNumberService checkIdentificationNumberService =
-      Mockito.mock(CheckIdentificationNumberService.class);
+      mock(CheckIdentificationNumberService.class);
 
   private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase =
       new SendEmailDirectlyUseCaseImpl(
           emailRepository, sendEmailService, checkIdentificationNumberService);
 
+  static {
+    mockStatic(LocalDateTime.class);
+  }
+
   @BeforeEach
   void setUp() throws SendEmailException {
-    when(checkIdentificationNumberService.isValid(DEFAULT_EMAIL_VO.getIdentificationNumber()))
-        .thenReturn(IS_VALID_IDENTIFICATION_NUMBER);
-    doNothing().when(sendEmailService).sendEmail(any(EmailEntity.class));
-    when(emailRepository.save(any(EmailEntity.class))).thenReturn(DEFAULT_EMAIL_ENTITY);
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
+    given(emailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+    given(LocalDateTime.now()).willReturn(DEFAULT_EMAIL_ENTITY.getEmailSentDate());
   }
 
   @Test
   @DisplayName("sendEmail returns email whith sent status when successfull")
   void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
+    var newEmail = DEFAULT_EMAIL_ENTITY.withEmailId(null);
+
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
     assertThat(email).isNotNull();
     assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
 
-    verify(checkIdentificationNumberService, times(1))
-        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
-    verify(sendEmailService, times(1)).sendEmail(any(EmailEntity.class));
-    verify(emailRepository, times(1)).save(any(EmailEntity.class));
+    then(checkIdentificationNumberService)
+        .should(times(1))
+        .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
+    then(sendEmailService).should(times(1)).sendEmail(eq(newEmail));
+    then(emailRepository).should(times(1)).save(eq(newEmail));
   }
 
   @Test
   @DisplayName("sendEmail throws error when pass null email vo")
   void sendEmail_ThrowsError_WhenPassNullEmailVo() throws SendEmailException {
-
     assertThrows(
         NullPointerException.class,
         () -> {
           sendEmailDirectlyUseCase.sendEmail(null);
         });
 
-    verify(checkIdentificationNumberService, times(0))
-        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
-    verify(sendEmailService, times(0)).sendEmail(any(EmailEntity.class));
-    verify(emailRepository, times(0)).save(any(EmailEntity.class));
+    then(checkIdentificationNumberService).should(times(0)).isValid(anyString());
+    then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
+    then(emailRepository).should(times(0)).save(any(EmailEntity.class));
   }
 
   @Test
   @DisplayName("sendEmail throws error when invalid identification number")
   void sendEmail_ThrowsError_WhenInvalidIdentificationNumber() throws SendEmailException {
-    when(checkIdentificationNumberService.isValid(DEFAULT_EMAIL_VO.getIdentificationNumber()))
-        .thenReturn(IS_INVALID_IDENTIFICATION_NUMBER);
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_INVALID_IDENTIFICATION_NUMBER);
 
     InvalidIdentificationNumberException thrown =
         assertThrows(
@@ -98,10 +113,11 @@ public class SendEmailDirectlyUseCaseTests {
                 "The identification number \"%s\" isn't valid",
                 DEFAULT_EMAIL_VO.getIdentificationNumber()));
 
-    verify(checkIdentificationNumberService, times(1))
-        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
-    verify(sendEmailService, times(0)).sendEmail(any(EmailEntity.class));
-    verify(emailRepository, times(0)).save(any(EmailEntity.class));
+    then(checkIdentificationNumberService)
+        .should(times(1))
+        .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
+    then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
+    then(emailRepository).should(times(0)).save(any(EmailEntity.class));
   }
 
   @Test
@@ -109,20 +125,24 @@ public class SendEmailDirectlyUseCaseTests {
       "sendEmail returns email with error status when some error happened during send email")
   void sendEmail_ReturnsEmailWhithErrorStatus_WhenSomeErrorHappenedDuringSendEmail()
       throws SendEmailException {
+
     var defaultEmail = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR);
-    doThrow(new SendEmailException("Error", null))
-        .when(sendEmailService)
+    var newEmail = defaultEmail.withEmailId(null);
+
+    willThrow(new SendEmailException("Error", null))
+        .given(sendEmailService)
         .sendEmail(any(EmailEntity.class));
-    when(emailRepository.save(any(EmailEntity.class))).thenReturn(defaultEmail);
+    given(emailRepository.save(any(EmailEntity.class))).willReturn(defaultEmail);
 
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
     assertThat(email).isNotNull();
     assertThat(email).isEqualTo(defaultEmail);
 
-    verify(checkIdentificationNumberService, times(1))
-        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
-    verify(sendEmailService, times(1)).sendEmail(any(EmailEntity.class));
-    verify(emailRepository, times(1)).save(any(EmailEntity.class));
+    then(checkIdentificationNumberService)
+        .should(times(1))
+        .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
+    then(sendEmailService).should(times(1)).sendEmail(eq(newEmail));
+    then(emailRepository).should(times(1)).save(eq(newEmail));
   }
 }
