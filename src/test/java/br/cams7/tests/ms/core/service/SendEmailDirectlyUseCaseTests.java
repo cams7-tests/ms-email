@@ -18,7 +18,7 @@ import br.cams7.tests.ms.core.port.in.EmailVOTestData;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
@@ -41,14 +41,14 @@ public class SendEmailDirectlyUseCaseTests {
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
-  private final EmailRepository emailRepository = mock(EmailRepository.class);
+  private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
   private final SendEmailService sendEmailService = mock(SendEmailService.class);
   private final CheckIdentificationNumberService checkIdentificationNumberService =
       mock(CheckIdentificationNumberService.class);
 
   private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase =
       new SendEmailDirectlyUseCaseImpl(
-          emailRepository, sendEmailService, checkIdentificationNumberService);
+          saveEmailRepository, sendEmailService, checkIdentificationNumberService);
 
   static {
     mockStatic(LocalDateTime.class);
@@ -59,7 +59,7 @@ public class SendEmailDirectlyUseCaseTests {
     given(checkIdentificationNumberService.isValid(anyString()))
         .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
     willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
-    given(emailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+    given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
     given(LocalDateTime.now()).willReturn(DEFAULT_EMAIL_ENTITY.getEmailSentDate());
   }
 
@@ -77,7 +77,7 @@ public class SendEmailDirectlyUseCaseTests {
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
     then(sendEmailService).should(times(1)).sendEmail(eq(newEmail));
-    then(emailRepository).should(times(1)).save(eq(newEmail));
+    then(saveEmailRepository).should(times(1)).save(eq(newEmail));
   }
 
   @Test
@@ -91,7 +91,7 @@ public class SendEmailDirectlyUseCaseTests {
 
     then(checkIdentificationNumberService).should(times(0)).isValid(anyString());
     then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
-    then(emailRepository).should(times(0)).save(any(EmailEntity.class));
+    then(saveEmailRepository).should(times(0)).save(any(EmailEntity.class));
   }
 
   @Test
@@ -117,7 +117,7 @@ public class SendEmailDirectlyUseCaseTests {
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
     then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
-    then(emailRepository).should(times(0)).save(any(EmailEntity.class));
+    then(saveEmailRepository).should(times(0)).save(any(EmailEntity.class));
   }
 
   @Test
@@ -132,7 +132,7 @@ public class SendEmailDirectlyUseCaseTests {
     willThrow(new SendEmailException("Error", null))
         .given(sendEmailService)
         .sendEmail(any(EmailEntity.class));
-    given(emailRepository.save(any(EmailEntity.class))).willReturn(defaultEmail);
+    given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(defaultEmail);
 
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
@@ -143,6 +143,6 @@ public class SendEmailDirectlyUseCaseTests {
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
     then(sendEmailService).should(times(1)).sendEmail(eq(newEmail));
-    then(emailRepository).should(times(1)).save(eq(newEmail));
+    then(saveEmailRepository).should(times(1)).save(eq(newEmail));
   }
 }

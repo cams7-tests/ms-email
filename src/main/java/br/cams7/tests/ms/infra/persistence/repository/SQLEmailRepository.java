@@ -1,7 +1,9 @@
 package br.cams7.tests.ms.infra.persistence.repository;
 
 import br.cams7.tests.ms.core.common.PageDTO;
-import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
+import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.infra.persistence.model.EmailModel;
 import java.util.List;
@@ -17,7 +19,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Primary
-public class SQLEmailRepository implements EmailRepository {
+public class SQLEmailRepository
+    implements GetEmailsRepository, GetEmailRepository, SaveEmailRepository {
 
   private final SpringDataSQLEmailRepository emailRepository;
   private final ModelMapper modelMapper;

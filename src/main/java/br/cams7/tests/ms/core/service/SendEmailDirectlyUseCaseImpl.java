@@ -7,7 +7,7 @@ import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
@@ -20,7 +20,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
 
-  private final EmailRepository emailRepository;
+  private final SaveEmailRepository saveEmailRepository;
   private final SendEmailService sendEmailService;
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
@@ -45,6 +45,6 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
   }
 
   private EmailEntity save(EmailEntity email) {
-    return emailRepository.save(email);
+    return saveEmailRepository.save(email);
   }
 }

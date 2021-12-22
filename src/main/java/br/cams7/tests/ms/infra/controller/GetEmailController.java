@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.controller;
 
 import br.cams7.tests.ms.core.common.PageDTO;
-import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
+import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GetEmailController {
 
-  private final GetAllEmailsUseCase getAllEmailsUseCase;
+  private final GetEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
   private final ModelMapper modelMapper;
 
   @Autowired
   GetEmailController(
-      GetAllEmailsUseCase getAllEmailsUseCase,
+      GetEmailsUseCase getAllEmailsUseCase,
       GetEmailUseCase getEmailUseCase,
       ModelMapper modelMapper) {
     super();

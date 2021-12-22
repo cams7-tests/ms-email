@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.common.PageDTO;
-import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
-import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
+import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +24,13 @@ public class GetAllEmailsUseCaseTests {
   private static final ArgumentCaptor<PageDTO> PAGE_DTO_CAPTOR =
       ArgumentCaptor.forClass(PageDTO.class);
 
-  private final EmailRepository emailRepository = mock(EmailRepository.class);
-  private final GetAllEmailsUseCase getAllEmailsUseCase =
-      new GetAllEmailsUseCaseImpl(emailRepository);
+  private final GetEmailsRepository getEmailsRepository = mock(GetEmailsRepository.class);
+  private final GetEmailsUseCase getAllEmailsUseCase =
+      new GetEmailsUseCaseImpl(getEmailsRepository);
 
   @BeforeEach
   void setUp() {
-    given(emailRepository.findAll(PAGE_DTO_CAPTOR.capture()))
+    given(getEmailsRepository.findAll(PAGE_DTO_CAPTOR.capture()))
         .willReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
   }
 
@@ -44,6 +44,6 @@ public class GetAllEmailsUseCaseTests {
     assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
     assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
 
-    then(emailRepository).should(times(1)).findAll(eq(PAGE_DTO_CAPTOR.getValue()));
+    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_DTO_CAPTOR.getValue()));
   }
 }

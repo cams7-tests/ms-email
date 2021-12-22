@@ -1,16 +1,18 @@
 package br.cams7.tests.ms.infra.configuration;
 
 import br.cams7.tests.ms.EmailApplication;
-import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
+import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.EmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
+import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
-import br.cams7.tests.ms.core.service.GetAllEmailsUseCaseImpl;
 import br.cams7.tests.ms.core.service.GetEmailUseCaseImpl;
+import br.cams7.tests.ms.core.service.GetEmailsUseCaseImpl;
 import br.cams7.tests.ms.core.service.SendEmailDirectlyUseCaseImpl;
 import br.cams7.tests.ms.core.service.SendEmailToQueueUseCaseImpl;
 import org.modelmapper.ModelMapper;
@@ -26,11 +28,11 @@ public class BeanConfiguration {
 
   @Bean
   SendEmailDirectlyUseCase sendEmailDirectly(
-      EmailRepository emailRepository,
+      SaveEmailRepository saveEmailRepository,
       SendEmailService sendEmailService,
       CheckIdentificationNumberService checkIdentificationNumberService) {
     return new SendEmailDirectlyUseCaseImpl(
-        emailRepository, sendEmailService, checkIdentificationNumberService);
+        saveEmailRepository, sendEmailService, checkIdentificationNumberService);
   }
 
   @Bean
@@ -41,13 +43,13 @@ public class BeanConfiguration {
   }
 
   @Bean
-  GetAllEmailsUseCase getAllEmails(EmailRepository emailRepository) {
-    return new GetAllEmailsUseCaseImpl(emailRepository);
+  GetEmailsUseCase getEmails(GetEmailsRepository getEmailsRepository) {
+    return new GetEmailsUseCaseImpl(getEmailsRepository);
   }
 
   @Bean
-  GetEmailUseCase getEmail(EmailRepository emailRepository) {
-    return new GetEmailUseCaseImpl(emailRepository);
+  GetEmailUseCase getEmail(GetEmailRepository getEmailRepository) {
+    return new GetEmailUseCaseImpl(getEmailRepository);
   }
 
   @Bean
