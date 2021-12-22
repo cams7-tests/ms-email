@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailEntityTestData;
+import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,8 +51,8 @@ public class SendEmailDirectlyUseCaseTests {
   }
 
   @Test
-  @DisplayName("sendEmail returns sent email when successfull")
-  void sendEmail_ReturnsSentEmail_WhenSuccessful() throws SendEmailException {
+  @DisplayName("sendEmail returns email whith sent status when successfull")
+  void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
     assertThat(email).isNotNull();
@@ -101,5 +103,27 @@ public class SendEmailDirectlyUseCaseTests {
         .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
     verify(sendEmailService, times(0)).sendEmail(any(EmailEntity.class));
     verify(emailRepository, times(0)).save(any(EmailEntity.class));
+  }
+
+  @Test
+  @DisplayName(
+      "sendEmail returns email with error status when some error happened during send email")
+  void sendEmail_ReturnsEmailWhithErrorStatus_WhenSomeErrorHappenedDuringSendEmail()
+      throws SendEmailException {
+    var defaultEmail = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR);
+    doThrow(new SendEmailException("Error", null))
+        .when(sendEmailService)
+        .sendEmail(any(EmailEntity.class));
+    when(emailRepository.save(any(EmailEntity.class))).thenReturn(defaultEmail);
+
+    var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
+
+    assertThat(email).isNotNull();
+    assertThat(email).isEqualTo(defaultEmail);
+
+    verify(checkIdentificationNumberService, times(1))
+        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
+    verify(sendEmailService, times(1)).sendEmail(any(EmailEntity.class));
+    verify(emailRepository, times(1)).save(any(EmailEntity.class));
   }
 }
