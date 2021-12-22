@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.core.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import br.cams7.tests.ms.core.common.PageDTO;
 import br.cams7.tests.ms.core.port.in.GetAllEmailsUseCase;
@@ -29,8 +29,8 @@ public class GetAllEmailsUseCaseTests {
 
   @BeforeEach
   void setUp() {
-    given(emailRepository.findAll(PAGE_DTO_CAPTOR.capture()))
-        .willReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
+    when(emailRepository.findAll(PAGE_DTO_CAPTOR.capture()))
+        .thenReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
   }
 
   @Test

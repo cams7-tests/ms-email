@@ -3,7 +3,6 @@ package br.cams7.tests.ms.core.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -39,8 +38,8 @@ public class SendEmailToQueueUseCaseTests {
 
   @BeforeEach
   void setUp() throws SendEmailException {
-    given(checkIdentificationNumberService.isValid(DEFAULT_EMAIL_VO.getIdentificationNumber()))
-        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+    when(checkIdentificationNumberService.isValid(DEFAULT_EMAIL_VO.getIdentificationNumber()))
+        .thenReturn(IS_VALID_IDENTIFICATION_NUMBER);
     doNothing().when(sendEmailService).sendEmail(any(EmailEntity.class));
   }
 
