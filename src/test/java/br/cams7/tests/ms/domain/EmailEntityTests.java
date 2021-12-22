@@ -14,7 +14,7 @@ public class EmailEntityTests {
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
   @Test
-  void createDefaultInstance() {
+  void shouldCreateEmailInstanceWithSentStatus() {
     var email = DEFAULT_EMAIL_ENTITY;
 
     assertThat(email.getEmailId()).isEqualTo(EmailEntityTestData.EMAIL_ID);
@@ -25,14 +25,10 @@ public class EmailEntityTests {
     assertThat(email.getText()).isEqualTo(EmailEntityTestData.MESSAGE_TEXT);
     assertThat(email.getEmailSentDate()).isEqualTo(EmailEntityTestData.EMAIL_SENT_DATE);
     assertThat(email.getEmailStatus()).isEqualTo(EmailEntityTestData.EMAIL_STATUS);
-    assertThat(email.toString()).isNotBlank();
-    assertThat(email.hashCode()).isNotNull();
-    assertThat(email.equals(DEFAULT_EMAIL_ENTITY)).isTrue();
-    assertThat(email.canEqual(DEFAULT_EMAIL_ENTITY)).isTrue();
   }
 
   @Test
-  void CreateSecondAlteredInstance() {
+  void shouldCreateEmailInstanceWithErrorStatus() {
     final var EMAIL_ID = UUID.randomUUID();
     final var OWNER_REF = "06744839012";
     final var EMAIL_FROM = "from2@tests.cams7.br";
@@ -63,22 +59,10 @@ public class EmailEntityTests {
     assertThat(email.getText()).isEqualTo(MESSAGE_TEXT);
     assertThat(email.getEmailSentDate()).isEqualTo(EMAIL_SENT_DATE);
     assertThat(email.getEmailStatus()).isEqualTo(EMAIL_STATUS);
-    assertThat(email.equals(DEFAULT_EMAIL_ENTITY)).isFalse();
-    assertThat(email.equals(email.withEmailId(EmailEntityTestData.EMAIL_ID))).isFalse();
-    assertThat(email.equals(email.withOwnerRef(EmailEntityTestData.OWNER_REF))).isFalse();
-    assertThat(email.equals(email.withEmailFrom(EmailEntityTestData.EMAIL_FROM))).isFalse();
-    assertThat(email.equals(email.withEmailTo(EmailEntityTestData.EMAIL_TO))).isFalse();
-    assertThat(email.equals(email.withSubject(EmailEntityTestData.MESSAGE_SUBJECT))).isFalse();
-    assertThat(email.equals(email.withText(EmailEntityTestData.MESSAGE_TEXT))).isFalse();
-    assertThat(email.equals(email.withEmailSentDate(EmailEntityTestData.EMAIL_SENT_DATE)))
-        .isFalse();
-    assertThat(email.equals(email.withEmailStatus(EmailEntityTestData.EMAIL_STATUS))).isFalse();
-    assertThat(email.equals(null)).isFalse();
-    assertThat(email.equals("")).isFalse();
   }
 
   @Test
-  void CreateThirdAlteredInstance() {
+  void shouldCreateEmailInstanceWithProcessingStatus() {
     final var EMAIL_ID = UUID.randomUUID();
     final var EMAIL_STATUS = EmailStatusEnum.PROCESSING;
 
@@ -94,6 +78,5 @@ public class EmailEntityTests {
     assertThat(email.getText()).isEqualTo(EmailEntityTestData.MESSAGE_TEXT);
     assertThat(email.getEmailSentDate()).isEqualTo(EmailEntityTestData.EMAIL_SENT_DATE);
     assertThat(email.getEmailStatus()).isEqualTo(EMAIL_STATUS);
-    assertThat(email.equals(DEFAULT_EMAIL_ENTITY)).isTrue();
   }
 }
