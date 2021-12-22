@@ -1,7 +1,9 @@
 package br.cams7.tests.ms.core.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -39,6 +41,19 @@ public class GetEmailUseCaseTests {
     assertThat(email).isNotNull();
     assertThat(email.get()).isEqualTo(DEFAULT_EMAIL_ENTITY);
     assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
+    verify(emailRepository, times(1)).findById(EMAIL_ID_CAPTOR.getValue());
+  }
+
+  @Test
+  @DisplayName("findById throws error when empty don't find email")
+  void findById_ThrowsError_WhenDontFindEmail() {
+    doThrow(new RuntimeException()).when(emailRepository).findById(EMAIL_ID_CAPTOR.capture());
+
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
+        });
     verify(emailRepository, times(1)).findById(EMAIL_ID_CAPTOR.getValue());
   }
 }
