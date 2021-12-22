@@ -22,7 +22,7 @@ import org.mockito.ArgumentCaptor;
 
 public class GetEmailUseCaseTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = mock(EmailEntity.class);
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
   private static final ArgumentCaptor<UUID> EMAIL_ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
 
   private final GetEmailRepository getEmailRepository = mock(GetEmailRepository.class);

@@ -23,13 +23,13 @@ public class SQLEmailRepository
     implements GetEmailsRepository, GetEmailRepository, SaveEmailRepository {
 
   private final SpringDataSQLEmailRepository emailRepository;
-  private final ModelMapper modelMapper;
+  private final ModelMapper modelMapper = new ModelMapper();
 
   @Autowired
-  SQLEmailRepository(SpringDataSQLEmailRepository emailRepository, ModelMapper modelMapper) {
+  SQLEmailRepository(SpringDataSQLEmailRepository emailRepository /*, ModelMapper modelMapper*/) {
     super();
     this.emailRepository = emailRepository;
-    this.modelMapper = modelMapper;
+    // this.modelMapper = modelMapper;
   }
 
   @Override
