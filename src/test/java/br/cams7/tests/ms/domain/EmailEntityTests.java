@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 /** @author CIANDT\cmagalhaes */
 public class EmailEntityTests {
 
-  private static final EmailEntity DEFAULT_EMAIL = EmailEntityTestData.defaultEmail();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
   @Test
   void sendEmailSuccess() {
-    var email = DEFAULT_EMAIL;
+    var email = DEFAULT_EMAIL_ENTITY;
 
     assertThat(email.getEmailId()).isEqualTo(EmailEntityTestData.EMAIL_ID);
     assertThat(email.getOwnerRef()).isEqualTo(EmailEntityTestData.OWNER_REF);
@@ -26,7 +26,7 @@ public class EmailEntityTests {
 
   @Test
   void sendEmailError() {
-    var email = DEFAULT_EMAIL.withEmailStatus(EmailStatusEnum.ERROR);
+    var email = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR);
 
     assertThat(email.getEmailId()).isEqualTo(EmailEntityTestData.EMAIL_ID);
     assertThat(email.getOwnerRef()).isEqualTo(EmailEntityTestData.OWNER_REF);
@@ -40,7 +40,7 @@ public class EmailEntityTests {
 
   @Test
   void sendEmailProcessing() {
-    var email = DEFAULT_EMAIL.withEmailStatus(EmailStatusEnum.PROCESSING);
+    var email = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.PROCESSING);
 
     assertThat(email.getEmailId()).isEqualTo(EmailEntityTestData.EMAIL_ID);
     assertThat(email.getOwnerRef()).isEqualTo(EmailEntityTestData.OWNER_REF);

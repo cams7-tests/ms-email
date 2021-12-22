@@ -18,9 +18,10 @@ import org.mockito.Mockito;
 
 public class GetAllEmailsUseCaseTests {
 
-  private static final EmailEntity DEFAULT_EMAIL = Mockito.mock(EmailEntity.class);
-  private static final PageDTO DEFAULT_PAGE = Mockito.mock(PageDTO.class);
-  private static final ArgumentCaptor<PageDTO> PAGE_CAPTOR = ArgumentCaptor.forClass(PageDTO.class);
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = Mockito.mock(EmailEntity.class);
+  private static final PageDTO DEFAULT_PAGE_DTO = Mockito.mock(PageDTO.class);
+  private static final ArgumentCaptor<PageDTO> PAGE_DTO_CAPTOR =
+      ArgumentCaptor.forClass(PageDTO.class);
 
   private final EmailRepository emailRepository = Mockito.mock(EmailRepository.class);
   private final GetAllEmailsUseCase getAllEmailsUseCase =
@@ -28,18 +29,19 @@ public class GetAllEmailsUseCaseTests {
 
   @BeforeEach
   void setUp() {
-    given(emailRepository.findAll(PAGE_CAPTOR.capture())).willReturn(Arrays.asList(DEFAULT_EMAIL));
+    given(emailRepository.findAll(PAGE_DTO_CAPTOR.capture()))
+        .willReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
   }
 
   @Test
   @DisplayName("findAll returns paged emails when successfull")
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
-    var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE);
+    var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
 
     assertThat(emails).isNotEmpty();
     assertThat(emails.size()).isEqualTo(1);
-    assertThat(emails).contains(DEFAULT_EMAIL);
-    assertThat(PAGE_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE);
-    verify(emailRepository, times(1)).findAll(PAGE_CAPTOR.getValue());
+    assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
+    assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
+    verify(emailRepository, times(1)).findAll(PAGE_DTO_CAPTOR.getValue());
   }
 }

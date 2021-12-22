@@ -19,15 +19,16 @@ import org.mockito.Mockito;
 
 public class GetEmailUseCaseTests {
 
-  private static final EmailEntity DEFAULT_EMAIL = Mockito.mock(EmailEntity.class);
-  private static final ArgumentCaptor<UUID> ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = Mockito.mock(EmailEntity.class);
+  private static final ArgumentCaptor<UUID> EMAIL_ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
 
   private final EmailRepository emailRepository = Mockito.mock(EmailRepository.class);
   private final GetEmailUseCase getEmailUseCase = new GetEmailUseCaseImpl(emailRepository);
 
   @BeforeEach
   void setUp() {
-    given(emailRepository.findById(ID_CAPTOR.capture())).willReturn(Optional.of(DEFAULT_EMAIL));
+    given(emailRepository.findById(EMAIL_ID_CAPTOR.capture()))
+        .willReturn(Optional.of(DEFAULT_EMAIL_ENTITY));
   }
 
   @Test
@@ -36,8 +37,8 @@ public class GetEmailUseCaseTests {
     var email = getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
 
     assertThat(email).isNotNull();
-    assertThat(email.get()).isEqualTo(DEFAULT_EMAIL);
-    assertThat(ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
-    verify(emailRepository, times(1)).findById(ID_CAPTOR.getValue());
+    assertThat(email.get()).isEqualTo(DEFAULT_EMAIL_ENTITY);
+    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
+    verify(emailRepository, times(1)).findById(EMAIL_ID_CAPTOR.getValue());
   }
 }
