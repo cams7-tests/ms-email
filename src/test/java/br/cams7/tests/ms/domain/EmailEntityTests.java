@@ -11,11 +11,9 @@ import org.junit.jupiter.api.Test;
 /** @author CIANDT\cmagalhaes */
 public class EmailEntityTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
-
   @Test
   void shouldCreateEmailInstanceWithSentStatus() {
-    var email = DEFAULT_EMAIL_ENTITY;
+    var email = EmailEntityTestData.defaultEmail();
 
     assertThat(email.getEmailId()).isEqualTo(EmailEntityTestData.EMAIL_ID);
     assertThat(email.getOwnerRef()).isEqualTo(EmailEntityTestData.OWNER_REF);
@@ -41,7 +39,7 @@ public class EmailEntityTests {
     final var EMAIL_STATUS = EmailStatusEnum.ERROR;
 
     var email =
-        DEFAULT_EMAIL_ENTITY
+        EmailEntityTestData.defaultEmail()
             .withEmailId(EMAIL_ID)
             .withOwnerRef(OWNER_REF)
             .withEmailFrom(EMAIL_FROM)
@@ -66,7 +64,7 @@ public class EmailEntityTests {
     final var EMAIL_ID = UUID.randomUUID();
     final var EMAIL_STATUS = EmailStatusEnum.PROCESSING;
 
-    var email = DEFAULT_EMAIL_ENTITY;
+    var email = EmailEntityTestData.defaultEmail();
     email.setEmailId(EMAIL_ID);
     email.setEmailStatus(EMAIL_STATUS);
 
