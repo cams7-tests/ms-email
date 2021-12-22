@@ -5,12 +5,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class EmailVO extends SelfValidating<EmailVO> {
 
-  @NotBlank private String identificationNumber;
+  @NotBlank @CPF private String identificationNumber;
   @NotBlank @Email private String emailFrom;
   @NotBlank @Email private String emailTo;
   @NotBlank private String subject;
