@@ -63,6 +63,22 @@ public class SendEmailDirectlyUseCaseTests {
   }
 
   @Test
+  @DisplayName("sendEmail throws error when pass null email vo")
+  void sendEmail_ThrowsError_WhenPassNullEmailVo() throws SendEmailException {
+
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          sendEmailDirectlyUseCase.sendEmail(null);
+        });
+
+    verify(checkIdentificationNumberService, times(0))
+        .isValid(DEFAULT_EMAIL_VO.getIdentificationNumber());
+    verify(sendEmailService, times(0)).sendEmail(any(EmailEntity.class));
+    verify(emailRepository, times(0)).save(any(EmailEntity.class));
+  }
+
+  @Test
   @DisplayName("sendEmail throws error when invalid identification number")
   void sendEmail_ThrowsError_WhenInvalidIdentificationNumber() throws SendEmailException {
     when(checkIdentificationNumberService.isValid(DEFAULT_EMAIL_VO.getIdentificationNumber()))
