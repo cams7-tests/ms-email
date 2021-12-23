@@ -29,8 +29,8 @@ class SendEmailControllerTests {
   @MockBean private SendEmailController sendEmailController;
 
   @Test
-  @DisplayName("sendingEmailDirectly returns email when successfull")
-  void sendingEmailDirectly_ReturnsEmail_WhenSuccessful() throws Exception {
+  @DisplayName("sendEmailDirectly returns email when successfull")
+  void sendEmailDirectly_ReturnsEmail_WhenSuccessful() throws Exception {
     var requestJson = getRequestJson(DEFAULT_SEND_EMAIL_REQUEST_DTO);
 
     mockMvc
@@ -42,12 +42,12 @@ class SendEmailControllerTests {
 
     then(sendEmailController)
         .should(times(1))
-        .sendingEmailDirectly(eq(DEFAULT_SEND_EMAIL_REQUEST_DTO));
+        .sendEmailDirectly(eq(DEFAULT_SEND_EMAIL_REQUEST_DTO));
   }
 
   @Test
-  @DisplayName("sendingEmail when successfull")
-  void sendingEmail_WhenSuccessful() throws Exception {
+  @DisplayName("sendEmailToQueue when successfull")
+  void sendEmailToQueue_WhenSuccessful() throws Exception {
     var requestJson = getRequestJson(DEFAULT_SEND_EMAIL_REQUEST_DTO);
 
     mockMvc
@@ -57,7 +57,7 @@ class SendEmailControllerTests {
                 .content(requestJson))
         .andExpect(status().isOk());
 
-    then(sendEmailController).should(times(1)).sendingEmail(eq(DEFAULT_SEND_EMAIL_REQUEST_DTO));
+    then(sendEmailController).should(times(1)).sendEmailToQueue(eq(DEFAULT_SEND_EMAIL_REQUEST_DTO));
   }
 
   private static String getRequestJson(SendEmailRequestDTO sendEmailRequest)

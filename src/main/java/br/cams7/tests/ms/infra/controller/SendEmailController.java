@@ -27,22 +27,24 @@ public class SendEmailController {
   }
 
   @PostMapping(path = "/send-email-directly")
-  ResponseEntity<EmailEntity> sendingEmailDirectly(@RequestBody final SendEmailRequestDTO dto) {
-    return new ResponseEntity<>(sendEmailDirectlyUseCase.sendEmail(getEmail(dto)), HttpStatus.OK);
+  ResponseEntity<EmailEntity> sendEmailDirectly(
+      @RequestBody final SendEmailRequestDTO sendEmailRequest) {
+    return new ResponseEntity<>(
+        sendEmailDirectlyUseCase.sendEmail(getEmail(sendEmailRequest)), HttpStatus.OK);
   }
 
   @PostMapping(path = "/send-email-to-queue")
-  ResponseEntity<Void> sendingEmail(@RequestBody final SendEmailRequestDTO dto) {
-    sendEmailToQueueUseCase.sendEmail(getEmail(dto));
+  ResponseEntity<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
+    sendEmailToQueueUseCase.sendEmail(getEmail(sendEmailRequest));
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  private static EmailVO getEmail(SendEmailRequestDTO dto) {
+  private static EmailVO getEmail(SendEmailRequestDTO sendEmailRequest) {
     return new EmailVO(
-        dto.getIdentificationNumber(),
-        dto.getEmailFrom(),
-        dto.getEmailTo(),
-        dto.getSubject(),
-        dto.getText());
+        sendEmailRequest.getIdentificationNumber(),
+        sendEmailRequest.getEmailFrom(),
+        sendEmailRequest.getEmailTo(),
+        sendEmailRequest.getSubject(),
+        sendEmailRequest.getText());
   }
 }
