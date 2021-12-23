@@ -39,7 +39,6 @@ class GetEmailUseCaseTests {
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
 
-    assertThat(email).isPresent();
     assertThat(email).contains(DEFAULT_EMAIL_ENTITY);
     assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
 
