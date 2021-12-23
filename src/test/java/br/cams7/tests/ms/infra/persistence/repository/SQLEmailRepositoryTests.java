@@ -44,7 +44,7 @@ class SQLEmailRepositoryTests {
     var emails = getEmailsRepository.findAll(DEFAULT_PAGE_DTO);
 
     assertThat(emails).isNotEmpty();
-    assertThat(emails.size()).isEqualTo(DEFAULT_PAGE_DTO.getPageSize());
+    assertThat(emails).hasSize(DEFAULT_PAGE_DTO.getPageSize());
   }
 
   @Test

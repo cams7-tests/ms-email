@@ -22,21 +22,17 @@ public class GetEmailController {
 
   private final GetEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
-  private final ModelMapper modelMapper;
+  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
 
   @Autowired
-  GetEmailController(
-      GetEmailsUseCase getAllEmailsUseCase,
-      GetEmailUseCase getEmailUseCase,
-      ModelMapper modelMapper) {
+  GetEmailController(GetEmailsUseCase getAllEmailsUseCase, GetEmailUseCase getEmailUseCase) {
     super();
     this.getAllEmailsUseCase = getAllEmailsUseCase;
     this.getEmailUseCase = getEmailUseCase;
-    this.modelMapper = modelMapper;
   }
 
   @GetMapping(path = "/emails")
-  ResponseEntity<Page<EmailEntity>> getAllEmails(
+  ResponseEntity<Page<EmailEntity>> getEmails(
       @PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC)
           Pageable pageable) {
     List<EmailEntity> emailList = getAllEmailsUseCase.findAll(getPage(pageable));
@@ -45,7 +41,7 @@ public class GetEmailController {
   }
 
   @GetMapping(path = "/emails/{emailId}")
-  ResponseEntity<Object> getOneEmail(@PathVariable(value = "emailId") final UUID emailId) {
+  ResponseEntity<Object> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
     Optional<EmailEntity> emailModelOptional = getEmailUseCase.findById(emailId);
     if (!emailModelOptional.isPresent()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
@@ -55,6 +51,6 @@ public class GetEmailController {
   }
 
   private PageDTO getPage(Pageable pageable) {
-    return modelMapper.map(pageable, PageDTO.class);
+    return MODEL_MAPPER.map(pageable, PageDTO.class);
   }
 }
