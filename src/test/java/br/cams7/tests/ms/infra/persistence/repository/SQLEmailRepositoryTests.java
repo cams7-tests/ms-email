@@ -86,7 +86,7 @@ class SQLEmailRepositoryTests {
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailRepository.findById(EMAIL_ID);
 
-    assertThat(email.isPresent()).isTrue();
+    assertThat(email).isPresent();
     assertThat(email.get().getEmailId()).isEqualTo(EMAIL_ID);
   }
 
@@ -105,7 +105,7 @@ class SQLEmailRepositoryTests {
   void findById_ReturnsNoEmail_WhenPassWrongEmailId() {
     var email = getEmailRepository.findById(WRONG_EMAIL_ID);
 
-    assertThat(email.isPresent()).isFalse();
+    assertThat(email).isNotPresent();
   }
 
   @Test
