@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class EmailVOTests {
+class EmailVOTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
   private static final String EMPTY = "   ";

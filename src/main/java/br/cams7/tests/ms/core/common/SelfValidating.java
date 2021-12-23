@@ -13,7 +13,7 @@ public abstract class SelfValidating<T> {
 
   private Validator validator;
 
-  public SelfValidating() {
+  protected SelfValidating() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     validator = factory.getValidator();
   }

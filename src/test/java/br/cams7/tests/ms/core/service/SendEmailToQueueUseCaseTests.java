@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class SendEmailToQueueUseCaseTests {
+class SendEmailToQueueUseCaseTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;

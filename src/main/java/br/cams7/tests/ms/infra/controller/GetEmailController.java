@@ -41,7 +41,7 @@ public class GetEmailController {
           Pageable pageable) {
     List<EmailEntity> emailList = getAllEmailsUseCase.findAll(getPage(pageable));
     return new ResponseEntity<>(
-        new PageImpl<EmailEntity>(emailList, pageable, emailList.size()), HttpStatus.OK);
+        new PageImpl<>(emailList, pageable, emailList.size()), HttpStatus.OK);
   }
 
   @GetMapping(path = "/emails/{emailId}")

@@ -2,7 +2,6 @@ package br.cams7.tests.ms.infra.mq;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
-import br.cams7.tests.ms.domain.EmailEntity;
 import javax.validation.ConstraintViolationException;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -24,21 +23,14 @@ public class EmailConsumer {
   @RabbitListener(queues = "${rabbitmq.queue}")
   void listen(@Payload final EmailDTO dto) {
     try {
-      EmailEntity email = sendEmailUseCase.sendEmail(getEmail(dto));
-      System.out.println("Email Status: " + email.getEmailStatus());
+      sendEmailUseCase.sendEmail(getEmail(dto));
     } catch (ConstraintViolationException e) {
       throw new AmqpRejectAndDontRequeueException(e.getMessage(), e.getCause());
     }
   }
 
   private static EmailVO getEmail(EmailDTO dto) {
-    EmailVO email =
-        new EmailVO(
-            dto.getOwnerRef(),
-            dto.getEmailFrom(),
-            dto.getEmailTo(),
-            dto.getSubject(),
-            dto.getText());
-    return email;
+    return new EmailVO(
+        dto.getOwnerRef(), dto.getEmailFrom(), dto.getEmailTo(), dto.getSubject(), dto.getText());
   }
 }

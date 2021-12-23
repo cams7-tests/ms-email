@@ -5,7 +5,7 @@ import static br.cams7.tests.ms.archunit.HexagonalArchitecture.boundedContext;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
 
-public class DependencyRuleTests {
+class DependencyRuleTests {
 
   @Test
   void validateRegistrationContextArchitecture() {

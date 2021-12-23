@@ -20,7 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-public class GetEmailUseCaseTests {
+class GetEmailUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
   private static final ArgumentCaptor<UUID> EMAIL_ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
@@ -39,7 +39,7 @@ public class GetEmailUseCaseTests {
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
 
-    assertThat(email.isEmpty()).isFalse();
+    assertThat(email.isPresent()).isTrue();
     assertThat(email.get()).isEqualTo(DEFAULT_EMAIL_ENTITY);
     assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
 

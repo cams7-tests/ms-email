@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 /** @author CIANDT\cmagalhaes */
-public class EmailEntityTests {
+class EmailEntityTests {
 
   @Test
   void shouldCreateEmailInstanceWithSentStatus() {

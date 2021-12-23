@@ -27,7 +27,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 @DataJpaTest
 @Import({SQLEmailRepository.class})
-public class SQLEmailRepositoryTests {
+class SQLEmailRepositoryTests {
 
   private static final PageDTO DEFAULT_PAGE_DTO = PageDTOTestData.defaultPage();
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
@@ -43,7 +43,6 @@ public class SQLEmailRepositoryTests {
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
     var emails = getEmailsRepository.findAll(DEFAULT_PAGE_DTO);
 
-    assertThat(emails).isNotNull();
     assertThat(emails).isNotEmpty();
     assertThat(emails.size()).isEqualTo(DEFAULT_PAGE_DTO.getPageSize());
   }
@@ -66,7 +65,6 @@ public class SQLEmailRepositoryTests {
 
     var emails = getEmailsRepository.findAll(page);
 
-    assertThat(emails).isNotNull();
     assertThat(emails).isEmpty();
   }
 
@@ -79,7 +77,6 @@ public class SQLEmailRepositoryTests {
 
     var emails = getEmailsRepository.findAll(page);
 
-    assertThat(emails).isNotNull();
     assertThat(emails).isNotEmpty();
     assertThat(emails.size() >= 1 && emails.size() <= 2).isTrue();
   }
@@ -89,7 +86,7 @@ public class SQLEmailRepositoryTests {
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailRepository.findById(EMAIL_ID);
 
-    assertThat(email.isEmpty()).isFalse();
+    assertThat(email.isPresent()).isTrue();
     assertThat(email.get().getEmailId()).isEqualTo(EMAIL_ID);
   }
 
@@ -108,7 +105,7 @@ public class SQLEmailRepositoryTests {
   void findById_ReturnsNoEmail_WhenPassWrongEmailId() {
     var email = getEmailRepository.findById(WRONG_EMAIL_ID);
 
-    assertThat(email.isEmpty()).isTrue();
+    assertThat(email.isPresent()).isFalse();
   }
 
   @Test

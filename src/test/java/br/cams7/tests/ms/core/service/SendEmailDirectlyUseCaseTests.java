@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 // @RunWith(PowerMockRunner.class)
 // @PrepareForTest(LocalDateTime.class)
-public class SendEmailDirectlyUseCaseTests {
+class SendEmailDirectlyUseCaseTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
@@ -63,7 +63,6 @@ public class SendEmailDirectlyUseCaseTests {
   void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
-    assertThat(email).isNotNull();
     assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
 
     then(checkIdentificationNumberService)
@@ -128,7 +127,6 @@ public class SendEmailDirectlyUseCaseTests {
 
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
-    assertThat(email).isNotNull();
     assertThat(email).isEqualTo(defaultEmail);
 
     then(checkIdentificationNumberService)

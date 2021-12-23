@@ -39,13 +39,11 @@ public class SendEmailController {
   }
 
   private static EmailVO getEmail(SendEmailRequestDTO dto) {
-    EmailVO email =
-        new EmailVO(
-            dto.getIdentificationNumber(),
-            dto.getEmailFrom(),
-            dto.getEmailTo(),
-            dto.getSubject(),
-            dto.getText());
-    return email;
+    return new EmailVO(
+        dto.getIdentificationNumber(),
+        dto.getEmailFrom(),
+        dto.getEmailTo(),
+        dto.getSubject(),
+        dto.getText());
   }
 }
