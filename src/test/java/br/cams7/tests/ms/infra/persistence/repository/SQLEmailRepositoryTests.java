@@ -43,7 +43,6 @@ class SQLEmailRepositoryTests {
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
     var emails = getEmailsRepository.findAll(DEFAULT_PAGE_DTO);
 
-    assertThat(emails).isNotEmpty();
     assertThat(emails).hasSize(DEFAULT_PAGE_DTO.getPageSize());
   }
 
