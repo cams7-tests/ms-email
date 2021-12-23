@@ -23,26 +23,25 @@ public class SQLEmailRepository
     implements GetEmailsRepository, GetEmailRepository, SaveEmailRepository {
 
   private final SpringDataSQLEmailRepository emailRepository;
-  private final ModelMapper modelMapper = new ModelMapper();
+  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
 
   @Autowired
-  SQLEmailRepository(SpringDataSQLEmailRepository emailRepository /*, ModelMapper modelMapper*/) {
+  SQLEmailRepository(SpringDataSQLEmailRepository emailRepository) {
     super();
     this.emailRepository = emailRepository;
-    // this.modelMapper = modelMapper;
   }
 
   @Override
   public EmailEntity save(EmailEntity entity) {
-    EmailModel model = emailRepository.save(modelMapper.map(entity, EmailModel.class));
-    return modelMapper.map(model, EmailEntity.class);
+    EmailModel model = emailRepository.save(MODEL_MAPPER.map(entity, EmailModel.class));
+    return MODEL_MAPPER.map(model, EmailEntity.class);
   }
 
   @Override
   public List<EmailEntity> findAll(PageDTO page) {
     Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize());
     return emailRepository.findAll(pageable).stream()
-        .map(model -> modelMapper.map(model, EmailEntity.class))
+        .map(model -> MODEL_MAPPER.map(model, EmailEntity.class))
         .collect(Collectors.toList());
   }
 
@@ -50,7 +49,7 @@ public class SQLEmailRepository
   public Optional<EmailEntity> findById(UUID emailId) {
     Optional<EmailModel> model = emailRepository.findById(emailId);
     if (model.isPresent()) {
-      return Optional.of(modelMapper.map(model.get(), EmailEntity.class));
+      return Optional.of(MODEL_MAPPER.map(model.get(), EmailEntity.class));
     } else {
       return Optional.empty();
     }

@@ -17,7 +17,7 @@ public final class EmailEntityTestData {
   public static LocalDateTime EMAIL_SENT_DATE =
       LocalDateTime.parse(
           "2021-12-21 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-  static EmailStatusEnum EMAIL_STATUS = EmailStatusEnum.SENT;
+  public static EmailStatusEnum EMAIL_STATUS = EmailStatusEnum.SENT;
 
   public static EmailEntity defaultEmail() {
     return EmailEntity.builder()

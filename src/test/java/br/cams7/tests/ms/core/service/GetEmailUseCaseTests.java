@@ -39,7 +39,7 @@ public class GetEmailUseCaseTests {
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
 
-    assertThat(email).isNotNull();
+    assertThat(email.isEmpty()).isFalse();
     assertThat(email.get()).isEqualTo(DEFAULT_EMAIL_ENTITY);
     assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
 

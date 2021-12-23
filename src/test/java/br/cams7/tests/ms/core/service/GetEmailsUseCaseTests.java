@@ -19,12 +19,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-public class GetAllEmailsUseCaseTests {
+public class GetEmailsUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
   private static final PageDTO DEFAULT_PAGE_DTO = PageDTOTestData.defaultPage();
   private static final ArgumentCaptor<PageDTO> PAGE_DTO_CAPTOR =
       ArgumentCaptor.forClass(PageDTO.class);
+  private static final int TOTAL_EMAILS = 1;
 
   private final GetEmailsRepository getEmailsRepository = mock(GetEmailsRepository.class);
   private final GetEmailsUseCase getAllEmailsUseCase =
@@ -41,8 +42,9 @@ public class GetAllEmailsUseCaseTests {
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
     var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
 
+    assertThat(emails).isNotNull();
     assertThat(emails).isNotEmpty();
-    assertThat(emails.size()).isEqualTo(1);
+    assertThat(emails.size()).isEqualTo(TOTAL_EMAILS);
     assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
     assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
 
