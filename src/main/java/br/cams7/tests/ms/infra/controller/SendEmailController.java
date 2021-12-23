@@ -28,14 +28,13 @@ public class SendEmailController {
 
   @PostMapping(path = "/send-email-directly")
   ResponseEntity<EmailEntity> sendingEmailDirectly(@RequestBody final SendEmailRequestDTO dto) {
-    return new ResponseEntity<>(
-        sendEmailDirectlyUseCase.sendEmail(getEmail(dto)), HttpStatus.CREATED);
+    return new ResponseEntity<>(sendEmailDirectlyUseCase.sendEmail(getEmail(dto)), HttpStatus.OK);
   }
 
   @PostMapping(path = "/send-email-to-queue")
   ResponseEntity<Void> sendingEmail(@RequestBody final SendEmailRequestDTO dto) {
     sendEmailToQueueUseCase.sendEmail(getEmail(dto));
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   private static EmailVO getEmail(SendEmailRequestDTO dto) {

@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = GetEmailController.class)
@@ -36,7 +37,7 @@ class GetEmailControllerTests {
   void getEmails_ReturnsEmails_WhenSuccessful() throws Exception {
     var defaultPage = PageRequest.of(0, 5, Sort.by("emailId").descending());
     mockMvc
-        .perform(get("/emails").header("Content-Type", "application/json"))
+        .perform(get("/emails").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
     then(getEmailController).should(times(1)).getEmails(eq(defaultPage));
@@ -53,7 +54,7 @@ class GetEmailControllerTests {
                     PAGE_SIZE,
                     SORT_FIELD,
                     "asc")
-                .header("Content-Type", "application/json"))
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
     then(getEmailController).should(times(1)).getEmails(eq(PAGE));
@@ -64,8 +65,7 @@ class GetEmailControllerTests {
   void getEmail_ReturnsAnEmail_WhenSuccessful() throws Exception {
     mockMvc
         .perform(
-            get("/emails/{emailId}", EMAIL_ID.toString())
-                .header("Content-Type", "application/json"))
+            get("/emails/{emailId}", EMAIL_ID.toString()).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
     then(getEmailController).should(times(1)).getEmail(eq(EMAIL_ID));

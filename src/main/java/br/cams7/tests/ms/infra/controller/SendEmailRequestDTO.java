@@ -1,5 +1,6 @@
 package br.cams7.tests.ms.infra.controller;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class SendEmailRequestDTO {
 
   private String identificationNumber;
