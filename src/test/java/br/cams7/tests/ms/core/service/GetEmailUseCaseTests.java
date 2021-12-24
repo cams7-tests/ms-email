@@ -5,6 +5,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
@@ -19,12 +20,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 class GetEmailUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final ArgumentCaptor<UUID> EMAIL_ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
 
   private final GetEmailRepository getEmailRepository = mock(GetEmailRepository.class);
   private final GetEmailUseCase getEmailUseCase = new GetEmailUseCaseImpl(getEmailRepository);
@@ -42,9 +41,7 @@ class GetEmailUseCaseTests {
 
     assertThat(email).contains(DEFAULT_EMAIL_ENTITY);
 
-    then(getEmailRepository).should(times(1)).findById(EMAIL_ID_CAPTOR.capture());
-
-    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EMAIL_ID);
+    then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID));
   }
 
   @Test
@@ -70,8 +67,6 @@ class GetEmailUseCaseTests {
         () -> {
           getEmailUseCase.findById(EMAIL_ID);
         });
-    then(getEmailRepository).should(times(1)).findById(EMAIL_ID_CAPTOR.capture());
-
-    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EMAIL_ID);
+    then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID));
   }
 }
