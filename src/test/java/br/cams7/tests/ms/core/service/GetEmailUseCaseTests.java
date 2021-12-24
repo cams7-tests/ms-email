@@ -1,8 +1,10 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
@@ -12,7 +14,6 @@ import static org.mockito.Mockito.times;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.out.GetEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailEntityTestData;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import org.mockito.ArgumentCaptor;
 
 class GetEmailUseCaseTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmail();
   private static final ArgumentCaptor<UUID> EMAIL_ID_CAPTOR = ArgumentCaptor.forClass(UUID.class);
 
   private final GetEmailRepository getEmailRepository = mock(GetEmailRepository.class);
@@ -30,19 +31,20 @@ class GetEmailUseCaseTests {
 
   @BeforeEach
   void setUp() {
-    given(getEmailRepository.findById(EMAIL_ID_CAPTOR.capture()))
+    given(getEmailRepository.findById(any(UUID.class)))
         .willReturn(Optional.of(DEFAULT_EMAIL_ENTITY));
   }
 
   @Test
   @DisplayName("findById returns an email when successfull")
   void findById_ReturnsAnEmail_WhenSuccessful() {
-    var email = getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
+    var email = getEmailUseCase.findById(EMAIL_ID);
 
     assertThat(email).contains(DEFAULT_EMAIL_ENTITY);
-    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EmailEntityTestData.EMAIL_ID);
 
-    then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID_CAPTOR.getValue()));
+    then(getEmailRepository).should(times(1)).findById(EMAIL_ID_CAPTOR.capture());
+
+    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EMAIL_ID);
   }
 
   @Test
@@ -61,13 +63,15 @@ class GetEmailUseCaseTests {
   @Test
   @DisplayName("findById throws error when empty don't find email")
   void findById_ThrowsError_WhenDontFindEmail() {
-    willThrow(new RuntimeException()).given(getEmailRepository).findById(EMAIL_ID_CAPTOR.capture());
+    willThrow(new RuntimeException()).given(getEmailRepository).findById(any(UUID.class));
 
     assertThrows(
         RuntimeException.class,
         () -> {
-          getEmailUseCase.findById(EmailEntityTestData.EMAIL_ID);
+          getEmailUseCase.findById(EMAIL_ID);
         });
-    then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID_CAPTOR.getValue()));
+    then(getEmailRepository).should(times(1)).findById(EMAIL_ID_CAPTOR.capture());
+
+    assertThat(EMAIL_ID_CAPTOR.getValue()).isEqualTo(EMAIL_ID);
   }
 }
