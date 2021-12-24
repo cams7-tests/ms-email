@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,7 +15,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
-import br.cams7.tests.ms.core.port.in.EmailVOTestData;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
@@ -21,21 +22,18 @@ import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailEntityTestData;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-// @RunWith(PowerMockRunner.class)
-// @PrepareForTest(LocalDateTime.class)
 class SendEmailDirectlyUseCaseTests {
 
-  private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
+  private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
@@ -47,17 +45,12 @@ class SendEmailDirectlyUseCaseTests {
       new SendEmailDirectlyUseCaseImpl(
           MODEL_MAPPER, saveEmailRepository, sendEmailService, checkIdentificationNumberService);
 
-  // static {
-  //  mockStatic(LocalDateTime.class);
-  // }
-
   @BeforeEach
   void setUp() throws SendEmailException {
     given(checkIdentificationNumberService.isValid(anyString()))
         .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
     willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
     given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
-    // given(LocalDateTime.now()).willReturn(DEFAULT_EMAIL_ENTITY.getEmailSentDate());
   }
 
   @Test

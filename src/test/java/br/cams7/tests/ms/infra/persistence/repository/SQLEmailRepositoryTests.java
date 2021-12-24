@@ -1,5 +1,6 @@
 package br.cams7.tests.ms.infra.persistence.repository;
 
+import static br.cams7.tests.ms.core.common.PageDTOTestData.defaultPageDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_FROM;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_SENT_DATE;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_STATUS;
@@ -7,16 +8,15 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_TO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import br.cams7.tests.ms.core.common.PageDTO;
-import br.cams7.tests.ms.core.common.PageDTOTestData;
 import br.cams7.tests.ms.core.port.out.GetEmailRepository;
 import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
 import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailEntityTestData;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,10 +32,10 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 @Import({SQLEmailRepository.class})
 class SQLEmailRepositoryTests {
 
-  private static final PageDTO DEFAULT_PAGE_DTO = PageDTOTestData.defaultPage();
+  private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
   private static UUID WRONG_EMAIL_ID = UUID.fromString("0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05");
-  private static EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
+  private static EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
 
   @Autowired private GetEmailsRepository getEmailsRepository;
   @Autowired private GetEmailRepository getEmailRepository;
@@ -70,7 +70,7 @@ class SQLEmailRepositoryTests {
   @Test
   @DisplayName("findAll returns no emails when \"page number\" is 2 and \"page size\" is 10")
   void findAll_ReturnsNoEmails_WhenPageNumberIs2AndPageSizeIs10() {
-    var page = PageDTOTestData.defaultPage();
+    var page = defaultPageDTO();
     page.setPageNumber(2);
 
     var emails = getEmailsRepository.findAll(page);
@@ -81,7 +81,7 @@ class SQLEmailRepositoryTests {
   @Test
   @DisplayName("findAll returns one email when \"page number\" is 2 and \"page size\" is 5")
   void findAll_ReturnsOneEmail_WhenPageNumberIs2AndPageSizeIs5() {
-    var page = PageDTOTestData.defaultPage();
+    var page = defaultPageDTO();
     page.setPageNumber(2);
     page.setPageSize(5);
 

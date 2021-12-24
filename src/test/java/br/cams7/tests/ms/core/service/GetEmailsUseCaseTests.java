@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.core.common.PageDTOTestData.defaultPageDTO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -8,11 +10,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.common.PageDTO;
-import br.cams7.tests.ms.core.common.PageDTOTestData;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailEntityTestData;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +21,8 @@ import org.mockito.ArgumentCaptor;
 
 class GetEmailsUseCaseTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
-  private static final PageDTO DEFAULT_PAGE_DTO = PageDTOTestData.defaultPage();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
   private static final ArgumentCaptor<PageDTO> PAGE_DTO_CAPTOR =
       ArgumentCaptor.forClass(PageDTO.class);
   private static final int TOTAL_EMAILS = 1;

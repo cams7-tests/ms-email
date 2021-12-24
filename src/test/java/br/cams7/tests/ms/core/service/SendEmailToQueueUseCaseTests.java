@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,14 +15,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
-import br.cams7.tests.ms.core.port.in.EmailVOTestData;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailEntityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,10 +28,10 @@ import org.modelmapper.ModelMapper;
 
 class SendEmailToQueueUseCaseTests {
 
-  private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
+  private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SendEmailToQueueService sendEmailService = mock(SendEmailToQueueService.class);

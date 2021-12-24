@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class EmailVOTests {
 
-  private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmail();
+  private static final EmailVO DEFAULT_EMAIL_VO = EmailVOTestData.defaultEmailVO();
   private static final String EMPTY = "   ";
   private static final String WRONG_IDENTIFICATION_NUMBER = "56317992001";
   private static final String WRONG_EMAIL = "test";
