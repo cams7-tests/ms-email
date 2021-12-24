@@ -26,6 +26,7 @@ import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.modelmapper.ModelMapper;
 
 class SendEmailDirectlyUseCaseTests {
@@ -34,6 +35,8 @@ class SendEmailDirectlyUseCaseTests {
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final ArgumentCaptor<EmailEntity> EMAIL_ENTITY_CAPTOR =
+      ArgumentCaptor.forClass(EmailEntity.class);
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
@@ -63,8 +66,20 @@ class SendEmailDirectlyUseCaseTests {
     then(checkIdentificationNumberService)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
-    then(sendEmailService).should(times(1)).sendEmail(any(EmailEntity.class));
-    then(saveEmailRepository).should(times(1)).save(any(EmailEntity.class));
+
+    then(sendEmailService).should(times(1)).sendEmail(EMAIL_ENTITY_CAPTOR.capture());
+    assertThat(
+            EMAIL_ENTITY_CAPTOR
+                .getValue()
+                .withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
+        .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null));
+
+    then(saveEmailRepository).should(times(1)).save(EMAIL_ENTITY_CAPTOR.capture());
+    assertThat(
+            EMAIL_ENTITY_CAPTOR
+                .getValue()
+                .withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
+        .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null));
   }
 
   @Test
@@ -127,7 +142,19 @@ class SendEmailDirectlyUseCaseTests {
     then(checkIdentificationNumberService)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
-    then(sendEmailService).should(times(1)).sendEmail(any(EmailEntity.class));
-    then(saveEmailRepository).should(times(1)).save(any(EmailEntity.class));
+
+    then(sendEmailService).should(times(1)).sendEmail(EMAIL_ENTITY_CAPTOR.capture());
+    assertThat(
+            EMAIL_ENTITY_CAPTOR
+                .getValue()
+                .withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
+        .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailStatus(EmailStatusEnum.ERROR));
+
+    then(saveEmailRepository).should(times(1)).save(EMAIL_ENTITY_CAPTOR.capture());
+    assertThat(
+            EMAIL_ENTITY_CAPTOR
+                .getValue()
+                .withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
+        .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailStatus(EmailStatusEnum.ERROR));
   }
 }
