@@ -20,13 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GetEmailController {
 
+  private final ModelMapper modelMapper;
   private final GetEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
-  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
 
   @Autowired
-  GetEmailController(GetEmailsUseCase getAllEmailsUseCase, GetEmailUseCase getEmailUseCase) {
+  GetEmailController(
+      ModelMapper modelMapper,
+      GetEmailsUseCase getAllEmailsUseCase,
+      GetEmailUseCase getEmailUseCase) {
     super();
+    this.modelMapper = modelMapper;
     this.getAllEmailsUseCase = getAllEmailsUseCase;
     this.getEmailUseCase = getEmailUseCase;
   }
@@ -51,6 +55,6 @@ public class GetEmailController {
   }
 
   private PageDTO getPage(Pageable pageable) {
-    return MODEL_MAPPER.map(pageable, PageDTO.class);
+    return modelMapper.map(pageable, PageDTO.class);
   }
 }

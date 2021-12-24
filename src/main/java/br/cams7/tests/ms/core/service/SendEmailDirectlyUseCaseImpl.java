@@ -18,8 +18,7 @@ import org.modelmapper.ModelMapper;
 @RequiredArgsConstructor
 public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
-  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
-
+  private final ModelMapper modelMapper;
   private final SaveEmailRepository saveEmailRepository;
   private final SendEmailService sendEmailService;
   private final CheckIdentificationNumberService checkIdentificationNumberService;
@@ -29,7 +28,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
     if (!checkIdentificationNumberService.isValid(vo.getIdentificationNumber()))
       throw new InvalidIdentificationNumberException(vo.getIdentificationNumber());
 
-    EmailEntity email = MODEL_MAPPER.map(vo, EmailEntity.class);
+    EmailEntity email = modelMapper.map(vo, EmailEntity.class);
     email.setOwnerRef(vo.getIdentificationNumber());
 
     email.setEmailSentDate(LocalDateTime.now());

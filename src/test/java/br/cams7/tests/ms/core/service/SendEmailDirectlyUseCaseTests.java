@@ -26,6 +26,7 @@ import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 // @RunWith(PowerMockRunner.class)
 // @PrepareForTest(LocalDateTime.class)
@@ -36,6 +37,7 @@ class SendEmailDirectlyUseCaseTests {
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
+  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
   private final SendEmailService sendEmailService = mock(SendEmailService.class);
   private final CheckIdentificationNumberService checkIdentificationNumberService =
@@ -43,7 +45,7 @@ class SendEmailDirectlyUseCaseTests {
 
   private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase =
       new SendEmailDirectlyUseCaseImpl(
-          saveEmailRepository, sendEmailService, checkIdentificationNumberService);
+          MODEL_MAPPER, saveEmailRepository, sendEmailService, checkIdentificationNumberService);
 
   // static {
   //  mockStatic(LocalDateTime.class);

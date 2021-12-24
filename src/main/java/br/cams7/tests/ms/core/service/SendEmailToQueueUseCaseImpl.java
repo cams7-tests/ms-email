@@ -14,8 +14,7 @@ import org.modelmapper.ModelMapper;
 @RequiredArgsConstructor
 public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
 
-  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
-
+  private final ModelMapper modelMapper;
   private final SendEmailToQueueService sendEmailService;
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
@@ -24,7 +23,7 @@ public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
     if (!checkIdentificationNumberService.isValid(vo.getIdentificationNumber()))
       throw new InvalidIdentificationNumberException(vo.getIdentificationNumber());
 
-    EmailEntity email = MODEL_MAPPER.map(vo, EmailEntity.class);
+    EmailEntity email = modelMapper.map(vo, EmailEntity.class);
     email.setOwnerRef(vo.getIdentificationNumber());
 
     sendEmailService.sendEmail(email);

@@ -20,8 +20,11 @@ import br.cams7.tests.ms.domain.EmailEntityTestData;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
@@ -37,6 +40,14 @@ class SQLEmailRepositoryTests {
   @Autowired private GetEmailsRepository getEmailsRepository;
   @Autowired private GetEmailRepository getEmailRepository;
   @Autowired private SaveEmailRepository saveEmailRepository;
+
+  @TestConfiguration
+  static class SQLEmailRepositoryTestsContextConfiguration {
+    @Bean
+    ModelMapper modelMapper() {
+      return new ModelMapper();
+    }
+  }
 
   @Test
   @DisplayName("findAll returns paged emails when successfull")

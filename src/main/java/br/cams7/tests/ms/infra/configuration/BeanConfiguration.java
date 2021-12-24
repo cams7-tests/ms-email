@@ -27,19 +27,25 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
   @Bean
+  ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
+
+  @Bean
   SendEmailDirectlyUseCase sendEmailDirectly(
       SaveEmailRepository saveEmailRepository,
       SendEmailService sendEmailService,
       CheckIdentificationNumberService checkIdentificationNumberService) {
     return new SendEmailDirectlyUseCaseImpl(
-        saveEmailRepository, sendEmailService, checkIdentificationNumberService);
+        modelMapper(), saveEmailRepository, sendEmailService, checkIdentificationNumberService);
   }
 
   @Bean
   SendEmailToQueueUseCase sendEmailToQueueUse(
       SendEmailToQueueService sendEmailService,
       CheckIdentificationNumberService checkIdentificationNumberService) {
-    return new SendEmailToQueueUseCaseImpl(sendEmailService, checkIdentificationNumberService);
+    return new SendEmailToQueueUseCaseImpl(
+        modelMapper(), sendEmailService, checkIdentificationNumberService);
   }
 
   @Bean
@@ -50,10 +56,5 @@ public class BeanConfiguration {
   @Bean
   GetEmailUseCase getEmail(GetEmailRepository getEmailRepository) {
     return new GetEmailUseCaseImpl(getEmailRepository);
-  }
-
-  @Bean
-  ModelMapper modelMapper() {
-    return new ModelMapper();
   }
 }

@@ -24,6 +24,7 @@ import br.cams7.tests.ms.domain.EmailEntityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 class SendEmailToQueueUseCaseTests {
 
@@ -32,12 +33,14 @@ class SendEmailToQueueUseCaseTests {
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = EmailEntityTestData.defaultEmail();
 
+  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SendEmailToQueueService sendEmailService = mock(SendEmailToQueueService.class);
   private final CheckIdentificationNumberService checkIdentificationNumberService =
       mock(CheckIdentificationNumberService.class);
 
   private final SendEmailToQueueUseCase sendEmailToQueueUseCase =
-      new SendEmailToQueueUseCaseImpl(sendEmailService, checkIdentificationNumberService);
+      new SendEmailToQueueUseCaseImpl(
+          MODEL_MAPPER, sendEmailService, checkIdentificationNumberService);
 
   @BeforeEach
   void setUp() throws SendEmailException {
