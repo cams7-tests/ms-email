@@ -22,7 +22,7 @@ public class SMTPSendEmailService implements SendEmailService {
 
   @Override
   public void sendEmail(EmailEntity email) throws SendEmailException {
-    SimpleMailMessage message = new SimpleMailMessage();
+    var message = new SimpleMailMessage();
     message.setFrom(email.getEmailFrom());
     message.setTo(email.getEmailTo());
     message.setSubject(email.getSubject());

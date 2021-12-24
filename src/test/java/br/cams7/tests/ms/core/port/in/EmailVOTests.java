@@ -49,7 +49,7 @@ class EmailVOTests {
   @Test
   @DisplayName("create email instance throws error when pass null params")
   void createEmailInstance_ThrowsError_WhenPassNullParams() {
-    ConstraintViolationException thrown =
+    var thrown =
         assertThrows(
             ConstraintViolationException.class,
             () -> {
@@ -66,7 +66,7 @@ class EmailVOTests {
   @Test
   @DisplayName("create email instance throws error when pass empty params")
   void createEmailInstance_ThrowsError_WhenPassEmptyParams() {
-    ConstraintViolationException thrown =
+    var thrown =
         assertThrows(
             ConstraintViolationException.class,
             () -> {
@@ -83,7 +83,7 @@ class EmailVOTests {
   @Test
   @DisplayName("create email instance throws error when pass wrong params")
   void createEmailInstance_ThrowsError_WhenPassWrongParams() {
-    ConstraintViolationException thrown =
+    var thrown =
         assertThrows(
             ConstraintViolationException.class,
             () -> {

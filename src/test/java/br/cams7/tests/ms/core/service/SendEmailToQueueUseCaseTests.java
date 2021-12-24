@@ -32,6 +32,7 @@ class SendEmailToQueueUseCaseTests {
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final String ERROR_MESSAGE = "Error";
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SendEmailToQueueService sendEmailService = mock(SendEmailToQueueService.class);
@@ -81,7 +82,7 @@ class SendEmailToQueueUseCaseTests {
     given(checkIdentificationNumberService.isValid(anyString()))
         .willReturn(IS_INVALID_IDENTIFICATION_NUMBER);
 
-    InvalidIdentificationNumberException thrown =
+    var thrown =
         assertThrows(
             InvalidIdentificationNumberException.class,
             () -> {
@@ -105,13 +106,18 @@ class SendEmailToQueueUseCaseTests {
   void sendEmail_ThrowsError_WhenSomeErrorHappenedDuringSendEmail() {
     var newEmail =
         DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailSentDate(null).withEmailStatus(null);
-    willThrow(new RuntimeException()).given(sendEmailService).sendEmail(any(EmailEntity.class));
+    willThrow(new RuntimeException(ERROR_MESSAGE))
+        .given(sendEmailService)
+        .sendEmail(any(EmailEntity.class));
 
-    assertThrows(
-        RuntimeException.class,
-        () -> {
-          sendEmailToQueueUseCase.sendEmail(DEFAULT_EMAIL_VO);
-        });
+    var thrown =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              sendEmailToQueueUseCase.sendEmail(DEFAULT_EMAIL_VO);
+            });
+
+    assertThat(thrown.getMessage()).isEqualTo(ERROR_MESSAGE);
 
     then(checkIdentificationNumberService)
         .should(times(1))

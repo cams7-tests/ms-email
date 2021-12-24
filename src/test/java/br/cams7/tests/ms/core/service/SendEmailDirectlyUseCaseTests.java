@@ -37,6 +37,7 @@ class SendEmailDirectlyUseCaseTests {
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final ArgumentCaptor<EmailEntity> EMAIL_ENTITY_CAPTOR =
       ArgumentCaptor.forClass(EmailEntity.class);
+  private static final String ERROR_MESSAGE = "Error";
 
   private static final ModelMapper MODEL_MAPPER = new ModelMapper();
   private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
@@ -102,7 +103,7 @@ class SendEmailDirectlyUseCaseTests {
     given(checkIdentificationNumberService.isValid(anyString()))
         .willReturn(IS_INVALID_IDENTIFICATION_NUMBER);
 
-    InvalidIdentificationNumberException thrown =
+    var thrown =
         assertThrows(
             InvalidIdentificationNumberException.class,
             () -> {
@@ -130,7 +131,7 @@ class SendEmailDirectlyUseCaseTests {
 
     var defaultEmail = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR);
 
-    willThrow(new SendEmailException("Error", null))
+    willThrow(new SendEmailException(ERROR_MESSAGE, null))
         .given(sendEmailService)
         .sendEmail(any(EmailEntity.class));
     given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(defaultEmail);

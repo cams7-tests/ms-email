@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 class GetEmailUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final String ERROR_MESSAGE = "Error";
 
   private final GetEmailRepository getEmailRepository = mock(GetEmailRepository.class);
   private final GetEmailUseCase getEmailUseCase = new GetEmailUseCaseImpl(getEmailRepository);
@@ -60,13 +61,18 @@ class GetEmailUseCaseTests {
   @Test
   @DisplayName("findById throws error when empty don't find email")
   void findById_ThrowsError_WhenDontFindEmail() {
-    willThrow(new RuntimeException()).given(getEmailRepository).findById(any(UUID.class));
+    willThrow(new RuntimeException(ERROR_MESSAGE))
+        .given(getEmailRepository)
+        .findById(any(UUID.class));
 
-    assertThrows(
-        RuntimeException.class,
-        () -> {
-          getEmailUseCase.findById(EMAIL_ID);
-        });
+    var thrown =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              getEmailUseCase.findById(EMAIL_ID);
+            });
+
+    assertThat(thrown.getMessage()).isEqualTo(ERROR_MESSAGE);
     then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID));
   }
 }
