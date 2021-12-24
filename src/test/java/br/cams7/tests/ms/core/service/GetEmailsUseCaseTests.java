@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -33,7 +33,7 @@ class GetEmailsUseCaseTests {
 
   @BeforeEach
   void setUp() {
-    given(getEmailsRepository.findAll(PAGE_DTO_CAPTOR.capture()))
+    given(getEmailsRepository.findAll(any(PageDTO.class)))
         .willReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
   }
 
@@ -42,11 +42,11 @@ class GetEmailsUseCaseTests {
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
     var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
 
-    assertThat(emails).isNotEmpty();
-    assertThat(emails.size()).isEqualTo(TOTAL_EMAILS);
+    assertThat(emails).hasSize(TOTAL_EMAILS);
     assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
-    assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_DTO_CAPTOR.getValue()));
+    then(getEmailsRepository).should(times(1)).findAll(PAGE_DTO_CAPTOR.capture());
+
+    assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
   }
 }
