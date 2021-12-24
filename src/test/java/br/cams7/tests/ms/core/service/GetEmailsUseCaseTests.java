@@ -4,6 +4,7 @@ import static br.cams7.tests.ms.core.common.PageDTOTestData.defaultPageDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -17,14 +18,11 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 class GetEmailsUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
-  private static final ArgumentCaptor<PageDTO> PAGE_DTO_CAPTOR =
-      ArgumentCaptor.forClass(PageDTO.class);
   private static final int TOTAL_EMAILS = 1;
 
   private final GetEmailsRepository getEmailsRepository = mock(GetEmailsRepository.class);
@@ -45,8 +43,6 @@ class GetEmailsUseCaseTests {
     assertThat(emails).hasSize(TOTAL_EMAILS);
     assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
 
-    then(getEmailsRepository).should(times(1)).findAll(PAGE_DTO_CAPTOR.capture());
-
-    assertThat(PAGE_DTO_CAPTOR.getValue()).isEqualTo(DEFAULT_PAGE_DTO);
+    then(getEmailsRepository).should(times(1)).findAll(eq(DEFAULT_PAGE_DTO));
   }
 }
