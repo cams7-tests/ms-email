@@ -2,14 +2,14 @@ package br.cams7.tests.ms;
 
 import static br.cams7.tests.ms.archunit.HexagonalArchitecture.boundedContext;
 
-import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
 
 class DependencyRuleTests {
 
   @Test
   void validateRegistrationContextArchitecture() {
-    boundedContext(EmailApplication.class.getPackageName())
+    var basePackage = EmailApplication.class.getPackageName();
+    boundedContext(basePackage)
         .withDomainLayer("domain")
         .withAdapterLayer("infra")
         .incoming("controller")
@@ -29,6 +29,6 @@ class DependencyRuleTests {
         .outgoingPorts("port.out.exception")
         .and()
         .withConfiguration("infra.configuration")
-        .check(new ClassFileImporter().importPackages("br.cams7.tests.."));
+        .check();
   }
 }

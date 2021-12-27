@@ -8,6 +8,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
 import java.util.Set;
 
 public final class ArchitectureElement {
@@ -48,7 +49,9 @@ public final class ArchitectureElement {
   }
 
   private static JavaClasses classesInPackage(String packageName) {
-    return new ClassFileImporter().importPackages(packageName);
+    return new ClassFileImporter()
+        .withImportOption(new DoNotIncludeTests())
+        .importPackages(packageName);
   }
 
   static void denyEmptyPackages(Set<String> packages) {

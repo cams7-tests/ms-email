@@ -5,6 +5,8 @@ import static br.cams7.tests.ms.archunit.ArchitectureElement.denyAnyDependency;
 import static br.cams7.tests.ms.archunit.ArchitectureElement.getFullQualifiedPackage;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +56,11 @@ public class HexagonalArchitecture {
         this.domainPackages, Collections.singleton(applicationLayer.getBasePackage()), classes);
   }
 
-  public void check(JavaClasses classes) {
+  public void check() {
+    var classes =
+        new ClassFileImporter()
+            .withImportOption(new DoNotIncludeTests())
+            .importPackages(basePackage + "..");
     this.adapterLayer.doesNotContainEmptyPackages();
     this.adapterLayer.dontDependOnEachOther(classes);
     this.adapterLayer.doesNotDependOn(this.configurationPackage, classes);
