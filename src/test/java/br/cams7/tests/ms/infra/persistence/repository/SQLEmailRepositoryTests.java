@@ -19,7 +19,10 @@ import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -30,6 +33,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 @DataJpaTest
 @Import({SQLEmailRepository.class})
+@TestMethodOrder(OrderAnnotation.class)
 class SQLEmailRepositoryTests {
 
   private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
@@ -50,6 +54,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(1)
   @DisplayName("findAll returns paged emails when successfull")
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
     var emails = getEmailsRepository.findAll(DEFAULT_PAGE_DTO);
@@ -58,6 +63,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(2)
   @DisplayName("findAll throws error when pass null page")
   void findAll_ThrowsError_WhenPassNullPage() {
     assertThrows(
@@ -68,6 +74,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(3)
   @DisplayName("findAll returns no emails when \"page number\" is 2 and \"page size\" is 10")
   void findAll_ReturnsNoEmails_WhenPageNumberIs2AndPageSizeIs10() {
     var page = defaultPageDTO();
@@ -79,6 +86,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(4)
   @DisplayName("findAll returns one email when \"page number\" is 2 and \"page size\" is 5")
   void findAll_ReturnsOneEmail_WhenPageNumberIs2AndPageSizeIs5() {
     var page = defaultPageDTO();
@@ -87,11 +95,11 @@ class SQLEmailRepositoryTests {
 
     var emails = getEmailsRepository.findAll(page);
 
-    assertThat(emails).isNotEmpty();
-    assertThat(emails.size() >= 1 && emails.size() <= 2).isTrue();
+    assertThat(emails).hasSize(1);
   }
 
   @Test
+  @Order(5)
   @DisplayName("findById returns an email when successfull")
   void findById_ReturnsAnEmail_WhenSuccessful() {
     var email = getEmailRepository.findById(EMAIL_ID);
@@ -101,6 +109,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(6)
   @DisplayName("findById throws error when pass null \"email id\"")
   void findById_ThrowsError_WhenPassNullEmailId() {
     assertThrows(
@@ -111,6 +120,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(7)
   @DisplayName("findById returns no email when pass wrong \"email id\"")
   void findById_ReturnsNoEmail_WhenPassWrongEmailId() {
     var email = getEmailRepository.findById(WRONG_EMAIL_ID);
@@ -119,6 +129,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(8)
   @DisplayName("save creates an email when successfull")
   void save_CreatesAnEmail_WhenSuccessful() {
     var email = saveEmailRepository.save(DEFAULT_EMAIL_ENTITY.withEmailId(null));
@@ -135,6 +146,7 @@ class SQLEmailRepositoryTests {
   }
 
   @Test
+  @Order(9)
   @DisplayName("save throws error when pass null email")
   void save_ThrowsError_WhenPassNullEmail() {
     assertThrows(
