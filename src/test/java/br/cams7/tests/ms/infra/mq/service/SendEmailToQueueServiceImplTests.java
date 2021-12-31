@@ -13,7 +13,6 @@ import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
 import br.cams7.tests.ms.domain.EmailEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,16 +37,13 @@ public class SendEmailToQueueServiceImplTests {
 
   @MockBean private RabbitTemplate rabbitTemplate;
 
-  @BeforeEach
-  void setUp() {
-    willDoNothing()
-        .given(rabbitTemplate)
-        .convertAndSend(anyString(), anyString(), any(Object.class));
-  }
-
   @Test
   @DisplayName("sendEmail when successfull")
   void sendEmail_WhenSuccessful() {
+    willDoNothing()
+        .given(rabbitTemplate)
+        .convertAndSend(anyString(), anyString(), any(Object.class));
+
     sendEmailToQueueService.sendEmail(DEFAULT_EMAIL_ENTITY);
     then(rabbitTemplate)
         .should(times(1))
