@@ -11,11 +11,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
-import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
@@ -23,12 +21,17 @@ import br.cams7.tests.ms.core.port.out.SendEmailService;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+@ExtendWith(MockitoExtension.class)
 class SendEmailDirectlyUseCaseTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
@@ -39,27 +42,21 @@ class SendEmailDirectlyUseCaseTests {
       ArgumentCaptor.forClass(EmailEntity.class);
   private static final String ERROR_MESSAGE = "Error";
 
-  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
-  private final SaveEmailRepository saveEmailRepository = mock(SaveEmailRepository.class);
-  private final SendEmailService sendEmailService = mock(SendEmailService.class);
-  private final CheckIdentificationNumberService checkIdentificationNumberService =
-      mock(CheckIdentificationNumberService.class);
+  @InjectMocks private SendEmailDirectlyUseCaseImpl sendEmailDirectlyUseCase;
 
-  private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase =
-      new SendEmailDirectlyUseCaseImpl(
-          MODEL_MAPPER, saveEmailRepository, sendEmailService, checkIdentificationNumberService);
-
-  @BeforeEach
-  void setUp() throws SendEmailException {
-    given(checkIdentificationNumberService.isValid(anyString()))
-        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
-    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
-    given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
-  }
+  @Spy private ModelMapper modelMapper = new ModelMapper();
+  @Mock private SaveEmailRepository saveEmailRepository;
+  @Mock private SendEmailService sendEmailService;
+  @Mock private CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Test
   @DisplayName("sendEmail returns email whith sent status when successfull")
   void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
+    given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+
     var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
 
     assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
@@ -128,6 +125,9 @@ class SendEmailDirectlyUseCaseTests {
       "sendEmail returns email with error status when some error happened during send email")
   void sendEmail_ReturnsEmailWhithErrorStatus_WhenSomeErrorHappenedDuringSendEmail()
       throws SendEmailException {
+
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
 
     var defaultEmail = DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR);
 

@@ -11,21 +11,23 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
-import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
-import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+@ExtendWith(MockitoExtension.class)
 class SendEmailToQueueUseCaseTests {
 
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
@@ -34,25 +36,19 @@ class SendEmailToQueueUseCaseTests {
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final String ERROR_MESSAGE = "Error";
 
-  private static final ModelMapper MODEL_MAPPER = new ModelMapper();
-  private final SendEmailToQueueService sendEmailService = mock(SendEmailToQueueService.class);
-  private final CheckIdentificationNumberService checkIdentificationNumberService =
-      mock(CheckIdentificationNumberService.class);
+  @InjectMocks private SendEmailToQueueUseCaseImpl sendEmailToQueueUseCase;
 
-  private final SendEmailToQueueUseCase sendEmailToQueueUseCase =
-      new SendEmailToQueueUseCaseImpl(
-          MODEL_MAPPER, sendEmailService, checkIdentificationNumberService);
-
-  @BeforeEach
-  void setUp() throws SendEmailException {
-    given(checkIdentificationNumberService.isValid(anyString()))
-        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
-    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
-  }
+  @Spy private ModelMapper modelMapper = new ModelMapper();
+  @Mock private SendEmailToQueueService sendEmailService;
+  @Mock private CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Test
   @DisplayName("sendEmail when successfull")
   void sendEmail_WhenSuccessful() {
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
+
     var newEmail =
         DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailSentDate(null).withEmailStatus(null);
     sendEmailToQueueUseCase.sendEmail(DEFAULT_EMAIL_VO);
@@ -104,6 +100,9 @@ class SendEmailToQueueUseCaseTests {
   @Test
   @DisplayName("sendEmail throws error when some error happened during send email")
   void sendEmail_ThrowsError_WhenSomeErrorHappenedDuringSendEmail() {
+    given(checkIdentificationNumberService.isValid(anyString()))
+        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+
     var newEmail =
         DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailSentDate(null).withEmailStatus(null);
     willThrow(new RuntimeException(ERROR_MESSAGE))

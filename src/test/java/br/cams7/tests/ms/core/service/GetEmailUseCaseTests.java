@@ -9,35 +9,35 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.out.GetEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class GetEmailUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final String ERROR_MESSAGE = "Error";
 
-  private final GetEmailRepository getEmailRepository = mock(GetEmailRepository.class);
-  private final GetEmailUseCase getEmailUseCase = new GetEmailUseCaseImpl(getEmailRepository);
+  @InjectMocks private GetEmailUseCaseImpl getEmailUseCase;
 
-  @BeforeEach
-  void setUp() {
-    given(getEmailRepository.findById(any(UUID.class)))
-        .willReturn(Optional.of(DEFAULT_EMAIL_ENTITY));
-  }
+  @Mock private GetEmailRepository getEmailRepository;
 
   @Test
   @DisplayName("findById returns an email when successfull")
   void findById_ReturnsAnEmail_WhenSuccessful() {
+    given(getEmailRepository.findById(any(UUID.class)))
+        .willReturn(Optional.of(DEFAULT_EMAIL_ENTITY));
+
     var email = getEmailUseCase.findById(EMAIL_ID);
 
     assertThat(email).contains(DEFAULT_EMAIL_ENTITY);
