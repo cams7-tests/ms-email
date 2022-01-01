@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
@@ -58,7 +59,7 @@ class SMTPSendEmailServiceTests {
           sendEmailService.sendEmail(null);
         });
 
-    then(emailSender).should(times(0)).send(any(SimpleMailMessage.class));
+    then(emailSender).should(never()).send(any(SimpleMailMessage.class));
   }
 
   @Test

@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
@@ -68,8 +69,8 @@ class SendEmailToQueueUseCaseTests {
           sendEmailToQueueUseCase.sendEmail(null);
         });
 
-    then(checkIdentificationNumberService).should(times(0)).isValid(anyString());
-    then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
+    then(checkIdentificationNumberService).should(never()).isValid(anyString());
+    then(sendEmailService).should(never()).sendEmail(any(EmailEntity.class));
   }
 
   @Test
@@ -94,7 +95,7 @@ class SendEmailToQueueUseCaseTests {
     then(checkIdentificationNumberService)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
-    then(sendEmailService).should(times(0)).sendEmail(any(EmailEntity.class));
+    then(sendEmailService).should(never()).sendEmail(any(EmailEntity.class));
   }
 
   @Test
