@@ -2,7 +2,7 @@
 package br.cams7.tests.ms.infra.controller;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.infra.controller.SendEmailRequestDTOTestData.defaultSendEmailRequestDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,7 +13,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
-import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 class SendEmailControllerTests {
 
   private static final SendEmailRequestDTO SEND_EMAIL_REQUEST_DTO = defaultSendEmailRequestDTO();
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
 
   @InjectMocks private SendEmailController sendEmailController;
@@ -42,7 +42,8 @@ class SendEmailControllerTests {
   @DisplayName("sendEmailDirectly returns email when successfull")
   void sendEmailDirectly_ReturnsEmail_WhenSuccessful() {
 
-    given(sendEmailDirectlyUseCase.sendEmail(any(EmailVO.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+    given(sendEmailDirectlyUseCase.sendEmail(any(EmailVO.class)))
+        .willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
     var response = sendEmailController.sendEmailDirectly(SEND_EMAIL_REQUEST_DTO);
 
@@ -51,7 +52,7 @@ class SendEmailControllerTests {
     assertThat(response.hasBody()).isTrue();
 
     var email = response.getBody();
-    assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
+    assertThat(email).isEqualTo(DEFAULT_EMAIL_RESPONSE_DTO);
 
     then(sendEmailDirectlyUseCase).should().sendEmail(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);

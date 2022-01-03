@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.infra.mq;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.infra.mq.EmailDTOTestData.defaultEmailDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.never;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
-import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class EmailConsumerTests {
 
   private static final EmailDTO DEFAULT_EMAIL_DTO = defaultEmailDTO();
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
 
   @InjectMocks private EmailConsumer emailConsumer;
 
@@ -42,7 +42,7 @@ class EmailConsumerTests {
   @DisplayName("listen when successfull")
   void listen_WhenSuccessful() {
 
-    given(sendEmailUseCase.sendEmail(any(EmailVO.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+    given(sendEmailUseCase.sendEmail(any(EmailVO.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
     emailConsumer.listen(DEFAULT_EMAIL_DTO);
 

@@ -4,8 +4,8 @@ package br.cams7.tests.ms.infra.controller;
 import static br.cams7.tests.ms.core.common.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.common.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.core.common.PageDTOTestData.defaultPageDTO;
+import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.then;
 import br.cams7.tests.ms.core.common.PageDTO;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
-import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,7 +41,7 @@ class GetEmailControllerTests {
   private static final Sort DEFAULT_SORT = Sort.by(DEFAULT_SORT_FIELD).ascending();
   private static final Pageable DEFAULT_PAGE = PageRequest.of(PAGE_NUMBER, PAGE_SIZE, DEFAULT_SORT);
   private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
   private static final int TOTAL_RETURNED_EMAILS = 1;
   private static final String ERROR_MESSAGE = "Email not found.";
 
@@ -56,7 +56,7 @@ class GetEmailControllerTests {
   @Test
   @DisplayName("getEmails returns emails when successfull")
   void getEmails_ReturnsEmails_WhenSuccessful() {
-    final var emails = Arrays.asList(DEFAULT_EMAIL_ENTITY);
+    final var emails = Arrays.asList(DEFAULT_EMAIL_RESPONSE_DTO);
 
     given(getAllEmailsUseCase.findAll(any(PageDTO.class))).willReturn(emails);
 
@@ -87,7 +87,8 @@ class GetEmailControllerTests {
   @DisplayName("getEmail returns an email when successfull")
   void getEmail_ReturnsAnEmail_WhenSuccessful() {
 
-    given(getEmailUseCase.findById(any(UUID.class))).willReturn(Optional.of(DEFAULT_EMAIL_ENTITY));
+    given(getEmailUseCase.findById(any(UUID.class)))
+        .willReturn(Optional.of(DEFAULT_EMAIL_RESPONSE_DTO));
 
     var response = getEmailController.getEmail(EMAIL_ID);
 
@@ -96,7 +97,7 @@ class GetEmailControllerTests {
     assertThat(response.hasBody()).isTrue();
 
     var email = response.getBody();
-    assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
+    assertThat(email).isEqualTo(DEFAULT_EMAIL_RESPONSE_DTO);
 
     then(getEmailUseCase).should().findById(eq(EMAIL_ID));
   }

@@ -3,7 +3,7 @@ package br.cams7.tests.ms.infra.controller;
 import br.cams7.tests.ms.core.common.PageDTO;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
-import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,17 +36,17 @@ public class GetEmailController {
   }
 
   @GetMapping(path = "/emails")
-  ResponseEntity<Page<EmailEntity>> getEmails(
+  ResponseEntity<Page<EmailResponseDTO>> getEmails(
       @PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC)
           Pageable pageable) {
-    List<EmailEntity> emailList = getAllEmailsUseCase.findAll(getPage(pageable));
+    List<EmailResponseDTO> emailList = getAllEmailsUseCase.findAll(getPage(pageable));
     return new ResponseEntity<>(
         new PageImpl<>(emailList, pageable, emailList.size()), HttpStatus.OK);
   }
 
   @GetMapping(path = "/emails/{emailId}")
   ResponseEntity<Object> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
-    Optional<EmailEntity> emailModelOptional = getEmailUseCase.findById(emailId);
+    Optional<EmailResponseDTO> emailModelOptional = getEmailUseCase.findById(emailId);
     if (!emailModelOptional.isPresent()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
     } else {

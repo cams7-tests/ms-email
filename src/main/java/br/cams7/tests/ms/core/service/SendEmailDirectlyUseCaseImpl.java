@@ -6,6 +6,7 @@ import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
+import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
@@ -24,7 +25,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Override
-  public EmailEntity sendEmail(EmailVO vo) {
+  public EmailResponseDTO sendEmail(EmailVO vo) {
     if (!checkIdentificationNumberService.isValid(vo.getIdentificationNumber()))
       throw new InvalidIdentificationNumberException(vo.getIdentificationNumber());
 
@@ -40,10 +41,16 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
     } finally {
       email = save(email);
     }
-    return email;
+    return getEmailResponseDTO(email);
   }
 
   private EmailEntity save(EmailEntity email) {
     return saveEmailRepository.save(email);
+  }
+
+  private EmailResponseDTO getEmailResponseDTO(EmailEntity email) {
+    EmailResponseDTO response = modelMapper.map(email, EmailResponseDTO.class);
+    response.setIdentificationNumber(email.getOwnerRef());
+    return response;
   }
 }
