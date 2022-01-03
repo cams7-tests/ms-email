@@ -34,7 +34,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 @DataJpaTest
 @Import({SQLEmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
-class SQLEmailRepositoryTests {
+class SQLEmailRepositoryJpaTests {
 
   private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
