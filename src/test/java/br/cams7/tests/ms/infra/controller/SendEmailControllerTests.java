@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
-public class SendEmailControllerTests {
+class SendEmailControllerTests {
 
   private static final SendEmailRequestDTO SEND_EMAIL_REQUEST_DTO = defaultSendEmailRequestDTO();
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
@@ -51,7 +51,6 @@ public class SendEmailControllerTests {
     assertThat(response.hasBody()).isTrue();
 
     var email = response.getBody();
-    assertThat(email).isNotNull();
     assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
 
     then(sendEmailDirectlyUseCase).should().sendEmail(emailVOCaptor.capture());

@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @Import({SendEmailToQueueServiceImpl.class})
 @TestPropertySource(properties = {"rabbitmq.queue=test", "rabbitmq.exchange=test"})
-public class SendEmailToQueueServiceImplTests {
+class SendEmailToQueueServiceImplTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final String QUEUE = "test";

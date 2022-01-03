@@ -21,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CheckIdentificationNumberServiceImplTests {
+class CheckIdentificationNumberServiceImplTests {
 
   private static final CheckIdentificationNumberResponse
       APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE = aprovedCheckIdentificationNumberResponse();

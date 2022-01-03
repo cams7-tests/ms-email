@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailConsumerTests {
+class EmailConsumerTests {
 
   private static final EmailDTO DEFAULT_EMAIL_DTO = defaultEmailDTO();
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();

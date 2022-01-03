@@ -35,7 +35,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
-public class GetEmailControllerTests {
+class GetEmailControllerTests {
 
   private static final String DEFAULT_SORT_FIELD = "emailFrom";
   private static final Sort DEFAULT_SORT = Sort.by(DEFAULT_SORT_FIELD).ascending();
@@ -77,8 +77,6 @@ public class GetEmailControllerTests {
     assertThat(page.getTotalPages()).isEqualTo(TOTAL_RETURNED_EMAILS);
 
     var content = page.getContent();
-    assertThat(content).isNotNull();
-    assertThat(content).hasSize(TOTAL_RETURNED_EMAILS);
     assertThat(content).isEqualTo(emails);
 
     then(getAllEmailsUseCase).should().findAll(pageDTOCaptor.capture());
@@ -98,7 +96,6 @@ public class GetEmailControllerTests {
     assertThat(response.hasBody()).isTrue();
 
     var email = response.getBody();
-    assertThat(email).isNotNull();
     assertThat(email).isEqualTo(DEFAULT_EMAIL_ENTITY);
 
     then(getEmailUseCase).should().findById(eq(EMAIL_ID));
@@ -117,7 +114,6 @@ public class GetEmailControllerTests {
     assertThat(response.hasBody()).isTrue();
 
     var message = response.getBody();
-    assertThat(message).isNotNull();
     assertThat(message).isEqualTo(ERROR_MESSAGE);
 
     then(getEmailUseCase).should().findById(eq(EMAIL_ID));

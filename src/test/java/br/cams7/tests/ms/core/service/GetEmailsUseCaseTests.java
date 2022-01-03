@@ -25,7 +25,6 @@ class GetEmailsUseCaseTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
-  private static final int TOTAL_EMAILS = 1;
 
   @InjectMocks private GetEmailsUseCaseImpl getAllEmailsUseCase;
 
@@ -39,7 +38,6 @@ class GetEmailsUseCaseTests {
 
     var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
 
-    assertThat(emails).hasSize(TOTAL_EMAILS);
     assertThat(emails).contains(DEFAULT_EMAIL_ENTITY);
 
     then(getEmailsRepository).should(times(1)).findAll(eq(DEFAULT_PAGE_DTO));
