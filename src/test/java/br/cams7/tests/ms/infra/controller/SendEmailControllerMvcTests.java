@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = SendEmailController.class)
-class SendEmailControllerTests {
+class SendEmailControllerMvcTests {
 
   private static final SendEmailRequestDTO DEFAULT_SEND_EMAIL_REQUEST_DTO =
       SendEmailRequestDTOTestData.defaultEmail();

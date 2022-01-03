@@ -22,7 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = GetEmailController.class)
-class GetEmailControllerTests {
+class GetEmailControllerMvcTests {
 
   private static final String SORT_FIELD = "emailFrom";
   private static final Pageable PAGE =
