@@ -1,5 +1,6 @@
 package br.cams7.tests.ms.infra.controller;
 
+import static br.cams7.tests.ms.infra.controller.SendEmailRequestDTOTestData.defaultSendEmailRequestDTO;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -21,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 class SendEmailControllerMvcTests {
 
   private static final SendEmailRequestDTO DEFAULT_SEND_EMAIL_REQUEST_DTO =
-      SendEmailRequestDTOTestData.defaultEmail();
+      defaultSendEmailRequestDTO();
   private static final ObjectWriter WRITER = getWriter();
 
   @Autowired private MockMvc mockMvc;

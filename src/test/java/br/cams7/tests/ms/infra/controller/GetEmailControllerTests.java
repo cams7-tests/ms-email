@@ -34,7 +34,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
-/** @author CIANDT\cmagalhaes */
 @ExtendWith(MockitoExtension.class)
 public class GetEmailControllerTests {
 

@@ -8,7 +8,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 
 public class SendEmailRequestDTOTestData {
 
-  public static SendEmailRequestDTO defaultEmail() {
+  public static SendEmailRequestDTO defaultSendEmailRequestDTO() {
     var request = new SendEmailRequestDTO();
     request.setIdentificationNumber(OWNER_REF);
     request.setEmailFrom(EMAIL_FROM);
