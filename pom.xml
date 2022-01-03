@@ -163,8 +163,8 @@
 			    <version>0.8.7</version>
 			    <configuration>
 	                <excludes>
-	                    <exclude>**/br/cams7/tests/ms/EmailApplication.*</exclude>
-	                    <exclude>**/br/cams7/tests/ms/infra/configuration/*</exclude>
+	                    <exclude>**/EmailApplication.*</exclude>
+	                    <exclude>**/configuration/*</exclude>
 	                </excludes>
 	            </configuration>
 				<executions>
