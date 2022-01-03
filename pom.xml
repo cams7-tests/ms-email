@@ -18,6 +18,10 @@
 	  <java.version>11</java.version>
 	  <sonar.organization>cams7-tests</sonar.organization>
 	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	  <sonar.coverage.exclusions>
+        **/br/cams7/tests/ms/EmailApplication.*,
+        **/br/cams7/tests/ms/infra/configuration/*
+      </sonar.coverage.exclusions>
 	</properties>
 	
 	<dependencies>
@@ -163,8 +167,8 @@
 			    <version>0.8.7</version>
 			    <configuration>
 	                <excludes>
-	                    <exclude>**/EmailApplication.*</exclude>
-	                    <exclude>**/configuration/*</exclude>
+	                    <exclude>**/br/cams7/tests/ms/EmailApplication.*</exclude>
+	                    <exclude>**/br/cams7/tests/ms/infra/configuration/*</exclude>
 	                </excludes>
 	            </configuration>
 				<executions>
