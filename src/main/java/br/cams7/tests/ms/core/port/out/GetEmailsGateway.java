@@ -6,6 +6,7 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
+@FunctionalInterface
 public interface GetEmailsGateway {
 
   Mono<PageDTO<EmailEntity>> findAll(int page, int size, List<OrderDTO> orders);

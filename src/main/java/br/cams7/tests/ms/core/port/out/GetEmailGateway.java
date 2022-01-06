@@ -4,6 +4,7 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.UUID;
 import reactor.core.publisher.Mono;
 
+@FunctionalInterface
 public interface GetEmailGateway {
 
   Mono<EmailEntity> findById(UUID emailId);

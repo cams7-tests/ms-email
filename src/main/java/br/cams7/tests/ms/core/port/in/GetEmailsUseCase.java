@@ -6,6 +6,7 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
+@FunctionalInterface
 public interface GetEmailsUseCase {
 
   Mono<PageDTO<EmailEntity>> execute(int page, int size, List<OrderDTO> orders);

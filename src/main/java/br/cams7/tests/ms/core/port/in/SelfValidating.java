@@ -8,7 +8,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-/** @author cams7 */
 public abstract class SelfValidating<T> {
 
   private Validator validator;
