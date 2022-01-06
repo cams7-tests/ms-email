@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Import;
 @DataR2dbcTest
 @Import({SQLEmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
-class SQLEmailRepositoryJpaTests {
+class SQLEmailRepositoryR2dbcTests {
 
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
   private static UUID WRONG_EMAIL_ID = UUID.fromString("0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05");
