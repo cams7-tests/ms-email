@@ -12,7 +12,7 @@ class DependencyRuleTests {
     boundedContext(basePackage)
         .withDomainLayer("domain")
         .withAdapterLayer("infra")
-        .incoming("controller")
+        .incoming("entrypoint")
         .incoming("mq")
         .outgoing("persistence.repository")
         // .outgoing("persistence.model")
