@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.controller;
+package br.cams7.tests.ms.infra.entrypoint;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_FROM;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_TO;

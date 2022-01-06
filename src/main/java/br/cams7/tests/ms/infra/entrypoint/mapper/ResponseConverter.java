@@ -1,8 +1,8 @@
-package br.cams7.tests.ms.infra.controller.mapper;
+package br.cams7.tests.ms.infra.entrypoint.mapper;
 
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.infra.controller.EmailResponseDTO;
+import br.cams7.tests.ms.infra.entrypoint.EmailResponseDTO;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

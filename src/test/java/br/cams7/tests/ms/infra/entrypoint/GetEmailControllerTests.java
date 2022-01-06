@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.infra.controller;
+package br.cams7.tests.ms.infra.entrypoint;
 
 import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.defaultOrderDTO;
@@ -22,7 +22,7 @@ import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;

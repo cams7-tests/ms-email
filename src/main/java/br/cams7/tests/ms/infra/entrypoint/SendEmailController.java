@@ -1,9 +1,9 @@
-package br.cams7.tests.ms.infra.controller;
+package br.cams7.tests.ms.infra.entrypoint;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
-import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

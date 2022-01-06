@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.controller;
+package br.cams7.tests.ms.infra.entrypoint;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -6,7 +6,7 @@ import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
-import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

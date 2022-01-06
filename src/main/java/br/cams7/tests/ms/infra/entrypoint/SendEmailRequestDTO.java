@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.controller;
+package br.cams7.tests.ms.infra.entrypoint;
 
 import lombok.Data;
 
