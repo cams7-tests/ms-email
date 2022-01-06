@@ -17,11 +17,6 @@ spring:
           auth: true
           starttls:
             enable: false
-  
-#database:
-#  url: r2dbc:postgresql://localhost:15432/ms_email
-#  username: ms_email
-#  password: ms_email
     
 rabbitmq:
   uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672
