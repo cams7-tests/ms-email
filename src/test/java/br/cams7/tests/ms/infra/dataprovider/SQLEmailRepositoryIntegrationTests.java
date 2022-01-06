@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.persistence.repository;
+package br.cams7.tests.ms.infra.dataprovider;
 
 import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.defaultOrderDTO;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
