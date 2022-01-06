@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.webclient;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
-import static br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponseTestData.aprovedCheckIdentificationNumberResponse;
-import static br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponseTestData.notAprovedCheckIdentificationNumberResponse;
+import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.aprovedCheckIdentificationNumberResponse;
+import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.notAprovedCheckIdentificationNumberResponse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;

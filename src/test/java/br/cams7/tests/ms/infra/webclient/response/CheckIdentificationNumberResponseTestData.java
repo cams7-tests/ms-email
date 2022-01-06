@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.infra.client.response;
+package br.cams7.tests.ms.infra.webclient.response;
 
 import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.APPROVED;
 import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.NOT_APPROVED;
