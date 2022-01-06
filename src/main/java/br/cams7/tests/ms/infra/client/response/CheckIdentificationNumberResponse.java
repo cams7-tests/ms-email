@@ -3,17 +3,12 @@ package br.cams7.tests.ms.infra.client.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-/** @author cams7 */
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class CheckIdentificationNumberResponse {
 
-  private IdentificationNumberStatusEnum status;
+  private final IdentificationNumberStatusEnum status;
 
   @JsonCreator
   public CheckIdentificationNumberResponse(

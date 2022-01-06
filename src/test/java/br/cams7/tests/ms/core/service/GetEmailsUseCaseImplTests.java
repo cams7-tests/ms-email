@@ -1,22 +1,25 @@
 package br.cams7.tests.ms.core.service;
 
-import static br.cams7.tests.ms.core.common.PageDTOTestData.defaultPageDTO;
 import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
+import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
+import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
+import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.defaultPageDTO;
+import static br.cams7.tests.ms.core.port.pagination.SortDTOTestData.ORDER;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
+import static reactor.test.StepVerifier.create;
 
-import br.cams7.tests.ms.core.common.PageDTO;
+import br.cams7.tests.ms.core.port.in.exception.ResponseStatusException;
 import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
+import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
-import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,13 +28,17 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class GetEmailsUseCaseImplTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
-  private static final PageDTO DEFAULT_PAGE_DTO = defaultPageDTO();
+  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY =
+      defaultPageDTO(DEFAULT_EMAIL_ENTITY);
+  private static final PageDTO<EmailResponseDTO> PAGE_DTO_OF_RESPONSE_DTO =
+      defaultPageDTO(DEFAULT_EMAIL_RESPONSE_DTO);
 
   @InjectMocks private GetEmailsUseCaseImpl getAllEmailsUseCase;
 
@@ -41,27 +48,47 @@ class GetEmailsUseCaseImplTests {
   @Test
   @DisplayName("findAll returns paged emails when successfull")
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
-    given(getEmailsRepository.findAll(any(PageDTO.class)))
-        .willReturn(Arrays.asList(DEFAULT_EMAIL_ENTITY));
+    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList()))
+        .willReturn(Mono.just(PAGE_DTO_OF_ENTITY));
 
-    var emails = getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
+    var orders = List.of(ORDER);
 
-    assertThat(emails).contains(DEFAULT_EMAIL_RESPONSE_DTO);
+    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+        .expectSubscription()
+        .expectNext(PAGE_DTO_OF_RESPONSE_DTO)
+        .verifyComplete();
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(DEFAULT_PAGE_DTO));
+    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
   }
 
   @Test
-  @DisplayName("findAll throws error when some error happened during get emails")
-  void findAll_ThrowsError_WhenSomeErrorHappenedDuringGetEmails() {
-    willThrow(RuntimeException.class).given(getEmailsRepository).findAll(any(PageDTO.class));
+  @DisplayName("findAll returns error when empty is returned")
+  void findAll_ReturnsError_WhenEmptyIsReturned() {
+    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList())).willReturn(Mono.empty());
 
-    assertThrows(
-        RuntimeException.class,
-        () -> {
-          getAllEmailsUseCase.findAll(DEFAULT_PAGE_DTO);
-        });
+    var orders = List.of(ORDER);
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(DEFAULT_PAGE_DTO));
+    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+        .expectSubscription()
+        .expectError(ResponseStatusException.class)
+        .verify();
+
+    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
+  }
+
+  @Test
+  @DisplayName("findAll returns error when error is returned")
+  void findAll_ReturnsError_WhenErrorIsReturned() {
+    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList()))
+        .willReturn(Mono.error(new RuntimeException()));
+
+    var orders = List.of(ORDER);
+
+    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+        .expectSubscription()
+        .expectError(RuntimeException.class)
+        .verify();
+
+    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
   }
 }

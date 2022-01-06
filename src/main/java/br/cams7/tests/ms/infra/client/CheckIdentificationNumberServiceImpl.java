@@ -2,28 +2,33 @@
 package br.cams7.tests.ms.infra.client;
 
 import static br.cams7.tests.ms.infra.client.response.IdentificationNumberStatusEnum.APPROVED;
+import static br.cams7.tests.ms.infra.configuration.BeanConfiguration.WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER;
 
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-/** @author cams7 */
 @Component
 public class CheckIdentificationNumberServiceImpl implements CheckIdentificationNumberService {
 
-  private final CheckIdentificationNumberClient client;
+  private final WebClient checkIdentificationNumber;
 
-  @Autowired
-  public CheckIdentificationNumberServiceImpl(CheckIdentificationNumberClient client) {
+  CheckIdentificationNumberServiceImpl(
+      @Qualifier(WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER) WebClient checkIdentificationNumber) {
     super();
-    this.client = client;
+    this.checkIdentificationNumber = checkIdentificationNumber;
   }
 
   @Override
-  public boolean isValid(String identificationNumber) {
-    CheckIdentificationNumberResponse response = client.queryStatus(identificationNumber);
-
-    return APPROVED.equals(response.getStatus());
+  public Mono<Boolean> isValid(String identificationNumber) {
+    return checkIdentificationNumber
+        .get()
+        .uri("/serasa/{cpf}", identificationNumber)
+        .retrieve()
+        .bodyToMono(CheckIdentificationNumberResponse.class)
+        .map(response -> APPROVED.equals(response.getStatus()));
   }
 }

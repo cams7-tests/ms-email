@@ -10,6 +10,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
+import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
@@ -24,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
+import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class EmailConsumerTests {
@@ -42,9 +44,13 @@ class EmailConsumerTests {
   @DisplayName("listen when successfull")
   void listen_WhenSuccessful() {
 
-    given(sendEmailUseCase.sendEmail(any(EmailVO.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
+    given(sendEmailUseCase.sendEmail(any(EmailVO.class)))
+        .willReturn(Mono.just(DEFAULT_EMAIL_RESPONSE_DTO));
 
-    emailConsumer.listen(DEFAULT_EMAIL_DTO);
+    create(emailConsumer.listen(DEFAULT_EMAIL_DTO))
+        .expectSubscription()
+        .expectNextCount(0)
+        .verifyComplete();
 
     then(sendEmailUseCase).should().sendEmail(emailVOCaptor.capture());
 

@@ -16,15 +16,21 @@ import br.cams7.tests.ms.core.service.GetEmailsUseCaseImpl;
 import br.cams7.tests.ms.core.service.SendEmailDirectlyUseCaseImpl;
 import br.cams7.tests.ms.core.service.SendEmailToQueueUseCaseImpl;
 import org.modelmapper.ModelMapper;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @ComponentScan(basePackageClasses = EmailApplication.class)
-@EnableFeignClients(basePackages = "br.cams7.tests.ms.infra.client")
 public class BeanConfiguration {
+
+  public static final String WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER = "checkIdentificationNumber";
+
+  @Value("${api.check.identificationNumber.url}")
+  private String identificationNumberUrl;
 
   @Bean
   ModelMapper modelMapper() {
@@ -56,5 +62,11 @@ public class BeanConfiguration {
   @Bean
   GetEmailUseCase getEmail(GetEmailRepository getEmailRepository) {
     return new GetEmailUseCaseImpl(modelMapper(), getEmailRepository);
+  }
+
+  @Bean
+  @Qualifier(WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER)
+  WebClient getCheckIdentificationNumber(WebClient.Builder builder) {
+    return builder.baseUrl(identificationNumberUrl).build();
   }
 }

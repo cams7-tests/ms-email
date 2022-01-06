@@ -4,39 +4,32 @@ import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
+@RequiredArgsConstructor
 public class SendEmailController {
 
   private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase;
   private final SendEmailToQueueUseCase sendEmailToQueueUseCase;
 
-  @Autowired
-  SendEmailController(
-      SendEmailDirectlyUseCase sendEmailDirectlyUseCase,
-      SendEmailToQueueUseCase sendEmailToQueueUseCase) {
-    super();
-    this.sendEmailDirectlyUseCase = sendEmailDirectlyUseCase;
-    this.sendEmailToQueueUseCase = sendEmailToQueueUseCase;
-  }
-
   @PostMapping(path = "/send-email-directly")
-  ResponseEntity<EmailResponseDTO> sendEmailDirectly(
+  @ResponseStatus(HttpStatus.OK)
+  Mono<EmailResponseDTO> sendEmailDirectly(
       @RequestBody final SendEmailRequestDTO sendEmailRequest) {
-    return new ResponseEntity<>(
-        sendEmailDirectlyUseCase.sendEmail(getEmail(sendEmailRequest)), HttpStatus.OK);
+    return sendEmailDirectlyUseCase.sendEmail(getEmail(sendEmailRequest));
   }
 
   @PostMapping(path = "/send-email-to-queue")
-  ResponseEntity<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
-    sendEmailToQueueUseCase.sendEmail(getEmail(sendEmailRequest));
-    return new ResponseEntity<>(HttpStatus.OK);
+  @ResponseStatus(HttpStatus.OK)
+  Mono<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
+    return sendEmailToQueueUseCase.sendEmail(getEmail(sendEmailRequest));
   }
 
   private static EmailVO getEmail(SendEmailRequestDTO sendEmailRequest) {

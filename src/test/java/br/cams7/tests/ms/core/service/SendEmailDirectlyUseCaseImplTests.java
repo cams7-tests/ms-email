@@ -14,6 +14,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
@@ -34,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class SendEmailDirectlyUseCaseImplTests {
@@ -58,13 +60,15 @@ class SendEmailDirectlyUseCaseImplTests {
   @DisplayName("sendEmail returns email with sent status when successfull")
   void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
     given(checkIdentificationNumberService.isValid(anyString()))
-        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+        .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
-    given(saveEmailRepository.save(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_ENTITY);
+    given(saveEmailRepository.save(any(EmailEntity.class)))
+        .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
 
-    var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
-
-    assertThat(email).isEqualTo(DEFAULT_EMAIL_RESPONSE_DTO);
+    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+        .expectSubscription()
+        .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
+        .verifyComplete();
 
     then(checkIdentificationNumberService)
         .should(times(1))
@@ -96,23 +100,15 @@ class SendEmailDirectlyUseCaseImplTests {
   }
 
   @Test
-  @DisplayName("sendEmail throws error when invalid identification number")
-  void sendEmail_ThrowsError_WhenInvalidIdentificationNumber() throws SendEmailException {
+  @DisplayName("sendEmail returns error when invalid identification number")
+  void sendEmail_ReturnsError_WhenInvalidIdentificationNumber() throws SendEmailException {
     given(checkIdentificationNumberService.isValid(anyString()))
-        .willReturn(IS_INVALID_IDENTIFICATION_NUMBER);
+        .willReturn(Mono.just(IS_INVALID_IDENTIFICATION_NUMBER));
 
-    var thrown =
-        assertThrows(
-            InvalidIdentificationNumberException.class,
-            () -> {
-              sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
-            });
-
-    assertThat(thrown.getMessage())
-        .isEqualTo(
-            String.format(
-                "The identification number \"%s\" isn't valid",
-                DEFAULT_EMAIL_VO.getIdentificationNumber()));
+    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+        .expectSubscription()
+        .expectError(InvalidIdentificationNumberException.class)
+        .verify();
 
     then(checkIdentificationNumberService)
         .should(times(1))
@@ -128,20 +124,21 @@ class SendEmailDirectlyUseCaseImplTests {
       throws SendEmailException {
 
     given(checkIdentificationNumberService.isValid(anyString()))
-        .willReturn(IS_VALID_IDENTIFICATION_NUMBER);
+        .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
 
     willThrow(new SendEmailException(ERROR_MESSAGE, null))
         .given(sendEmailService)
         .sendEmail(any(EmailEntity.class));
     given(saveEmailRepository.save(any(EmailEntity.class)))
-        .willReturn(DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR));
-
-    var email = sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO);
+        .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR)));
 
     var response = DEFAULT_EMAIL_RESPONSE_DTO;
     response.setEmailStatus(EmailStatusEnum.ERROR);
 
-    assertThat(email).isEqualTo(response);
+    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+        .expectSubscription()
+        .expectNext(response)
+        .verifyComplete();
 
     then(checkIdentificationNumberService)
         .should(times(1))

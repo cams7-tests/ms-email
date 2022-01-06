@@ -2,9 +2,10 @@ server:
   port: 8080
   
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
+  r2dbc:
+    url: r2dbc:postgresql://localhost:15432/ms_email
+    username: ms_email
+    password: ms_email
   mail:
     host: 127.0.0.1
     port: 2525
@@ -17,10 +18,10 @@ spring:
           starttls:
             enable: false
   
-database:
-  url: jdbc:postgresql://localhost:15432/ms_email
-  username: ms_email
-  password: ms_email
+#database:
+#  url: r2dbc:postgresql://localhost:15432/ms_email
+#  username: ms_email
+#  password: ms_email
     
 rabbitmq:
   uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672

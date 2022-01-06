@@ -1,5 +1,6 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.core.port.in.exception.CommonExceptions.responseInternalServerErrorException;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 
@@ -15,6 +16,7 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
@@ -25,27 +27,36 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Override
-  public EmailResponseDTO sendEmail(EmailVO vo) {
-    if (!checkIdentificationNumberService.isValid(vo.getIdentificationNumber()))
-      throw new InvalidIdentificationNumberException(vo.getIdentificationNumber());
+  public Mono<EmailResponseDTO> sendEmail(EmailVO email) {
+    return checkIdentificationNumberService
+        .isValid(email.getIdentificationNumber())
+        .flatMap(
+            isValid -> {
+              if (!isValid)
+                return Mono.error(
+                    new InvalidIdentificationNumberException(email.getIdentificationNumber()));
 
-    EmailEntity email = modelMapper.map(vo, EmailEntity.class);
-    email.setOwnerRef(vo.getIdentificationNumber());
+              EmailEntity entity = modelMapper.map(email, EmailEntity.class);
+              entity.setOwnerRef(email.getIdentificationNumber());
 
-    email.setEmailSentDate(LocalDateTime.now());
-    try {
-      sendEmailService.sendEmail(email);
-      email.setEmailStatus(SENT);
-    } catch (SendEmailException e) {
-      email.setEmailStatus(ERROR);
-    } finally {
-      email = save(email);
-    }
-    return getEmailResponseDTO(email);
+              entity.setEmailSentDate(LocalDateTime.now());
+
+              Mono<EmailResponseDTO> newEmail = Mono.empty();
+              try {
+                sendEmailService.sendEmail(entity);
+                entity.setEmailStatus(SENT);
+              } catch (SendEmailException e) {
+                entity.setEmailStatus(ERROR);
+              } finally {
+                newEmail = save(entity);
+              }
+              return newEmail;
+            })
+        .switchIfEmpty(responseInternalServerErrorException());
   }
 
-  private EmailEntity save(EmailEntity email) {
-    return saveEmailRepository.save(email);
+  private Mono<EmailResponseDTO> save(EmailEntity email) {
+    return saveEmailRepository.save(email).map(this::getEmailResponseDTO);
   }
 
   private EmailResponseDTO getEmailResponseDTO(EmailEntity email) {

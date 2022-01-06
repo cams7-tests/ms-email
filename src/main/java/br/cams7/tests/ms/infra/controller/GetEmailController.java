@@ -1,63 +1,63 @@
 package br.cams7.tests.ms.infra.controller;
 
-import br.cams7.tests.ms.core.common.PageDTO;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
+import br.cams7.tests.ms.core.port.pagination.OrderDTO;
+import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
+@RequiredArgsConstructor
 public class GetEmailController {
+
+  private static final int DEFAULT_PAGE_NUMBER = 0;
+  private static final int DEFAULT_PAGE_SIZE = 5;
+  private static final String DEFAULT_SORT_FIELD = "emailId";
 
   private final ModelMapper modelMapper;
   private final GetEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
 
-  @Autowired
-  GetEmailController(
-      ModelMapper modelMapper,
-      GetEmailsUseCase getAllEmailsUseCase,
-      GetEmailUseCase getEmailUseCase) {
-    super();
-    this.modelMapper = modelMapper;
-    this.getAllEmailsUseCase = getAllEmailsUseCase;
-    this.getEmailUseCase = getEmailUseCase;
-  }
-
   @GetMapping(path = "/emails")
-  ResponseEntity<Page<EmailResponseDTO>> getEmails(
-      @PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC)
+  @ResponseStatus(HttpStatus.OK)
+  Mono<PageDTO<EmailResponseDTO>> getEmails(
+      @PageableDefault(
+              page = DEFAULT_PAGE_NUMBER,
+              size = DEFAULT_PAGE_SIZE,
+              sort = DEFAULT_SORT_FIELD,
+              direction = DESC)
           Pageable pageable) {
-    List<EmailResponseDTO> emailList = getAllEmailsUseCase.findAll(getPage(pageable));
-    return new ResponseEntity<>(
-        new PageImpl<>(emailList, pageable, emailList.size()), HttpStatus.OK);
+    return getAllEmailsUseCase.findAll(
+        pageable.getPageNumber(), pageable.getPageSize(), getOrders(pageable.getSort()));
   }
 
   @GetMapping(path = "/emails/{emailId}")
-  ResponseEntity<Object> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
-    Optional<EmailResponseDTO> emailModelOptional = getEmailUseCase.findById(emailId);
-    if (!emailModelOptional.isPresent()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
-    } else {
-      return ResponseEntity.status(HttpStatus.OK).body(emailModelOptional.get());
-    }
+  @ResponseStatus(HttpStatus.OK)
+  Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
+    return getEmailUseCase.findById(emailId);
   }
 
-  private PageDTO getPage(Pageable pageable) {
-    return modelMapper.map(pageable, PageDTO.class);
+  private List<OrderDTO> getOrders(Sort sort) {
+    if (sort.isUnsorted()) return List.of();
+
+    return sort.toList().stream()
+        .map(order -> modelMapper.map(order, OrderDTO.class))
+        .collect(Collectors.toList());
   }
 }

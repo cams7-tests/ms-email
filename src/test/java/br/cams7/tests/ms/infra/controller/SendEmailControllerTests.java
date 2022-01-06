@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
+import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
@@ -22,7 +22,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class SendEmailControllerTests {
@@ -43,16 +43,12 @@ class SendEmailControllerTests {
   void sendEmailDirectly_ReturnsEmail_WhenSuccessful() {
 
     given(sendEmailDirectlyUseCase.sendEmail(any(EmailVO.class)))
-        .willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
+        .willReturn(Mono.just(DEFAULT_EMAIL_RESPONSE_DTO));
 
-    var response = sendEmailController.sendEmailDirectly(SEND_EMAIL_REQUEST_DTO);
-
-    assertThat(response).isNotNull();
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.hasBody()).isTrue();
-
-    var email = response.getBody();
-    assertThat(email).isEqualTo(DEFAULT_EMAIL_RESPONSE_DTO);
+    create(sendEmailController.sendEmailDirectly(SEND_EMAIL_REQUEST_DTO))
+        .expectSubscription()
+        .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
+        .verifyComplete();
 
     then(sendEmailDirectlyUseCase).should().sendEmail(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
@@ -62,13 +58,12 @@ class SendEmailControllerTests {
   @DisplayName("sendEmailToQueue when successfull")
   void sendEmailToQueue_WhenSuccessful() {
 
-    willDoNothing().given(sendEmailToQueueUseCase).sendEmail(any(EmailVO.class));
+    given(sendEmailToQueueUseCase.sendEmail(any(EmailVO.class))).willReturn(Mono.empty());
 
-    var response = sendEmailController.sendEmailToQueue(SEND_EMAIL_REQUEST_DTO);
-
-    assertThat(response).isNotNull();
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.hasBody()).isFalse();
+    create(sendEmailController.sendEmailToQueue(SEND_EMAIL_REQUEST_DTO))
+        .expectSubscription()
+        .expectNextCount(0)
+        .verifyComplete();
 
     then(sendEmailToQueueUseCase).should().sendEmail(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);

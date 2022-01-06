@@ -1,7 +1,8 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
+  r2dbc:
+    url: r2dbc:h2:mem:///ms_email?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
   mail:
     host: 127.0.0.1
     port: 25
@@ -15,10 +16,10 @@ spring:
   main:
     allow-bean-definition-overriding: true
       
-database:
-  url: jdbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-  username: sa
-  password:
+#database:
+#  url: jdbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#  username: sa
+#  password:
 
 rabbitmq:
   uri: amqp://rabbitmq:test@127.0.0.1:5672

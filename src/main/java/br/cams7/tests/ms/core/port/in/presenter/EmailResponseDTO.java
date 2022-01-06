@@ -4,15 +4,9 @@ package br.cams7.tests.ms.core.port.in.presenter;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class EmailResponseDTO {
   private UUID emailId;
   private String identificationNumber;

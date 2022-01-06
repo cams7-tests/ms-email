@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.core.common;
+package br.cams7.tests.ms.core.port.in;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;

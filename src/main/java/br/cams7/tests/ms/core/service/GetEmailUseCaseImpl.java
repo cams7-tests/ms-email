@@ -1,13 +1,15 @@
 package br.cams7.tests.ms.core.service;
 
+import static br.cams7.tests.ms.core.port.in.exception.CommonExceptions.responseNotFoundException;
+
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.GetEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class GetEmailUseCaseImpl implements GetEmailUseCase {
@@ -16,17 +18,16 @@ public class GetEmailUseCaseImpl implements GetEmailUseCase {
   private final GetEmailRepository getEmailRepository;
 
   @Override
-  public Optional<EmailResponseDTO> findById(UUID emailId) {
-    // inserir manipulação de dados/regras
-    return getEmailResponseDTO(getEmailRepository.findById(emailId));
+  public Mono<EmailResponseDTO> findById(UUID emailId) {
+    return getEmailRepository
+        .findById(emailId)
+        .map(this::getEmailResponseDTO)
+        .switchIfEmpty(responseNotFoundException());
   }
 
-  private Optional<EmailResponseDTO> getEmailResponseDTO(Optional<EmailEntity> email) {
-    if (email.isPresent()) {
-      EmailResponseDTO response = modelMapper.map(email.get(), EmailResponseDTO.class);
-      response.setIdentificationNumber(email.get().getOwnerRef());
-      return Optional.of(response);
-    }
-    return Optional.empty();
+  private EmailResponseDTO getEmailResponseDTO(EmailEntity email) {
+    EmailResponseDTO response = modelMapper.map(email, EmailResponseDTO.class);
+    response.setIdentificationNumber(email.getOwnerRef());
+    return response;
   }
 }

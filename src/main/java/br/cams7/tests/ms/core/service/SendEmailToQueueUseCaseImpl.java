@@ -9,6 +9,7 @@ import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
 import br.cams7.tests.ms.domain.EmailEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import reactor.core.publisher.Mono;
 
 /** @author cams7 */
 @RequiredArgsConstructor
@@ -19,13 +20,21 @@ public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Override
-  public void sendEmail(EmailVO vo) {
-    if (!checkIdentificationNumberService.isValid(vo.getIdentificationNumber()))
-      throw new InvalidIdentificationNumberException(vo.getIdentificationNumber());
+  public Mono<Void> sendEmail(EmailVO vo) {
+    return checkIdentificationNumberService
+        .isValid(vo.getIdentificationNumber())
+        .flatMap(
+            isValid -> {
+              if (!isValid)
+                return Mono.error(
+                    new InvalidIdentificationNumberException(vo.getIdentificationNumber()));
 
-    EmailEntity email = modelMapper.map(vo, EmailEntity.class);
-    email.setOwnerRef(vo.getIdentificationNumber());
+              EmailEntity email = modelMapper.map(vo, EmailEntity.class);
+              email.setOwnerRef(vo.getIdentificationNumber());
 
-    sendEmailService.sendEmail(email);
+              sendEmailService.sendEmail(email);
+
+              return Mono.empty();
+            });
   }
 }

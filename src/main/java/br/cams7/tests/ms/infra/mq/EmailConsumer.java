@@ -3,27 +3,28 @@ package br.cams7.tests.ms.infra.mq;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import javax.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class EmailConsumer {
 
   private final SendEmailDirectlyUseCase sendEmailUseCase;
 
-  @Autowired
-  EmailConsumer(SendEmailDirectlyUseCase sendEmailUseCase) {
-    super();
-    this.sendEmailUseCase = sendEmailUseCase;
-  }
-
   @RabbitListener(queues = "${rabbitmq.queue}")
-  void listen(@Payload final EmailDTO dto) {
+  Mono<Void> listen(@Payload final EmailDTO email) {
     try {
-      sendEmailUseCase.sendEmail(getEmail(dto));
+      return sendEmailUseCase
+          .sendEmail(getEmail(email))
+          .flatMap(
+              __ -> {
+                return Mono.empty();
+              });
     } catch (ConstraintViolationException e) {
       throw new AmqpRejectAndDontRequeueException(e.getMessage(), e.getCause());
     }

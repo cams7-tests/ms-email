@@ -1,44 +1,38 @@
 package br.cams7.tests.ms.infra.persistence.model;
 
-import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Entity
-@Table(name = "tb_email")
+@Table("tb_email")
 public class EmailModel {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id_email", nullable = false)
+  @Column("id_email")
   private UUID emailId;
 
-  @Column(name = "owner_ref", nullable = false)
+  @Column("owner_ref")
   private String ownerRef;
 
-  @Column(name = "email_from", nullable = false)
+  @Column("email_from")
   private String emailFrom;
 
-  @Column(name = "email_to", nullable = false)
+  @Column("email_to")
   private String emailTo;
 
-  @Column(name = "subject", nullable = false)
+  @Column("subject")
   private String subject;
 
-  @Column(name = "text", columnDefinition = "TEXT", nullable = false)
+  @Column("text")
   private String text;
 
-  @Column(name = "email_sent_date", nullable = false)
+  @Column("email_sent_date")
   private LocalDateTime emailSentDate;
 
-  @Column(name = "email_status", nullable = false)
-  private EmailStatusEnum emailStatus;
+  @Column("email_status")
+  private byte emailStatus;
 }
