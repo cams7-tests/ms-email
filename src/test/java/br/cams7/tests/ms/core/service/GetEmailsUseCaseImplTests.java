@@ -1,6 +1,5 @@
 package br.cams7.tests.ms.core.service;
 
-import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.defaultPageDTO;
@@ -15,7 +14,6 @@ import static org.mockito.Mockito.times;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.exception.ResponseStatusException;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
@@ -25,24 +23,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class GetEmailsUseCaseImplTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
   private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY =
       defaultPageDTO(DEFAULT_EMAIL_ENTITY);
-  private static final PageDTO<EmailResponseDTO> PAGE_DTO_OF_RESPONSE_DTO =
-      defaultPageDTO(DEFAULT_EMAIL_RESPONSE_DTO);
 
   @InjectMocks private GetEmailsUseCaseImpl getAllEmailsUseCase;
 
-  @Spy private ModelMapper modelMapper = new ModelMapper();
   @Mock private GetEmailsRepository getEmailsRepository;
 
   @Test
@@ -55,7 +47,7 @@ class GetEmailsUseCaseImplTests {
 
     create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
         .expectSubscription()
-        .expectNext(PAGE_DTO_OF_RESPONSE_DTO)
+        .expectNext(PAGE_DTO_OF_ENTITY)
         .verifyComplete();
 
     then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));

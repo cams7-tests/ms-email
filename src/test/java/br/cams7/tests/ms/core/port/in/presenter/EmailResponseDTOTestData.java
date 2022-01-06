@@ -10,6 +10,8 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 
+import br.cams7.tests.ms.infra.controller.EmailResponseDTO;
+
 public final class EmailResponseDTOTestData {
 
   public static EmailResponseDTO defaultEmailResponseDTO() {

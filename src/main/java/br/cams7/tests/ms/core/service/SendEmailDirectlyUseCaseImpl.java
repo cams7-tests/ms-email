@@ -7,7 +7,6 @@ import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
@@ -27,7 +26,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
   private final CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Override
-  public Mono<EmailResponseDTO> sendEmail(EmailVO email) {
+  public Mono<EmailEntity> sendEmail(EmailVO email) {
     return checkIdentificationNumberService
         .isValid(email.getIdentificationNumber())
         .flatMap(
@@ -41,7 +40,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
               entity.setEmailSentDate(LocalDateTime.now());
 
-              Mono<EmailResponseDTO> newEmail = Mono.empty();
+              Mono<EmailEntity> newEmail = Mono.empty();
               try {
                 sendEmailService.sendEmail(entity);
                 entity.setEmailStatus(SENT);
@@ -55,13 +54,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
         .switchIfEmpty(responseInternalServerErrorException());
   }
 
-  private Mono<EmailResponseDTO> save(EmailEntity email) {
-    return saveEmailRepository.save(email).map(this::getEmailResponseDTO);
-  }
-
-  private EmailResponseDTO getEmailResponseDTO(EmailEntity email) {
-    EmailResponseDTO response = modelMapper.map(email, EmailResponseDTO.class);
-    response.setIdentificationNumber(email.getOwnerRef());
-    return response;
+  private Mono<EmailEntity> save(EmailEntity email) {
+    return saveEmailRepository.save(email);
   }
 }

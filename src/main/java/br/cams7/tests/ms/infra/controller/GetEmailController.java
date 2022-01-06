@@ -4,9 +4,9 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
+import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +33,7 @@ public class GetEmailController {
   private final ModelMapper modelMapper;
   private final GetEmailsUseCase getAllEmailsUseCase;
   private final GetEmailUseCase getEmailUseCase;
+  private final ResponseConverter responseConverter;
 
   @GetMapping(path = "/emails")
   @ResponseStatus(HttpStatus.OK)
@@ -43,14 +44,15 @@ public class GetEmailController {
               sort = DEFAULT_SORT_FIELD,
               direction = DESC)
           Pageable pageable) {
-    return getAllEmailsUseCase.findAll(
-        pageable.getPageNumber(), pageable.getPageSize(), getOrders(pageable.getSort()));
+    return getAllEmailsUseCase
+        .findAll(pageable.getPageNumber(), pageable.getPageSize(), getOrders(pageable.getSort()))
+        .map(page -> responseConverter.convert(page));
   }
 
   @GetMapping(path = "/emails/{emailId}")
   @ResponseStatus(HttpStatus.OK)
   Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
-    return getEmailUseCase.findById(emailId);
+    return getEmailUseCase.findById(emailId).map(email -> responseConverter.convert(email));
   }
 
   private List<OrderDTO> getOrders(Sort sort) {

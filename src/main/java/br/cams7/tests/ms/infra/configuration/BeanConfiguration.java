@@ -56,12 +56,12 @@ public class BeanConfiguration {
 
   @Bean
   GetEmailsUseCase getEmails(GetEmailsRepository getEmailsRepository) {
-    return new GetEmailsUseCaseImpl(modelMapper(), getEmailsRepository);
+    return new GetEmailsUseCaseImpl(getEmailsRepository);
   }
 
   @Bean
   GetEmailUseCase getEmail(GetEmailRepository getEmailRepository) {
-    return new GetEmailUseCaseImpl(modelMapper(), getEmailRepository);
+    return new GetEmailUseCaseImpl(getEmailRepository);
   }
 
   @Bean

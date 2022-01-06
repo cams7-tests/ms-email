@@ -1,7 +1,6 @@
 package br.cams7.tests.ms.core.service;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +17,6 @@ import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
 import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
 import br.cams7.tests.ms.core.port.out.SendEmailService;
@@ -44,7 +42,6 @@ class SendEmailDirectlyUseCaseImplTests {
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
   private static final String ERROR_MESSAGE = "Error";
 
   @InjectMocks private SendEmailDirectlyUseCaseImpl sendEmailDirectlyUseCase;
@@ -67,7 +64,7 @@ class SendEmailDirectlyUseCaseImplTests {
 
     create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
         .expectSubscription()
-        .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
+        .expectNext(DEFAULT_EMAIL_ENTITY)
         .verifyComplete();
 
     then(checkIdentificationNumberService)
@@ -132,7 +129,7 @@ class SendEmailDirectlyUseCaseImplTests {
     given(saveEmailRepository.save(any(EmailEntity.class)))
         .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR)));
 
-    var response = DEFAULT_EMAIL_RESPONSE_DTO;
+    var response = DEFAULT_EMAIL_ENTITY;
     response.setEmailStatus(EmailStatusEnum.ERROR);
 
     create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))

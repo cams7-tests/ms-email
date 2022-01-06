@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.core.port.in.presenter;
+package br.cams7.tests.ms.infra.controller;
 
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;

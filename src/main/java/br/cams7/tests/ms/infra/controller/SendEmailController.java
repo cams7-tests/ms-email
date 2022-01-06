@@ -3,7 +3,7 @@ package br.cams7.tests.ms.infra.controller;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
+import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +18,15 @@ public class SendEmailController {
 
   private final SendEmailDirectlyUseCase sendEmailDirectlyUseCase;
   private final SendEmailToQueueUseCase sendEmailToQueueUseCase;
+  private final ResponseConverter responseConverter;
 
   @PostMapping(path = "/send-email-directly")
   @ResponseStatus(HttpStatus.OK)
   Mono<EmailResponseDTO> sendEmailDirectly(
       @RequestBody final SendEmailRequestDTO sendEmailRequest) {
-    return sendEmailDirectlyUseCase.sendEmail(getEmail(sendEmailRequest));
+    return sendEmailDirectlyUseCase
+        .sendEmail(getEmail(sendEmailRequest))
+        .map(email -> responseConverter.convert(email));
   }
 
   @PostMapping(path = "/send-email-to-queue")

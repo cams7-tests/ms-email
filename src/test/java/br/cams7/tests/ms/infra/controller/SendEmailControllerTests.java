@@ -3,9 +3,11 @@ package br.cams7.tests.ms.infra.controller;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
 import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static br.cams7.tests.ms.infra.controller.SendEmailRequestDTOTestData.defaultSendEmailRequestDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static reactor.test.StepVerifier.create;
@@ -13,7 +15,8 @@ import static reactor.test.StepVerifier.create;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
+import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.infra.controller.mapper.ResponseConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +31,7 @@ import reactor.core.publisher.Mono;
 class SendEmailControllerTests {
 
   private static final SendEmailRequestDTO SEND_EMAIL_REQUEST_DTO = defaultSendEmailRequestDTO();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
   private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
 
@@ -35,6 +39,7 @@ class SendEmailControllerTests {
 
   @Mock private SendEmailDirectlyUseCase sendEmailDirectlyUseCase;
   @Mock private SendEmailToQueueUseCase sendEmailToQueueUseCase;
+  @Mock private ResponseConverter responseConverter;
 
   @Captor private ArgumentCaptor<EmailVO> emailVOCaptor;
 
@@ -43,7 +48,8 @@ class SendEmailControllerTests {
   void sendEmailDirectly_ReturnsEmail_WhenSuccessful() {
 
     given(sendEmailDirectlyUseCase.sendEmail(any(EmailVO.class)))
-        .willReturn(Mono.just(DEFAULT_EMAIL_RESPONSE_DTO));
+        .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
+    given(responseConverter.convert(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
     create(sendEmailController.sendEmailDirectly(SEND_EMAIL_REQUEST_DTO))
         .expectSubscription()
@@ -52,6 +58,7 @@ class SendEmailControllerTests {
 
     then(sendEmailDirectlyUseCase).should().sendEmail(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
+    then(responseConverter).should().convert(eq(DEFAULT_EMAIL_ENTITY));
   }
 
   @Test

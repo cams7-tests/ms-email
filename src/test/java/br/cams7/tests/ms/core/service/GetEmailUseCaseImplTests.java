@@ -1,6 +1,5 @@
 package br.cams7.tests.ms.core.service;
 
-import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +12,6 @@ import static org.mockito.Mockito.times;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.exception.ResponseStatusException;
-import br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTO;
 import br.cams7.tests.ms.core.port.out.GetEmailRepository;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.UUID;
@@ -31,7 +29,6 @@ import reactor.core.publisher.Mono;
 class GetEmailUseCaseImplTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
 
   @InjectMocks private GetEmailUseCaseImpl getEmailUseCase;
 
@@ -45,7 +42,7 @@ class GetEmailUseCaseImplTests {
 
     create(getEmailUseCase.findById(EMAIL_ID))
         .expectSubscription()
-        .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
+        .expectNext(DEFAULT_EMAIL_ENTITY)
         .verifyComplete();
 
     then(getEmailRepository).should(times(1)).findById(eq(EMAIL_ID));
