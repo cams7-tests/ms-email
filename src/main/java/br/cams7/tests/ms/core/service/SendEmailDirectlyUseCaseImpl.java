@@ -3,6 +3,7 @@ package br.cams7.tests.ms.core.service;
 import static br.cams7.tests.ms.core.port.in.exception.CommonExceptions.responseInternalServerErrorException;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
+import static java.lang.Boolean.TRUE;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
@@ -30,8 +31,8 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
     return checkIdentificationNumberGateway
         .isValid(email.getIdentificationNumber())
         .flatMap(
-            valid -> {
-              if (!valid)
+            isValid -> {
+              if (!TRUE.equals(isValid))
                 return Mono.error(
                     new InvalidIdentificationNumberException(email.getIdentificationNumber()));
 
