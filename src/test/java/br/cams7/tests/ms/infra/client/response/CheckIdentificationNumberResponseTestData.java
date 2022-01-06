@@ -1,8 +1,10 @@
 /** */
 package br.cams7.tests.ms.infra.client.response;
 
-import static br.cams7.tests.ms.infra.client.response.IdentificationNumberStatusEnum.APPROVED;
-import static br.cams7.tests.ms.infra.client.response.IdentificationNumberStatusEnum.NOT_APPROVED;
+import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.APPROVED;
+import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.NOT_APPROVED;
+
+import br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponse;
 
 public class CheckIdentificationNumberResponseTestData {
   public static CheckIdentificationNumberResponse aprovedCheckIdentificationNumberResponse() {

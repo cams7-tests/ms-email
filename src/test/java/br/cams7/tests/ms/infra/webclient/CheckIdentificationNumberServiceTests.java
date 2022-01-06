@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.client;
+package br.cams7.tests.ms.infra.webclient;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 import static br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponseTestData.aprovedCheckIdentificationNumberResponse;
@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static reactor.test.StepVerifier.create;
 
-import br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponse;
+import br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.infra.client.response;
+package br.cams7.tests.ms.infra.webclient.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

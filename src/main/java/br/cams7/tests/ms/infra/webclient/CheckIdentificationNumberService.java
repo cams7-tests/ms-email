@@ -1,11 +1,11 @@
 /** */
-package br.cams7.tests.ms.infra.client;
+package br.cams7.tests.ms.infra.webclient;
 
-import static br.cams7.tests.ms.infra.client.response.IdentificationNumberStatusEnum.APPROVED;
 import static br.cams7.tests.ms.infra.configuration.BeanConfiguration.WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.APPROVED;
 
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
-import br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponse;
+import br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
