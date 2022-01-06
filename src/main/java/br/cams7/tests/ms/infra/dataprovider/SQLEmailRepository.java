@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.persistence.repository;
+package br.cams7.tests.ms.infra.dataprovider;
 
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
 import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
@@ -7,7 +7,7 @@ import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
-import br.cams7.tests.ms.infra.persistence.model.EmailModel;
+import br.cams7.tests.ms.infra.dataprovider.model.EmailModel;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

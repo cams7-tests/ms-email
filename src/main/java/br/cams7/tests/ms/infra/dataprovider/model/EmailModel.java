@@ -1,4 +1,4 @@
-package br.cams7.tests.ms.infra.persistence.model;
+package br.cams7.tests.ms.infra.dataprovider.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

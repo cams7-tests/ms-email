@@ -1,6 +1,6 @@
-package br.cams7.tests.ms.infra.persistence.repository;
+package br.cams7.tests.ms.infra.dataprovider;
 
-import br.cams7.tests.ms.infra.persistence.model.EmailModel;
+import br.cams7.tests.ms.infra.dataprovider.model.EmailModel;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;

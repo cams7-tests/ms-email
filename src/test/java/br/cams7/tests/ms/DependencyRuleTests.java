@@ -14,7 +14,7 @@ class DependencyRuleTests {
         .withAdapterLayer("infra")
         .incoming("entrypoint")
         .incoming("mq")
-        .outgoing("persistence.repository")
+        .outgoing("dataprovider")
         // .outgoing("persistence.model")
         .outgoing("smtp")
         .outgoing("mq.service")

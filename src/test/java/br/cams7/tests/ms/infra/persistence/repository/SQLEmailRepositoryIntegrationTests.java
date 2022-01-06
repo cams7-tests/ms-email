@@ -12,6 +12,7 @@ import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
 import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.infra.dataprovider.SQLEmailRepository;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
