@@ -30,8 +30,8 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
     return checkIdentificationNumberGateway
         .isValid(email.getIdentificationNumber())
         .flatMap(
-            isValid -> {
-              if (!isValid)
+            valid -> {
+              if (!valid)
                 return Mono.error(
                     new InvalidIdentificationNumberException(email.getIdentificationNumber()));
 

@@ -88,9 +88,9 @@ public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, Sa
     return EmailStatusEnum.values()[index];
   }
 
+  @SuppressWarnings("unchecked")
   private PageDTO<EmailEntity> getPageDTO(Page<EmailModel> page) {
-    @SuppressWarnings("unchecked")
-    var anotherPage = (PageDTO<EmailEntity>) modelMapper.map(page, PageDTO.class);
+    var anotherPage = modelMapper.map(page, PageDTO.class);
     anotherPage.setContent(
         page.getContent().stream().map(this::getEmailEntity).collect(Collectors.toList()));
     anotherPage.setHasContent(page.hasContent());

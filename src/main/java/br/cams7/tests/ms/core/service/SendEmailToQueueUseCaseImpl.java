@@ -24,8 +24,8 @@ public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
     return checkIdentificationNumberGateway
         .isValid(vo.getIdentificationNumber())
         .flatMap(
-            isValid -> {
-              if (!isValid)
+            valid -> {
+              if (!valid)
                 return Mono.error(
                     new InvalidIdentificationNumberException(vo.getIdentificationNumber()));
 

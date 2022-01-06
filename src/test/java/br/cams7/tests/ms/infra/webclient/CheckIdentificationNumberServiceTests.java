@@ -31,12 +31,12 @@ class CheckIdentificationNumberServiceTests {
 
   @InjectMocks private CheckIdentificationNumberService checkIdentificationNumberService;
 
-  @Mock private WebClient checkIdentificationNumber;
+  @Mock private WebClient checkIdentificationNumberWebClient;
 
   @Test
   @DisplayName("isValid when aproved")
   void isValid_WhenAproved() {
-    mockCheckIdentificationNumber(
+    mockCheckIdentificationNumberWebClient(
         IDENTIFICATION_NUMBER, APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE);
 
     create(checkIdentificationNumberService.isValid(IDENTIFICATION_NUMBER))
@@ -49,7 +49,7 @@ class CheckIdentificationNumberServiceTests {
   @DisplayName("isValid when not aproved")
   void isValid_WhenNotAproved() {
 
-    mockCheckIdentificationNumber(
+    mockCheckIdentificationNumberWebClient(
         IDENTIFICATION_NUMBER, NOT_APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE);
 
     create(checkIdentificationNumberService.isValid(IDENTIFICATION_NUMBER))
@@ -73,7 +73,7 @@ class CheckIdentificationNumberServiceTests {
       "isValid returns error when some error happened during validation of identification number")
   void isValid_ReturnsError_WhenSomeErrorHappenedDuringValidationOfIdenficationNumber() {
 
-    mockCheckIdentificationNumber(
+    mockCheckIdentificationNumberWebClient(
         IDENTIFICATION_NUMBER, Mono.error(new RuntimeException(ERROR_MESSAGE)));
 
     create(checkIdentificationNumberService.isValid(IDENTIFICATION_NUMBER))
@@ -82,13 +82,13 @@ class CheckIdentificationNumberServiceTests {
         .verify();
   }
 
-  private void mockCheckIdentificationNumber(
+  private void mockCheckIdentificationNumberWebClient(
       String identificationNumber, CheckIdentificationNumberResponse response) {
-    mockCheckIdentificationNumber(identificationNumber, Mono.just(response));
+    mockCheckIdentificationNumberWebClient(identificationNumber, Mono.just(response));
   }
 
   @SuppressWarnings("unchecked")
-  private void mockCheckIdentificationNumber(
+  private void mockCheckIdentificationNumberWebClient(
       String identificationNumber, Mono<CheckIdentificationNumberResponse> response) {
     var requestHeadersMock = mock(WebClient.RequestHeadersSpec.class);
     var requestHeadersUriMock = mock(WebClient.RequestHeadersUriSpec.class);
@@ -96,7 +96,7 @@ class CheckIdentificationNumberServiceTests {
     // var requestBodyUriMock = mock(WebClient.RequestBodyUriSpec.class) ;
     var responseMock = mock(WebClient.ResponseSpec.class);
 
-    given(checkIdentificationNumber.get()).willReturn(requestHeadersUriMock);
+    given(checkIdentificationNumberWebClient.get()).willReturn(requestHeadersUriMock);
     given(requestHeadersUriMock.uri("/serasa/{cpf}", identificationNumber))
         .willReturn(requestHeadersMock);
     given(requestHeadersMock.retrieve()).willReturn(responseMock);

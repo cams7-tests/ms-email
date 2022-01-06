@@ -26,7 +26,7 @@ public class SendEmailController {
       @RequestBody final SendEmailRequestDTO sendEmailRequest) {
     return sendEmailDirectlyUseCase
         .execute(getEmail(sendEmailRequest))
-        .map(email -> responseConverter.convert(email));
+        .map(responseConverter::convert);
   }
 
   @PostMapping(path = "/send-email-to-queue")

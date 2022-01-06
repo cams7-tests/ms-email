@@ -1,7 +1,10 @@
 package br.cams7.tests.ms.core.port.in.exception;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommonExceptions {
   public static final int NOT_FOUND = 404;
   public static final int INTERNAL_SERVER_ERROR = 500;

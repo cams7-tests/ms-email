@@ -14,9 +14,9 @@ public class ResponseConverter {
 
   private final ModelMapper modelMapper;
 
+  @SuppressWarnings("unchecked")
   public PageDTO<EmailResponseDTO> convert(PageDTO<EmailEntity> page) {
-    @SuppressWarnings("unchecked")
-    var anotherPage = (PageDTO<EmailResponseDTO>) modelMapper.map(page, PageDTO.class);
+    var anotherPage = modelMapper.map(page, PageDTO.class);
     anotherPage.setContent(
         page.getContent().stream().map(this::convert).collect(Collectors.toList()));
     return anotherPage;

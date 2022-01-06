@@ -19,12 +19,7 @@ public class EmailConsumer {
   @RabbitListener(queues = "${rabbitmq.queue}")
   Mono<Void> listen(@Payload final EmailDTO email) {
     try {
-      return sendEmailUseCase
-          .execute(getEmail(email))
-          .flatMap(
-              __ -> {
-                return Mono.empty();
-              });
+      return sendEmailUseCase.execute(getEmail(email)).flatMap(savedEmail -> Mono.empty());
     } catch (ConstraintViolationException e) {
       throw new AmqpRejectAndDontRequeueException(e.getMessage(), e.getCause());
     }
