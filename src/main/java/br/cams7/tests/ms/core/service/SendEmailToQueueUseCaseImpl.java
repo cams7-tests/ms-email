@@ -1,6 +1,8 @@
 /** */
 package br.cams7.tests.ms.core.service;
 
+import static java.lang.Boolean.TRUE;
+
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
@@ -24,8 +26,8 @@ public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
     return checkIdentificationNumberGateway
         .isValid(vo.getIdentificationNumber())
         .flatMap(
-            valid -> {
-              if (!valid)
+            isValid -> {
+              if (!TRUE.equals(isValid))
                 return Mono.error(
                     new InvalidIdentificationNumberException(vo.getIdentificationNumber()));
 
