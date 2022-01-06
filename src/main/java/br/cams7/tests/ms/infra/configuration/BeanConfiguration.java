@@ -5,12 +5,12 @@ import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
-import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.GetEmailRepository;
-import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
-import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
-import br.cams7.tests.ms.core.port.out.SendEmailService;
-import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
+import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
+import br.cams7.tests.ms.core.port.out.GetEmailGateway;
+import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
+import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
+import br.cams7.tests.ms.core.port.out.SendEmailGateway;
+import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
 import br.cams7.tests.ms.core.service.GetEmailUseCaseImpl;
 import br.cams7.tests.ms.core.service.GetEmailsUseCaseImpl;
 import br.cams7.tests.ms.core.service.SendEmailDirectlyUseCaseImpl;
@@ -39,29 +39,29 @@ public class BeanConfiguration {
 
   @Bean
   SendEmailDirectlyUseCase sendEmailDirectly(
-      SaveEmailRepository saveEmailRepository,
-      SendEmailService sendEmailService,
-      CheckIdentificationNumberService checkIdentificationNumberService) {
+      SaveEmailGateway saveEmailGateway,
+      SendEmailGateway sendEmailGateway,
+      CheckIdentificationNumberGateway checkIdentificationNumberGateway) {
     return new SendEmailDirectlyUseCaseImpl(
-        modelMapper(), saveEmailRepository, sendEmailService, checkIdentificationNumberService);
+        modelMapper(), saveEmailGateway, sendEmailGateway, checkIdentificationNumberGateway);
   }
 
   @Bean
   SendEmailToQueueUseCase sendEmailToQueueUse(
-      SendEmailToQueueService sendEmailService,
-      CheckIdentificationNumberService checkIdentificationNumberService) {
+      SendEmailToQueueGateway sendEmailGateway,
+      CheckIdentificationNumberGateway checkIdentificationNumberGateway) {
     return new SendEmailToQueueUseCaseImpl(
-        modelMapper(), sendEmailService, checkIdentificationNumberService);
+        modelMapper(), sendEmailGateway, checkIdentificationNumberGateway);
   }
 
   @Bean
-  GetEmailsUseCase getEmails(GetEmailsRepository getEmailsRepository) {
-    return new GetEmailsUseCaseImpl(getEmailsRepository);
+  GetEmailsUseCase getEmails(GetEmailsGateway getEmailsGateway) {
+    return new GetEmailsUseCaseImpl(getEmailsGateway);
   }
 
   @Bean
-  GetEmailUseCase getEmail(GetEmailRepository getEmailRepository) {
-    return new GetEmailUseCaseImpl(getEmailRepository);
+  GetEmailUseCase getEmail(GetEmailGateway getEmailGateway) {
+    return new GetEmailUseCaseImpl(getEmailGateway);
   }
 
   @Bean

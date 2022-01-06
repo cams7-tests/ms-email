@@ -1,7 +1,7 @@
 /** */
 package br.cams7.tests.ms.infra.mq.service;
 
-import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
+import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /** @author cams7 */
 @Component
 @RequiredArgsConstructor
-public class SendEmailToQueueServiceImpl implements SendEmailToQueueService {
+public class SendEmailToQueueService implements SendEmailToQueueGateway {
 
   @Value("${rabbitmq.queue}")
   private String queue;

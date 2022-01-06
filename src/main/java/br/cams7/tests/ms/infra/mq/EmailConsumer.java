@@ -20,7 +20,7 @@ public class EmailConsumer {
   Mono<Void> listen(@Payload final EmailDTO email) {
     try {
       return sendEmailUseCase
-          .sendEmail(getEmail(email))
+          .execute(getEmail(email))
           .flatMap(
               __ -> {
                 return Mono.empty();

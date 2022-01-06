@@ -4,8 +4,8 @@ package br.cams7.tests.ms.core.service;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
-import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
+import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
+import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,12 +16,12 @@ import reactor.core.publisher.Mono;
 public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
 
   private final ModelMapper modelMapper;
-  private final SendEmailToQueueService sendEmailService;
-  private final CheckIdentificationNumberService checkIdentificationNumberService;
+  private final SendEmailToQueueGateway sendEmailServiceGateway;
+  private final CheckIdentificationNumberGateway checkIdentificationNumberGateway;
 
   @Override
-  public Mono<Void> sendEmail(EmailVO vo) {
-    return checkIdentificationNumberService
+  public Mono<Void> execute(EmailVO vo) {
+    return checkIdentificationNumberGateway
         .isValid(vo.getIdentificationNumber())
         .flatMap(
             isValid -> {
@@ -32,7 +32,7 @@ public class SendEmailToQueueUseCaseImpl implements SendEmailToQueueUseCase {
               EmailEntity email = modelMapper.map(vo, EmailEntity.class);
               email.setOwnerRef(vo.getIdentificationNumber());
 
-              sendEmailService.sendEmail(email);
+              sendEmailServiceGateway.sendEmail(email);
 
               return Mono.empty();
             });

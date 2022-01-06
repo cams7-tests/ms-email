@@ -44,15 +44,14 @@ class EmailConsumerTests {
   @DisplayName("listen when successfull")
   void listen_WhenSuccessful() {
 
-    given(sendEmailUseCase.sendEmail(any(EmailVO.class)))
-        .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
+    given(sendEmailUseCase.execute(any(EmailVO.class))).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
 
     create(emailConsumer.listen(DEFAULT_EMAIL_DTO))
         .expectSubscription()
         .expectNextCount(0)
         .verifyComplete();
 
-    then(sendEmailUseCase).should().sendEmail(emailVOCaptor.capture());
+    then(sendEmailUseCase).should().execute(emailVOCaptor.capture());
 
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
   }
@@ -66,7 +65,7 @@ class EmailConsumerTests {
           emailConsumer.listen(null);
         });
 
-    then(sendEmailUseCase).should(never()).sendEmail(any(EmailVO.class));
+    then(sendEmailUseCase).should(never()).execute(any(EmailVO.class));
   }
 
   @Test
@@ -74,7 +73,7 @@ class EmailConsumerTests {
   void listen_ThrowsError_WhenSomeErrorHappenedDuringSendEmail() {
     willThrow(ConstraintViolationException.class)
         .given(sendEmailUseCase)
-        .sendEmail(any(EmailVO.class));
+        .execute(any(EmailVO.class));
 
     assertThrows(
         AmqpRejectAndDontRequeueException.class,
@@ -82,7 +81,7 @@ class EmailConsumerTests {
           emailConsumer.listen(DEFAULT_EMAIL_DTO);
         });
 
-    then(sendEmailUseCase).should().sendEmail(emailVOCaptor.capture());
+    then(sendEmailUseCase).should().execute(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
   }
 }

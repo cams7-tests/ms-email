@@ -8,5 +8,5 @@ import reactor.core.publisher.Mono;
 
 public interface GetEmailsUseCase {
 
-  Mono<PageDTO<EmailEntity>> findAll(int page, int size, List<OrderDTO> orders);
+  Mono<PageDTO<EmailEntity>> execute(int page, int size, List<OrderDTO> orders);
 }

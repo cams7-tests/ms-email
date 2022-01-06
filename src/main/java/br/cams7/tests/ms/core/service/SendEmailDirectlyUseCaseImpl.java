@@ -7,9 +7,9 @@ import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
-import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
-import br.cams7.tests.ms.core.port.out.SendEmailService;
+import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
+import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
+import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.time.LocalDateTime;
@@ -21,13 +21,13 @@ import reactor.core.publisher.Mono;
 public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
   private final ModelMapper modelMapper;
-  private final SaveEmailRepository saveEmailRepository;
-  private final SendEmailService sendEmailService;
-  private final CheckIdentificationNumberService checkIdentificationNumberService;
+  private final SaveEmailGateway saveEmailGateway;
+  private final SendEmailGateway sendEmailGateway;
+  private final CheckIdentificationNumberGateway checkIdentificationNumberGateway;
 
   @Override
-  public Mono<EmailEntity> sendEmail(EmailVO email) {
-    return checkIdentificationNumberService
+  public Mono<EmailEntity> execute(EmailVO email) {
+    return checkIdentificationNumberGateway
         .isValid(email.getIdentificationNumber())
         .flatMap(
             isValid -> {
@@ -42,7 +42,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
               Mono<EmailEntity> newEmail = Mono.empty();
               try {
-                sendEmailService.sendEmail(entity);
+                sendEmailGateway.sendEmail(entity);
                 entity.setEmailStatus(SENT);
               } catch (SendEmailException e) {
                 entity.setEmailStatus(ERROR);
@@ -55,6 +55,6 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
   }
 
   private Mono<EmailEntity> save(EmailEntity email) {
-    return saveEmailRepository.save(email);
+    return saveEmailGateway.save(email);
   }
 }

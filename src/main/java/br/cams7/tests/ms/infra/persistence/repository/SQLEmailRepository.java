@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.persistence.repository;
 
-import br.cams7.tests.ms.core.port.out.GetEmailRepository;
-import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
-import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailGateway;
+import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
+import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
@@ -24,8 +24,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Primary
-public class SQLEmailRepository
-    implements GetEmailsRepository, GetEmailRepository, SaveEmailRepository {
+public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, SaveEmailGateway {
 
   private final ModelMapper modelMapper;
   private final SpringDataSQLEmailRepository emailRepository;

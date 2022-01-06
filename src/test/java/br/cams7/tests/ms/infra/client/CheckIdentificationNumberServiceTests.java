@@ -19,7 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
-class CheckIdentificationNumberServiceImplTests {
+class CheckIdentificationNumberServiceTests {
 
   private static final CheckIdentificationNumberResponse
       APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE = aprovedCheckIdentificationNumberResponse();
@@ -29,7 +29,7 @@ class CheckIdentificationNumberServiceImplTests {
   private static final String IDENTIFICATION_NUMBER = OWNER_REF;
   private static final String ERROR_MESSAGE = "Error";
 
-  @InjectMocks private CheckIdentificationNumberServiceImpl checkIdentificationNumberService;
+  @InjectMocks private CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Mock private WebClient checkIdentificationNumber;
 

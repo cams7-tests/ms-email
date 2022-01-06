@@ -1,6 +1,6 @@
 package br.cams7.tests.ms.infra.smtp;
 
-import br.cams7.tests.ms.core.port.out.SendEmailService;
+import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SMTPSendEmailService implements SendEmailService {
+public class SMTPSendEmailService implements SendEmailGateway {
 
   private final JavaMailSender emailSender;
 

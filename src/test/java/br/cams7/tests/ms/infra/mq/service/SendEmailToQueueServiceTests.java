@@ -11,7 +11,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 
-import br.cams7.tests.ms.core.port.out.SendEmailToQueueService;
+import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,16 +24,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@Import({SendEmailToQueueServiceImpl.class})
+@Import({SendEmailToQueueService.class})
 @TestPropertySource(properties = {"rabbitmq.queue=test", "rabbitmq.exchange=test"})
-class SendEmailToQueueServiceImplTests {
+class SendEmailToQueueServiceTests {
 
   private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
   private static final String QUEUE = "test";
   private static final String EXCHANGE = "test";
   private static final String ERROR_MESSAGE = "Error";
 
-  @Autowired private SendEmailToQueueService sendEmailToQueueService;
+  @Autowired private SendEmailToQueueGateway sendEmailToQueueGateway;
 
   @MockBean private RabbitTemplate rabbitTemplate;
 
@@ -44,7 +44,7 @@ class SendEmailToQueueServiceImplTests {
         .given(rabbitTemplate)
         .convertAndSend(anyString(), anyString(), any(Object.class));
 
-    sendEmailToQueueService.sendEmail(DEFAULT_EMAIL_ENTITY);
+    sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY);
     then(rabbitTemplate)
         .should(times(1))
         .convertAndSend(eq(EXCHANGE), eq(QUEUE), eq(DEFAULT_EMAIL_ENTITY));
@@ -61,7 +61,7 @@ class SendEmailToQueueServiceImplTests {
         assertThrows(
             RuntimeException.class,
             () -> {
-              sendEmailToQueueService.sendEmail(DEFAULT_EMAIL_ENTITY);
+              sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY);
             });
 
     assertThat(thrown.getMessage()).isEqualTo(ERROR_MESSAGE);

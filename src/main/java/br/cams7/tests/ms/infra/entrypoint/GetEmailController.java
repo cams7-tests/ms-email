@@ -45,14 +45,14 @@ public class GetEmailController {
               direction = DESC)
           Pageable pageable) {
     return getAllEmailsUseCase
-        .findAll(pageable.getPageNumber(), pageable.getPageSize(), getOrders(pageable.getSort()))
+        .execute(pageable.getPageNumber(), pageable.getPageSize(), getOrders(pageable.getSort()))
         .map(page -> responseConverter.convert(page));
   }
 
   @GetMapping(path = "/emails/{emailId}")
   @ResponseStatus(HttpStatus.OK)
   Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
-    return getEmailUseCase.findById(emailId).map(email -> responseConverter.convert(email));
+    return getEmailUseCase.execute(emailId).map(email -> responseConverter.convert(email));
   }
 
   private List<OrderDTO> getOrders(Sort sort) {

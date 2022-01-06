@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface SendEmailToQueueUseCase {
 
-  Mono<Void> sendEmail(EmailVO email);
+  Mono<Void> execute(EmailVO email);
 }

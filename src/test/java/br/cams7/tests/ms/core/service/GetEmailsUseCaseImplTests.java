@@ -14,7 +14,7 @@ import static org.mockito.Mockito.times;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.exception.ResponseStatusException;
-import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
@@ -35,52 +35,52 @@ class GetEmailsUseCaseImplTests {
 
   @InjectMocks private GetEmailsUseCaseImpl getAllEmailsUseCase;
 
-  @Mock private GetEmailsRepository getEmailsRepository;
+  @Mock private GetEmailsGateway getEmailsGateway;
 
   @Test
   @DisplayName("findAll returns paged emails when successfull")
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
-    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList()))
+    given(getEmailsGateway.findAll(anyInt(), anyInt(), anyList()))
         .willReturn(Mono.just(PAGE_DTO_OF_ENTITY));
 
     var orders = List.of(ORDER);
 
-    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+    create(getAllEmailsUseCase.execute(PAGE_NUMBER, PAGE_SIZE, orders))
         .expectSubscription()
         .expectNext(PAGE_DTO_OF_ENTITY)
         .verifyComplete();
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
+    then(getEmailsGateway).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
   }
 
   @Test
   @DisplayName("findAll returns error when empty is returned")
   void findAll_ReturnsError_WhenEmptyIsReturned() {
-    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList())).willReturn(Mono.empty());
+    given(getEmailsGateway.findAll(anyInt(), anyInt(), anyList())).willReturn(Mono.empty());
 
     var orders = List.of(ORDER);
 
-    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+    create(getAllEmailsUseCase.execute(PAGE_NUMBER, PAGE_SIZE, orders))
         .expectSubscription()
         .expectError(ResponseStatusException.class)
         .verify();
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
+    then(getEmailsGateway).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
   }
 
   @Test
   @DisplayName("findAll returns error when error is returned")
   void findAll_ReturnsError_WhenErrorIsReturned() {
-    given(getEmailsRepository.findAll(anyInt(), anyInt(), anyList()))
+    given(getEmailsGateway.findAll(anyInt(), anyInt(), anyList()))
         .willReturn(Mono.error(new RuntimeException()));
 
     var orders = List.of(ORDER);
 
-    create(getAllEmailsUseCase.findAll(PAGE_NUMBER, PAGE_SIZE, orders))
+    create(getAllEmailsUseCase.execute(PAGE_NUMBER, PAGE_SIZE, orders))
         .expectSubscription()
         .expectError(RuntimeException.class)
         .verify();
 
-    then(getEmailsRepository).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
+    then(getEmailsGateway).should(times(1)).findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), eq(orders));
   }
 }

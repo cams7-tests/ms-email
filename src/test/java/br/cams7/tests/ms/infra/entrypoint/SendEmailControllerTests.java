@@ -47,7 +47,7 @@ class SendEmailControllerTests {
   @DisplayName("sendEmailDirectly returns email when successfull")
   void sendEmailDirectly_ReturnsEmail_WhenSuccessful() {
 
-    given(sendEmailDirectlyUseCase.sendEmail(any(EmailVO.class)))
+    given(sendEmailDirectlyUseCase.execute(any(EmailVO.class)))
         .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
     given(responseConverter.convert(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
@@ -56,7 +56,7 @@ class SendEmailControllerTests {
         .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
         .verifyComplete();
 
-    then(sendEmailDirectlyUseCase).should().sendEmail(emailVOCaptor.capture());
+    then(sendEmailDirectlyUseCase).should().execute(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
     then(responseConverter).should().convert(eq(DEFAULT_EMAIL_ENTITY));
   }
@@ -65,14 +65,14 @@ class SendEmailControllerTests {
   @DisplayName("sendEmailToQueue when successfull")
   void sendEmailToQueue_WhenSuccessful() {
 
-    given(sendEmailToQueueUseCase.sendEmail(any(EmailVO.class))).willReturn(Mono.empty());
+    given(sendEmailToQueueUseCase.execute(any(EmailVO.class))).willReturn(Mono.empty());
 
     create(sendEmailController.sendEmailToQueue(SEND_EMAIL_REQUEST_DTO))
         .expectSubscription()
         .expectNextCount(0)
         .verifyComplete();
 
-    then(sendEmailToQueueUseCase).should().sendEmail(emailVOCaptor.capture());
+    then(sendEmailToQueueUseCase).should().execute(emailVOCaptor.capture());
     assertThat(emailVOCaptor.getValue()).isEqualTo(DEFAULT_EMAIL_VO);
   }
 }

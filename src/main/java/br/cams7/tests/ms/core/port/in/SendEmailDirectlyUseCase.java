@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface SendEmailDirectlyUseCase {
 
-  Mono<EmailEntity> sendEmail(EmailVO email);
+  Mono<EmailEntity> execute(EmailVO email);
 }

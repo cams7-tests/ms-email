@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface GetEmailUseCase {
 
-  Mono<EmailEntity> findById(UUID emailId);
+  Mono<EmailEntity> execute(UUID emailId);
 }

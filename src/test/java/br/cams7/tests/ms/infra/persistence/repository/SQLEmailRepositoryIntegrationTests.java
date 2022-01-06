@@ -7,9 +7,9 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.test.StepVerifier.create;
 
-import br.cams7.tests.ms.core.port.out.GetEmailRepository;
-import br.cams7.tests.ms.core.port.out.GetEmailsRepository;
-import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
+import br.cams7.tests.ms.core.port.out.GetEmailGateway;
+import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
+import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Import;
 @DataR2dbcTest
 @Import({SQLEmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
-class SQLEmailRepositoryR2dbcTests {
+class SQLEmailRepositoryIntegrationTests {
 
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
   private static UUID WRONG_EMAIL_ID = UUID.fromString("0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05");
@@ -48,9 +48,9 @@ class SQLEmailRepositoryR2dbcTests {
   private static final boolean IS_EMPTY_ORDERS = false;
   private static final int TOTAL_ORDERS = 1;
 
-  @Autowired private GetEmailsRepository getEmailsRepository;
-  @Autowired private GetEmailRepository getEmailRepository;
-  @Autowired private SaveEmailRepository saveEmailRepository;
+  @Autowired private GetEmailsGateway getEmailsGateway;
+  @Autowired private GetEmailGateway getEmailGateway;
+  @Autowired private SaveEmailGateway saveEmailGateway;
 
   @TestConfiguration
   static class SQLEmailRepositoryTestsContextConfiguration {
@@ -64,7 +64,7 @@ class SQLEmailRepositoryR2dbcTests {
   @Order(1)
   @DisplayName("findAll returns paged emails when successfull")
   void findAll_ReturnsPagedEmails_WhenSuccessful() {
-    var response = getEmailsRepository.findAll(PAGE_NUMBER, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
+    var response = getEmailsGateway.findAll(PAGE_NUMBER, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
 
     create(response)
         .expectSubscription()
@@ -108,7 +108,7 @@ class SQLEmailRepositoryR2dbcTests {
     assertThrows(
         NullPointerException.class,
         () -> {
-          getEmailsRepository.findAll(0, 0, null);
+          getEmailsGateway.findAll(0, 0, null);
         });
   }
 
@@ -124,7 +124,7 @@ class SQLEmailRepositoryR2dbcTests {
     var hasNext = false;
     var hasPrevious = true;
 
-    var response = getEmailsRepository.findAll(pageNumber, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
+    var response = getEmailsGateway.findAll(pageNumber, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
 
     create(response)
         .expectSubscription()
@@ -154,7 +154,7 @@ class SQLEmailRepositoryR2dbcTests {
     var hasNext = false;
     var hasPrevious = true;
 
-    var response = getEmailsRepository.findAll(pageNumber, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
+    var response = getEmailsGateway.findAll(pageNumber, PAGE_SIZE, List.of(DEFAULT_ORDER_DTO));
 
     create(response)
         .expectSubscription()
@@ -179,7 +179,7 @@ class SQLEmailRepositoryR2dbcTests {
   @Order(5)
   @DisplayName("findById returns an email when successfull")
   void findById_ReturnsAnEmail_WhenSuccessful() {
-    var response = getEmailRepository.findById(EMAIL_ID);
+    var response = getEmailGateway.findById(EMAIL_ID);
 
     create(response)
         .expectSubscription()
@@ -198,7 +198,7 @@ class SQLEmailRepositoryR2dbcTests {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          getEmailRepository.findById(null);
+          getEmailGateway.findById(null);
         });
   }
 
@@ -206,7 +206,7 @@ class SQLEmailRepositoryR2dbcTests {
   @Order(7)
   @DisplayName("findById returns no email when pass wrong \"email id\"")
   void findById_ReturnsNoEmail_WhenPassWrongEmailId() {
-    var response = getEmailRepository.findById(WRONG_EMAIL_ID);
+    var response = getEmailGateway.findById(WRONG_EMAIL_ID);
 
     create(response).expectSubscription().expectNextCount(0).verifyComplete();
   }
@@ -215,7 +215,7 @@ class SQLEmailRepositoryR2dbcTests {
   @Order(8)
   @DisplayName("save creates an email when successfull")
   void save_CreatesAnEmail_WhenSuccessful() {
-    var response = saveEmailRepository.save(DEFAULT_EMAIL_ENTITY.withEmailId(null));
+    var response = saveEmailGateway.save(DEFAULT_EMAIL_ENTITY.withEmailId(null));
 
     create(response)
         .expectSubscription()
@@ -235,7 +235,7 @@ class SQLEmailRepositoryR2dbcTests {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          saveEmailRepository.save(null);
+          saveEmailGateway.save(null);
         });
   }
 }

@@ -68,7 +68,7 @@ class GetEmailControllerTests {
   @Test
   @DisplayName("getEmails returns emails when successfull")
   void getEmails_ReturnsEmails_WhenSuccessful() {
-    given(getAllEmailsUseCase.findAll(anyInt(), anyInt(), anyList()))
+    given(getAllEmailsUseCase.execute(anyInt(), anyInt(), anyList()))
         .willReturn(Mono.just(PAGE_DTO_OF_ENTITY));
     given(responseConverter.convert(any(PageDTO.class))).willReturn(PAGE_DTO_OF_RESPONSE_DTO);
 
@@ -79,7 +79,7 @@ class GetEmailControllerTests {
 
     then(getAllEmailsUseCase)
         .should()
-        .findAll(eq(PAGE_NUMBER), eq(PAGE_SIZE), orderDTOCaptor.capture());
+        .execute(eq(PAGE_NUMBER), eq(PAGE_SIZE), orderDTOCaptor.capture());
     assertThat(orderDTOCaptor.getValue()).isEqualTo(List.of(DEFAULT_ORDER_DTO));
     then(responseConverter).should().convert(eq(PAGE_DTO_OF_ENTITY));
   }
@@ -88,7 +88,7 @@ class GetEmailControllerTests {
   @DisplayName("getEmail returns an email when successfull")
   void getEmail_ReturnsAnEmail_WhenSuccessful() {
 
-    given(getEmailUseCase.findById(any(UUID.class))).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
+    given(getEmailUseCase.execute(any(UUID.class))).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
     given(responseConverter.convert(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
     create(getEmailController.getEmail(EMAIL_ID))
@@ -96,7 +96,7 @@ class GetEmailControllerTests {
         .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
         .verifyComplete();
 
-    then(getEmailUseCase).should().findById(eq(EMAIL_ID));
+    then(getEmailUseCase).should().execute(eq(EMAIL_ID));
     then(responseConverter).should().convert(eq(DEFAULT_EMAIL_ENTITY));
   }
 
@@ -104,7 +104,7 @@ class GetEmailControllerTests {
   @DisplayName("getEmail returns an error message when get empty email")
   void getEmail_ReturnsAnErrorMessage_WhenGetEmptyEmail() {
 
-    given(getEmailUseCase.findById(any(UUID.class)))
+    given(getEmailUseCase.execute(any(UUID.class)))
         .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
 
     create(getEmailController.getEmail(EMAIL_ID))
@@ -112,6 +112,6 @@ class GetEmailControllerTests {
         .expectError(RuntimeException.class)
         .verify();
 
-    then(getEmailUseCase).should().findById(eq(EMAIL_ID));
+    then(getEmailUseCase).should().execute(eq(EMAIL_ID));
   }
 }

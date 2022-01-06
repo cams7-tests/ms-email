@@ -25,14 +25,14 @@ public class SendEmailController {
   Mono<EmailResponseDTO> sendEmailDirectly(
       @RequestBody final SendEmailRequestDTO sendEmailRequest) {
     return sendEmailDirectlyUseCase
-        .sendEmail(getEmail(sendEmailRequest))
+        .execute(getEmail(sendEmailRequest))
         .map(email -> responseConverter.convert(email));
   }
 
   @PostMapping(path = "/send-email-to-queue")
   @ResponseStatus(HttpStatus.OK)
   Mono<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
-    return sendEmailToQueueUseCase.sendEmail(getEmail(sendEmailRequest));
+    return sendEmailToQueueUseCase.execute(getEmail(sendEmailRequest));
   }
 
   private static EmailVO getEmail(SendEmailRequestDTO sendEmailRequest) {

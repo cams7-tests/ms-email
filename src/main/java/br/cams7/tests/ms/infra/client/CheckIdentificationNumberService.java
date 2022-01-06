@@ -4,7 +4,7 @@ package br.cams7.tests.ms.infra.client;
 import static br.cams7.tests.ms.infra.client.response.IdentificationNumberStatusEnum.APPROVED;
 import static br.cams7.tests.ms.infra.configuration.BeanConfiguration.WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER;
 
-import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
+import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
 import br.cams7.tests.ms.infra.client.response.CheckIdentificationNumberResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -12,19 +12,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CheckIdentificationNumberServiceImpl implements CheckIdentificationNumberService {
+public class CheckIdentificationNumberService implements CheckIdentificationNumberGateway {
 
-  private final WebClient checkIdentificationNumber;
+  private final WebClient checkIdentificationNumberWebClient;
 
-  CheckIdentificationNumberServiceImpl(
-      @Qualifier(WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER) WebClient checkIdentificationNumber) {
+  CheckIdentificationNumberService(
+      @Qualifier(WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER)
+          WebClient checkIdentificationNumberWebClient) {
     super();
-    this.checkIdentificationNumber = checkIdentificationNumber;
+    this.checkIdentificationNumberWebClient = checkIdentificationNumberWebClient;
   }
 
   @Override
   public Mono<Boolean> isValid(String identificationNumber) {
-    return checkIdentificationNumber
+    return checkIdentificationNumberWebClient
         .get()
         .uri("/serasa/{cpf}", identificationNumber)
         .retrieve()

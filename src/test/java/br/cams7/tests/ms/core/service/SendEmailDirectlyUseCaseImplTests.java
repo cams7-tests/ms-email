@@ -17,9 +17,9 @@ import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException;
-import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberService;
-import br.cams7.tests.ms.core.port.out.SaveEmailRepository;
-import br.cams7.tests.ms.core.port.out.SendEmailService;
+import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
+import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
+import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
@@ -47,36 +47,36 @@ class SendEmailDirectlyUseCaseImplTests {
   @InjectMocks private SendEmailDirectlyUseCaseImpl sendEmailDirectlyUseCase;
 
   @Spy private ModelMapper modelMapper = new ModelMapper();
-  @Mock private SaveEmailRepository saveEmailRepository;
-  @Mock private SendEmailService sendEmailService;
-  @Mock private CheckIdentificationNumberService checkIdentificationNumberService;
+  @Mock private SaveEmailGateway saveEmailGateway;
+  @Mock private SendEmailGateway sendEmailGateway;
+  @Mock private CheckIdentificationNumberGateway checkIdentificationNumberGateway;
 
   @Captor private ArgumentCaptor<EmailEntity> emailEntityCaptor;
 
   @Test
   @DisplayName("sendEmail returns email with sent status when successfull")
   void sendEmail_ReturnsEmailWithSentStatus_WhenSuccessful() throws SendEmailException {
-    given(checkIdentificationNumberService.isValid(anyString()))
+    given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willDoNothing().given(sendEmailService).sendEmail(any(EmailEntity.class));
-    given(saveEmailRepository.save(any(EmailEntity.class)))
+    willDoNothing().given(sendEmailGateway).sendEmail(any(EmailEntity.class));
+    given(saveEmailGateway.save(any(EmailEntity.class)))
         .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
 
-    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+    create(sendEmailDirectlyUseCase.execute(DEFAULT_EMAIL_VO))
         .expectSubscription()
         .expectNext(DEFAULT_EMAIL_ENTITY)
         .verifyComplete();
 
-    then(checkIdentificationNumberService)
+    then(checkIdentificationNumberGateway)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
 
-    then(sendEmailService).should(times(1)).sendEmail(emailEntityCaptor.capture());
+    then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(
             emailEntityCaptor.getValue().withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
         .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null));
 
-    then(saveEmailRepository).should(times(1)).save(emailEntityCaptor.capture());
+    then(saveEmailGateway).should(times(1)).save(emailEntityCaptor.capture());
     assertThat(
             emailEntityCaptor.getValue().withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
         .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null));
@@ -88,30 +88,30 @@ class SendEmailDirectlyUseCaseImplTests {
     assertThrows(
         NullPointerException.class,
         () -> {
-          sendEmailDirectlyUseCase.sendEmail(null);
+          sendEmailDirectlyUseCase.execute(null);
         });
 
-    then(checkIdentificationNumberService).should(never()).isValid(anyString());
-    then(sendEmailService).should(never()).sendEmail(any(EmailEntity.class));
-    then(saveEmailRepository).should(never()).save(any(EmailEntity.class));
+    then(checkIdentificationNumberGateway).should(never()).isValid(anyString());
+    then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
+    then(saveEmailGateway).should(never()).save(any(EmailEntity.class));
   }
 
   @Test
   @DisplayName("sendEmail returns error when invalid identification number")
   void sendEmail_ReturnsError_WhenInvalidIdentificationNumber() throws SendEmailException {
-    given(checkIdentificationNumberService.isValid(anyString()))
+    given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_INVALID_IDENTIFICATION_NUMBER));
 
-    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+    create(sendEmailDirectlyUseCase.execute(DEFAULT_EMAIL_VO))
         .expectSubscription()
         .expectError(InvalidIdentificationNumberException.class)
         .verify();
 
-    then(checkIdentificationNumberService)
+    then(checkIdentificationNumberGateway)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
-    then(sendEmailService).should(never()).sendEmail(any(EmailEntity.class));
-    then(saveEmailRepository).should(never()).save(any(EmailEntity.class));
+    then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
+    then(saveEmailGateway).should(never()).save(any(EmailEntity.class));
   }
 
   @Test
@@ -120,33 +120,33 @@ class SendEmailDirectlyUseCaseImplTests {
   void sendEmail_ReturnsEmailWhithErrorStatus_WhenSomeErrorHappenedDuringSendEmail()
       throws SendEmailException {
 
-    given(checkIdentificationNumberService.isValid(anyString()))
+    given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
 
     willThrow(new SendEmailException(ERROR_MESSAGE, null))
-        .given(sendEmailService)
+        .given(sendEmailGateway)
         .sendEmail(any(EmailEntity.class));
-    given(saveEmailRepository.save(any(EmailEntity.class)))
+    given(saveEmailGateway.save(any(EmailEntity.class)))
         .willReturn(Mono.just(DEFAULT_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR)));
 
     var response = DEFAULT_EMAIL_ENTITY;
     response.setEmailStatus(EmailStatusEnum.ERROR);
 
-    create(sendEmailDirectlyUseCase.sendEmail(DEFAULT_EMAIL_VO))
+    create(sendEmailDirectlyUseCase.execute(DEFAULT_EMAIL_VO))
         .expectSubscription()
         .expectNext(response)
         .verifyComplete();
 
-    then(checkIdentificationNumberService)
+    then(checkIdentificationNumberGateway)
         .should(times(1))
         .isValid(eq(DEFAULT_EMAIL_VO.getIdentificationNumber()));
 
-    then(sendEmailService).should(times(1)).sendEmail(emailEntityCaptor.capture());
+    then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(
             emailEntityCaptor.getValue().withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
         .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailStatus(EmailStatusEnum.ERROR));
 
-    then(saveEmailRepository).should(times(1)).save(emailEntityCaptor.capture());
+    then(saveEmailGateway).should(times(1)).save(emailEntityCaptor.capture());
     assertThat(
             emailEntityCaptor.getValue().withEmailSentDate(DEFAULT_EMAIL_ENTITY.getEmailSentDate()))
         .isEqualTo(DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailStatus(EmailStatusEnum.ERROR));
