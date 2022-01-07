@@ -14,6 +14,7 @@ import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
 import java.util.UUID;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
+@Disabled
 @DataR2dbcTest
 @Import({SQLEmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)

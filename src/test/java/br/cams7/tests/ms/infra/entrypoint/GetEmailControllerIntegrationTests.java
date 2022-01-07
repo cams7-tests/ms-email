@@ -6,6 +6,7 @@ import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.INVALID_EM
 import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.LAST_EMAIL_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -28,8 +30,8 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @Order(1)
-  @DisplayName("getEmails returns all emails sorted by 'email sent date' desc when successfull")
-  void getEmails_ReturnsAllEmailsSortedByEmailSentDateDesc_WhenSuccessful() {
+  @DisplayName("Returns all emails when pass 'page number' is 0 and 'page size' is 20")
+  void getEmails_ReturnsAllEmails_WhenPassPageNumberIs0AndPageSizeIs20() {
     testClient
         .get()
         .uri("/emails?page=0&size=20&sort=emailSentDate,desc")
@@ -63,8 +65,8 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @Order(2)
-  @DisplayName("getEmails returns all emails sorted by 'email sent date' asc when successfull")
-  void getEmails_ReturnsAllEmailsSortedByEmailSentDateAsc_WhenSuccessful() {
+  @DisplayName("Returns sorted emails when pass 'email sent date' ascending")
+  void getEmails_ReturnsSortedEmails_WhenPassPageEmailSentDateAscending() {
     testClient
         .get()
         .uri("/emails?page=0&size=15&sort=emailSentDate,asc")
@@ -82,8 +84,8 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @Order(3)
-  @DisplayName("findAll returns no emails when 'page number' is 3 and 'page size' is 10")
-  void getEmails_ReturnsNoEmails_WhenPageNumberIs2AndPageSizeIs10() {
+  @DisplayName("Returns no emails when pass 'page number' is 2 and 'page size' is 10")
+  void getEmails_ReturnsNoEmails_WhenPassPageNumberIs2AndPageSizeIs10() {
     testClient
         .get()
         .uri("/emails?page=2&size=10")
@@ -113,7 +115,7 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @Order(4)
-  @DisplayName("getEmail returns an email when pass a valid id")
+  @DisplayName("Returns an email when pass a valid id")
   void getEmail_ReturnsAnEmail_WhenPassAValidId() {
     testClient
         .get()
@@ -127,7 +129,7 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @Order(5)
-  @DisplayName("getEmail returns error when pass a invalid id")
+  @DisplayName("Returns error when pass a invalid id")
   void getEmail_ReturnsError_WhenPassAInvalidId() {
     testClient.get().uri("/emails/{id}", INVALID_EMAIL_ID).exchange().expectStatus().isBadRequest();
   }
