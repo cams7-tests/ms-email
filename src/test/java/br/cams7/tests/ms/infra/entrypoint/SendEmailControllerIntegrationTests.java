@@ -98,8 +98,8 @@ class SendEmailControllerIntegrationTests {
         .should(times(1))
         .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
     then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
-    assertThat(NEW_EMAIL_ENTITY)
-        .isEqualTo(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null));
+    assertThat(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null))
+        .isEqualTo(NEW_EMAIL_ENTITY);
   }
 
   @Test
@@ -214,8 +214,8 @@ class SendEmailControllerIntegrationTests {
         .should(times(1))
         .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
     then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
-    assertThat(NEW_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR))
-        .isEqualTo(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null));
+    assertThat(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null))
+        .isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR));
   }
 
   @Test
@@ -240,7 +240,7 @@ class SendEmailControllerIntegrationTests {
         .should(times(1))
         .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
     then(sendEmailToQueueGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
-    assertThat(NEW_EMAIL_ENTITY.withEmailStatus(null)).isEqualTo(emailEntityCaptor.getValue());
+    assertThat(emailEntityCaptor.getValue()).isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(null));
   }
 
   @Test
@@ -267,6 +267,6 @@ class SendEmailControllerIntegrationTests {
         .should(times(1))
         .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
     then(sendEmailToQueueGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
-    assertThat(NEW_EMAIL_ENTITY.withEmailStatus(null)).isEqualTo(emailEntityCaptor.getValue());
+    assertThat(emailEntityCaptor.getValue()).isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(null));
   }
 }
