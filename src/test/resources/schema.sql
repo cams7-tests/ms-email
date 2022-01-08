@@ -8,3 +8,10 @@ CREATE TABLE tb_email (
     subject VARCHAR NOT NULL,
     text VARCHAR NOT NULL
 );
+CREATE TABLE tb_user ( 
+    id_user UUID DEFAULT random_uuid() PRIMARY KEY,
+    name VARCHAR NOT NULL,
+	username VARCHAR NOT NULL UNIQUE,
+	password VARCHAR NOT NULL,
+	authorities VARCHAR NOT NULL
+);

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(
@@ -26,11 +27,16 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWebTestClient
 class GetEmailControllerIntegrationTests {
 
+  private static final String USER = "user";
+
   @Autowired private WebTestClient testClient;
 
   @Test
-  @DisplayName("Returns all emails when pass 'page number' is 0 and 'page size' is 20")
-  void getEmails_ReturnsAllEmails_WhenPassPageNumberIs0AndPageSizeIs20() {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns all emails when pass 'page number' is 0 and 'page size' is 20 and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsAllEmails_WhenPassPageNumberIs0AndPageSizeIs20AndUserIsSuccessfullAuthenticatedAndHasUserRole() {
     testClient
         .get()
         .uri("/emails?page=0&size=20&sort=emailSentDate,desc")
@@ -63,8 +69,17 @@ class GetEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns sorted emails when pass 'email sent date' ascending")
-  void getEmails_ReturnsSortedEmails_WhenPassPageEmailSentDateAscending() {
+  @DisplayName("getEmails returns unauthorized when user isn't authenticated")
+  void getEmails_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+    testClient.get().uri("/emails").exchange().expectStatus().isUnauthorized();
+  }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns sorted emails when pass 'email sent date' ascending and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsSortedEmails_WhenPassPageEmailSentDateAscendingAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
     testClient
         .get()
         .uri("/emails?page=0&size=15&sort=emailSentDate,asc")
@@ -81,8 +96,11 @@ class GetEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns no emails when pass 'page number' is 2 and 'page size' is 10")
-  void getEmails_ReturnsNoEmails_WhenPassPageNumberIs2AndPageSizeIs10() {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns no emails when pass 'page number' is 2 and 'page size' is 10 and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsNoEmails_WhenPassPageNumberIs2AndPageSizeIs10AndUserIsSuccessfullAuthenticatedAndHasUserRole() {
     testClient
         .get()
         .uri("/emails?page=2&size=10")
@@ -111,8 +129,10 @@ class GetEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns an email when pass a valid id")
-  void getEmail_ReturnsAnEmail_WhenPassAValidId() {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmail returns an email when pass a valid id and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsAnEmail_WhenPassAValidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
     testClient
         .get()
         .uri("/emails/{id}", FIRST_EMAIL_ID)
@@ -141,8 +161,16 @@ class GetEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when pass a invalid id")
-  void getEmail_ReturnsError_WhenPassAInvalidId() {
+  @DisplayName("getEmail returns unauthorized when user isn't authenticated")
+  void getById_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+    testClient.get().uri("/emails/{id}", FIRST_EMAIL_ID).exchange().expectStatus().isUnauthorized();
+  }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "Returns error when pass a invalid id and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsError_WhenPassAInvalidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
     testClient.get().uri("/emails/{id}", INVALID_EMAIL_ID).exchange().expectStatus().isBadRequest();
   }
 }

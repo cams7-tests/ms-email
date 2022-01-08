@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
@@ -48,6 +49,9 @@ import reactor.core.publisher.Mono;
     })
 @AutoConfigureWebTestClient
 class SendEmailControllerIntegrationTests {
+
+  private static final String USER = "user";
+  private static final String ADMIN = "admin";
 
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
@@ -63,8 +67,12 @@ class SendEmailControllerIntegrationTests {
   @Captor private ArgumentCaptor<EmailEntity> emailEntityCaptor;
 
   @Test
-  @DisplayName("Sent an email directly when pass valid params")
-  void sendEmailDirectly_SendAnEmailDirectly_WhenPassValidParams() throws SendEmailException {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns a registred email and sent an email directly when pass valid params and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsARegistredEmailAndSendAnEmailDirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willDoNothing().given(sendEmailGateway).sendEmail(any(EmailEntity.class));
@@ -102,8 +110,39 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when pass empty subject")
-  void sendEmailDirectly_ReturnsError_WhenPassEmptySubject() {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "sendEmailDirectly returns forbidden when user is successfull authenticated and doesn't have ADMIN role")
+  void sendEmailDirectly_ReturnsForbidden_WhenUserDoesNotHaveAdminRole() {
+    testClient
+        .post()
+        .uri("/send-email-directly")
+        .contentType(APPLICATION_JSON)
+        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .exchange()
+        .expectStatus()
+        .isForbidden();
+  }
+
+  @Test
+  @DisplayName("sendEmailDirectly returns unauthorized when user isn't authenticated")
+  void sendEmailDirectly_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+    testClient
+        .post()
+        .uri("/send-email-directly")
+        .contentType(APPLICATION_JSON)
+        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .exchange()
+        .expectStatus()
+        .isUnauthorized();
+  }
+
+  @Test
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when pass empty subject and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenPassEmptySubjectAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     testClient
         .post()
         .uri("/send-email-directly")
@@ -116,8 +155,11 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when pass 'identification number' that isn't a valid CPF")
-  void sendEmailDirectly_ReturnsError_WhenPassIdentificationNumberThatIsntAValidCpf() {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when pass 'identification number' that isn't a valid CPF and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenPassIdentificationNumberThatIsntAValidCpfAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     testClient
         .post()
         .uri("/send-email-directly")
@@ -130,8 +172,11 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when pass 'email from' that isn't a valid email")
-  void sendEmailDirectly_ReturnsError_WhenPassEmailFromThatIsntAValidEmail() {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when pass invalid 'email from' and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenPassInvalidEmailFromAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     testClient
         .post()
         .uri("/send-email-directly")
@@ -144,9 +189,12 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when pass a invalid 'identification number'")
-  void sendEmailDirectly_ReturnsError_WhenPassAInvalidIdentificationNumber()
-      throws SendEmailException {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when pass a invalid 'identification number' and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenPassAInvalidIdentificationNumberAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_INVALID_IDENTIFICATION_NUMBER));
     testClient
@@ -164,9 +212,12 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when some error happened during 'identification number' validation")
-  void sendEmailDirectly_ReturnsError_WhenSomeErrorHappenedDuringIdentificationNumberValidation()
-      throws SendEmailException {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when some error happened during 'identification number' validation and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenSomeErrorHappenedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
     testClient
@@ -184,9 +235,12 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Save an email with error status when some error happened during try sent email")
-  void sendEmailDirectly_SaveAnEmailWithErrorStatus_WhenSomeErrorHappenedDuringTrySendEmail()
-      throws SendEmailException {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns a registred email with error status and don't sent an email when some error happened during try sent email and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsARegistredEmailWithErrorStatusAndDontSentAndEmail_WhenSomeErrorHappenedDuringTrySendEmailAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willThrow(new SendEmailException(ERROR_MESSAGE, null))
@@ -212,8 +266,12 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Sent an email indirectly when pass valid params")
-  void sendEmailToQueue_SendAnEmailIndirectly_WhenPassValidParams() throws SendEmailException {
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailToQueue returns void and sent an email indirectly when pass valid params and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailToQueue_ReturnsVoidAndSendAnEmailIndirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willDoNothing().given(sendEmailToQueueGateway).sendEmail(any(EmailEntity.class));
@@ -235,9 +293,40 @@ class SendEmailControllerIntegrationTests {
   }
 
   @Test
-  @DisplayName("Returns error when some error happened during try sent email to queue")
-  void sendEmailToQueue_ReturnsError_WhenSomeErrorHappenedDuringTrySentEmailToQueue()
-      throws SendEmailException {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "sendEmailToQueue returns forbidden when user is successfull authenticated and doesn't have ADMIN role")
+  void sendEmailToQueue_ReturnsForbidden_WhenUserDoesNotHaveAdminRole() {
+    testClient
+        .post()
+        .uri("/send-email-to-queue")
+        .contentType(APPLICATION_JSON)
+        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .exchange()
+        .expectStatus()
+        .isForbidden();
+  }
+
+  @Test
+  @DisplayName("sendEmailToQueue returns unauthorized when user isn't authenticated")
+  void sendEmailToQueue_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+    testClient
+        .post()
+        .uri("/send-email-to-queue")
+        .contentType(APPLICATION_JSON)
+        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .exchange()
+        .expectStatus()
+        .isUnauthorized();
+  }
+
+  @Test
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailToQueue returns error when some error happened during try sent email to queue and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailToQueue_ReturnsError_WhenSomeErrorHappenedDuringTrySentEmailToQueueAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willThrow(new RuntimeException(ERROR_MESSAGE))

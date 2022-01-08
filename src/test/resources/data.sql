@@ -9,4 +9,6 @@ INSERT INTO tb_email(id_email, email_from, email_sent_date, email_status, email_
 INSERT INTO tb_email(id_email, email_from, email_sent_date, email_status, email_to, owner_ref, subject, text) VALUES ('7cafabdc-610b-11ec-9d8b-fbd25b19d932', 'from1@tests.cams7.br', '2021-12-27 16:38:30.0+00', 1, 'to3@tests.cams7.br', '46384730081', 'E-mail subject 09', 'E-mail message 09');
 INSERT INTO tb_email(id_email, email_from, email_sent_date, email_status, email_to, owner_ref, subject, text) VALUES ('818a59ea-610b-11ec-bc95-47257c8efb25', 'from2@tests.cams7.br', '2021-12-26 17:05:20.0+00', 0, 'to2@tests.cams7.br', '71141101033', 'E-mail subject 10', 'E-mail message 10');
 INSERT INTO tb_email(id_email, email_from, email_sent_date, email_status, email_to, owner_ref, subject, text) VALUES ('86abce68-610b-11ec-8f23-733c774c16af', 'from3@tests.cams7.br', '2021-12-23 17:43:15.0+00', 1, 'to1@tests.cams7.br', '90978373081', 'E-mail subject 11', 'E-mail message 11');
-
+--Password: abc12345
+INSERT INTO tb_user(id_user, name, username, password, authorities) VALUES('87d15b0f-059c-40bc-913e-fbfed11c0bd8', 'Some User', 'user', '{bcrypt}$2a$10$8RRftD6fhCnp0Psyl.8VGeRb6wEOuUX8bqsVqnWzTZXw2x.C0cepO', 'ROLE_USER');
+INSERT INTO tb_user(id_user, name, username, password, authorities) VALUES('2bd77a5f-7dfa-4010-adf5-4403742239a3', 'Administrator', 'admin', '{bcrypt}$2a$10$NOcV6G.vaf5cPc7ZLSoSfO495Z/mWUibm11hpFkS6lr2fP48.e1.u', 'ROLE_USER,ROLE_ADMIN');
