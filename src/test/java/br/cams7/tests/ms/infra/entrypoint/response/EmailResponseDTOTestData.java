@@ -18,13 +18,6 @@ import java.util.UUID;
 
 public final class EmailResponseDTOTestData {
 
-  public static final EmailResponseDTO NEW_EMAIL_RESPONSE_DTO = getNewEmailResponseDTO();
-  public static final EmailResponseDTO NEW_EMAIL_WITH_EMPTY_SUBJECT = getNewEmailWithEmptySubject();
-  public static final EmailResponseDTO NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER =
-      getNewEmailWithInvalidIdentificationNumber();
-  public static final EmailResponseDTO NEW_EMAIL_WITH_INVALID_EMAIL_FROM =
-      getNewEmailWithInvalidEmailFrom();
-
   public static final String INVALID_EMAIL_ID = "fa3758635-fe93-4735-bca0-51e754833221";
 
   public static final String FIRST_EMAIL_ID = "fd0622c0-6101-11ec-902c-8f89d045b40c";
@@ -48,34 +41,6 @@ public final class EmailResponseDTOTestData {
     email.setText(MESSAGE_TEXT);
     email.setEmailSentDate(EMAIL_SENT_DATE);
     email.setEmailStatus(EMAIL_STATUS);
-
-    return email;
-  }
-
-  private static EmailResponseDTO getNewEmailResponseDTO() {
-    var email = getEmailResponseDTO();
-    email.setEmailId(null);
-    email.setEmailSentDate(null);
-    email.setEmailStatus(null);
-    return email;
-  }
-
-  private static EmailResponseDTO getNewEmailWithEmptySubject() {
-    var email = getNewEmailResponseDTO();
-    email.setSubject("");
-    return email;
-  }
-
-  private static EmailResponseDTO getNewEmailWithInvalidIdentificationNumber() {
-    var email = getNewEmailResponseDTO();
-    email.setIdentificationNumber("12345678901");
-    return email;
-  }
-
-  private static EmailResponseDTO getNewEmailWithInvalidEmailFrom() {
-    var email = getNewEmailResponseDTO();
-    email.setEmailFrom("test");
-    ;
     return email;
   }
 

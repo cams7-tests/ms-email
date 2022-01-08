@@ -6,10 +6,10 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.NEW_EMAIL_ENTITY;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_RESPONSE_DTO;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_EMPTY_SUBJECT;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_INVALID_EMAIL_FROM;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL;
+import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL_WITH_EMPTY_SUBJECT;
+import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL_WITH_INVALID_EMAIL_FROM;
+import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -81,7 +81,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isOk()
@@ -118,7 +118,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isForbidden();
@@ -131,7 +131,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isUnauthorized();
@@ -201,7 +201,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
@@ -224,7 +224,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
@@ -251,7 +251,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-directly")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isOk()
@@ -280,7 +280,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-to-queue")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isOk()
@@ -301,7 +301,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-to-queue")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isForbidden();
@@ -314,7 +314,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-to-queue")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .isUnauthorized();
@@ -337,7 +337,7 @@ class SendEmailControllerIntegrationTests {
         .post()
         .uri("/send-email-to-queue")
         .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(NEW_EMAIL_RESPONSE_DTO))
+        .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
