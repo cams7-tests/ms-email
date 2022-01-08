@@ -1,13 +1,13 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_FROM;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_ID;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_IDENTIFICATION_NUMBER;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_SUBJECT;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_TEXT;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_TO;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.INVALID_EMAIL_ID;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.LAST_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_FROM;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_SUBJECT;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TEXT;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import br.cams7.tests.ms.domain.EmailStatusEnum;

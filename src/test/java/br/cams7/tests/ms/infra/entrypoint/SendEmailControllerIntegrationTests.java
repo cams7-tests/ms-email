@@ -1,15 +1,15 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_ENTITY;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_FROM;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_IDENTIFICATION_NUMBER;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_RESPONSE_DTO;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_SUBJECT;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_TEXT;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_TO;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_WITH_EMPTY_SUBJECT;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_WITH_INVALID_EMAIL_FROM;
-import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_FROM;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_TO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.NEW_EMAIL_ENTITY;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_RESPONSE_DTO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_EMPTY_SUBJECT;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_INVALID_EMAIL_FROM;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -79,15 +79,15 @@ class SendEmailControllerIntegrationTests {
         .isOk()
         .expectBody()
         .jsonPath("$.identificationNumber")
-        .isEqualTo(NEW_EMAIL_IDENTIFICATION_NUMBER)
+        .isEqualTo(OWNER_REF)
         .jsonPath("$.emailFrom")
-        .isEqualTo(NEW_EMAIL_FROM)
+        .isEqualTo(EMAIL_FROM)
         .jsonPath("$.emailTo")
-        .isEqualTo(NEW_EMAIL_TO)
+        .isEqualTo(EMAIL_TO)
         .jsonPath("$.subject")
-        .isEqualTo(NEW_EMAIL_SUBJECT)
+        .isEqualTo(MESSAGE_SUBJECT)
         .jsonPath("$.text")
-        .isEqualTo(NEW_EMAIL_TEXT)
+        .isEqualTo(MESSAGE_TEXT)
         .jsonPath("$.emailStatus")
         .isEqualTo(EmailStatusEnum.SENT.name())
         .jsonPath("$.emailSentDate")
@@ -95,9 +95,7 @@ class SendEmailControllerIntegrationTests {
         .jsonPath("$.emailId")
         .isNotEmpty();
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null))
         .isEqualTo(NEW_EMAIL_ENTITY);
@@ -161,9 +159,7 @@ class SendEmailControllerIntegrationTests {
         .is5xxServerError()
         .expectBody();
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
   }
 
@@ -183,9 +179,7 @@ class SendEmailControllerIntegrationTests {
         .is5xxServerError()
         .expectBody();
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
   }
 
@@ -211,9 +205,7 @@ class SendEmailControllerIntegrationTests {
         .jsonPath("$.emailStatus")
         .isEqualTo(EmailStatusEnum.ERROR.name());
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null))
         .isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR));
@@ -237,9 +229,7 @@ class SendEmailControllerIntegrationTests {
         .expectBody()
         .isEmpty();
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailToQueueGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(emailEntityCaptor.getValue()).isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(null));
   }
@@ -264,9 +254,7 @@ class SendEmailControllerIntegrationTests {
         .is5xxServerError()
         .expectBody();
 
-    then(checkIdentificationNumberGateway)
-        .should(times(1))
-        .isValid(eq(NEW_EMAIL_IDENTIFICATION_NUMBER));
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailToQueueGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(emailEntityCaptor.getValue()).isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(null));
   }

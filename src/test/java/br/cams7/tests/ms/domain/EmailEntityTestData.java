@@ -19,6 +19,8 @@ public final class EmailEntityTestData {
           "2021-12-21 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
   public static EmailStatusEnum EMAIL_STATUS = EmailStatusEnum.SENT;
 
+  public static final EmailEntity NEW_EMAIL_ENTITY = getNewEmailEntity();
+
   public static EmailEntity getEmailEntity() {
     return EmailEntity.builder()
         .emailId(EMAIL_ID)
@@ -30,5 +32,9 @@ public final class EmailEntityTestData {
         .emailSentDate(EMAIL_SENT_DATE)
         .emailStatus(EMAIL_STATUS)
         .build();
+  }
+
+  private static EmailEntity getNewEmailEntity() {
+    return getEmailEntity().withEmailId(null).withEmailSentDate(null);
   }
 }
