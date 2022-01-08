@@ -3,7 +3,7 @@ package br.cams7.tests.ms.core.port.pagination;
 import static br.cams7.tests.ms.core.port.pagination.SortDTOTestData.defaultSortDTO;
 
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.infra.entrypoint.EmailResponseDTO;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import java.util.List;
 
 public class PageDTOTestData {

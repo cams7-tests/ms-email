@@ -2,6 +2,7 @@ package br.cams7.tests.ms.infra.entrypoint;
 
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -17,17 +18,17 @@ public final class EmailResponseCreator {
   public static final String FIRST_EMAIL_TO = "to1@tests.cams7.br";
   public static final String FIRST_EMAIL_SUBJECT = "E-mail subject 01";
   public static final String FIRST_EMAIL_TEXT = "E-mail message 01";
-  public static final EmailResponseDTO FIRST_EMAIL = getFistEmail();
+  public static final EmailResponseDTO FIRST_EMAIL_RESPONSE_DTO = getFistEmailResponseDTO();
 
   public static final String LAST_EMAIL_ID = "86abce68-610b-11ec-8f23-733c774c16af";
-  public static final EmailResponseDTO LAST_EMAIL = getLastEmail();
+  public static final EmailResponseDTO LAST_EMAIL_RESPONSE_DTO = getLastEmailResponseDTOEmail();
 
   public static final String NEW_EMAIL_IDENTIFICATION_NUMBER = "45537498073";
   public static final String NEW_EMAIL_FROM = "from@tests.cams7.br";
   public static final String NEW_EMAIL_TO = "to@tests.cams7.br";
   public static final String NEW_EMAIL_SUBJECT = "E-mail subject";
   public static final String NEW_EMAIL_TEXT = "E-mail message";
-  public static final EmailResponseDTO NEW_EMAIL = getNewEmail();
+  public static final EmailResponseDTO NEW_EMAIL_RESPONSE_DTO = getNewEmailResponseDTO();
   public static final EmailEntity NEW_EMAIL_ENTITY = getNewEmailEntity();
 
   public static final EmailResponseDTO NEW_EMAIL_WITH_EMPTY_SUBJECT = getNewEmailWithEmptySubject();
@@ -38,7 +39,7 @@ public final class EmailResponseCreator {
   public static final EmailResponseDTO NEW_EMAIL_WITH_INVALID_EMAIL_FROM =
       getNewEmailWithInvalidEmailFrom();
 
-  public static EmailResponseDTO getFistEmail() {
+  private static EmailResponseDTO getFistEmailResponseDTO() {
     var email = new EmailResponseDTO();
     email.setEmailId(UUID.fromString(FIRST_EMAIL_ID));
     email.setIdentificationNumber(FIRST_EMAIL_IDENTIFICATION_NUMBER);
@@ -51,7 +52,7 @@ public final class EmailResponseCreator {
     return email;
   }
 
-  public static EmailResponseDTO getLastEmail() {
+  private static EmailResponseDTO getLastEmailResponseDTOEmail() {
     var email = new EmailResponseDTO();
     email.setEmailId(UUID.fromString(LAST_EMAIL_ID));
     email.setIdentificationNumber("90978373081");
@@ -64,7 +65,7 @@ public final class EmailResponseCreator {
     return email;
   }
 
-  public static EmailResponseDTO getNewEmail() {
+  private static EmailResponseDTO getNewEmailResponseDTO() {
     var email = new EmailResponseDTO();
     email.setIdentificationNumber(NEW_EMAIL_IDENTIFICATION_NUMBER);
     email.setEmailFrom(NEW_EMAIL_FROM);
@@ -86,19 +87,19 @@ public final class EmailResponseCreator {
   }
 
   public static EmailResponseDTO getNewEmailWithEmptySubject() {
-    var email = getNewEmail();
+    var email = getNewEmailResponseDTO();
     email.setSubject("");
     return email;
   }
 
   public static EmailResponseDTO getNewEmailWithInvalidIdentificationNumber() {
-    var email = getNewEmail();
+    var email = getNewEmailResponseDTO();
     email.setIdentificationNumber("12345678901");
     return email;
   }
 
   public static EmailResponseDTO getNewEmailWithInvalidEmailFrom() {
-    var email = getNewEmail();
+    var email = getNewEmailResponseDTO();
     email.setEmailFrom("test");
     ;
     return email;

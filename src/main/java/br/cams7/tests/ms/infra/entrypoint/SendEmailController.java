@@ -4,6 +4,8 @@ import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTO;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.core.port.in.presenter;
+package br.cams7.tests.ms.infra.entrypoint.response;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_FROM;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
@@ -9,8 +9,6 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_TO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
-
-import br.cams7.tests.ms.infra.entrypoint.EmailResponseDTO;
 
 public final class EmailResponseDTOTestData {
 

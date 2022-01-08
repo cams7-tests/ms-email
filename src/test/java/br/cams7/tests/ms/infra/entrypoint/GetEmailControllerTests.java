@@ -1,13 +1,13 @@
 /** */
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.defaultOrderDTO;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.defaultPageDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -23,6 +23,7 @@ import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;

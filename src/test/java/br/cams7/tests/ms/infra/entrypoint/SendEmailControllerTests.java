@@ -2,9 +2,9 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.core.port.in.presenter.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
 import static br.cams7.tests.ms.infra.entrypoint.SendEmailRequestDTOTestData.defaultSendEmailRequestDTO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.defaultEmailResponseDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,6 +17,8 @@ import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTO;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

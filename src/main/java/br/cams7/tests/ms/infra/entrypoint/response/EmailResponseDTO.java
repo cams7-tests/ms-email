@@ -1,5 +1,5 @@
 /** */
-package br.cams7.tests.ms.infra.entrypoint;
+package br.cams7.tests.ms.infra.entrypoint.response;
 
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;

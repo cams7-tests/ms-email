@@ -1,5 +1,6 @@
 package br.cams7.tests.ms.core.port.in;
 
+import br.cams7.tests.ms.core.port.in.common.SelfValidating;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;

@@ -7,6 +7,7 @@ import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
+import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
