@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:10
     environment:
-      POSTGRES_PASSWORD: "Abc@12345"
+      POSTGRES_PASSWORD: "admin"
     ports:
       - "15432:5432"
     volumes:
@@ -15,8 +15,8 @@ services:
   pgadmin:
     image: dpage/pgadmin4:6.2
     environment:
-      PGADMIN_DEFAULT_EMAIL: "pgadmin@tests.cams7.br"
-      PGADMIN_DEFAULT_PASSWORD: "Abc@12345"
+      PGADMIN_DEFAULT_EMAIL: "admin@cams7.test"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
       - "16543:80"
     depends_on:
@@ -28,8 +28,8 @@ services:
     image: "rabbitmq:3-management"
     environment:
       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-      RABBITMQ_DEFAULT_USER: "rabbitmq"
-      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
       RABBITMQ_DEFAULT_VHOST: "/"
     ports:
       - "15672:15672"

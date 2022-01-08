@@ -6,7 +6,7 @@ spring:
   mail:
     host: 127.0.0.1
     port: 25
-    username: test
+    username: test@test
     password:
   rabbitmq:
     listener:
@@ -17,7 +17,7 @@ spring:
     allow-bean-definition-overriding: true
 
 rabbitmq:
-  uri: amqp://rabbitmq:test@127.0.0.1:5672
+  uri: amqp://test:test@127.0.0.1:5672
   queue: test
   exchange: test
   

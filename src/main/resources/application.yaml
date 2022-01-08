@@ -9,7 +9,7 @@ spring:
   mail:
     host: 127.0.0.1
     port: 2525
-    username: ms@tests.cams7.br
+    username: ms@cams7.test
     password:
     properties:
       mail:
@@ -19,7 +19,7 @@ spring:
             enable: false
     
 rabbitmq:
-  uri: amqp://rabbitmq:rabbitmq@127.0.0.1:5672
+  uri: amqp://admin:admin@127.0.0.1:5672
   queue: ms-queue
   exchange: ms-exchange
   
