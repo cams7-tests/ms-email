@@ -14,7 +14,6 @@ import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -27,8 +26,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-@Disabled
-@DataR2dbcTest
+@DataR2dbcTest(
+    properties = {
+      "spring.r2dbc.url=r2dbc:h2:mem:///sql-email-repository-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    })
 @Import({SQLEmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
 class SQLEmailRepositoryIntegrationTests {
