@@ -3,6 +3,7 @@ package br.cams7.tests.ms.infra.smtp;
 import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.infra.logging.LogEntryExit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,6 +16,7 @@ public class SMTPSendEmailService implements SendEmailGateway {
 
   private final JavaMailSender emailSender;
 
+  @LogEntryExit(showArgs = true)
   @Override
   public void sendEmail(EmailEntity email) throws SendEmailException {
     var message = new SimpleMailMessage();

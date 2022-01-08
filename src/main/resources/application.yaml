@@ -27,3 +27,11 @@ api:
   check:
     identificationNumber: 
       url: http://localhost:3000
+      
+logEntryExit:
+  showLog: true
+  showArgs: true
+  showResult: true
+  showExecutionTime: true
+  level: INFO
+  unit: MILLIS

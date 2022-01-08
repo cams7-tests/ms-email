@@ -25,4 +25,12 @@ api:
   check:
     identificationNumber: 
       url: test
+      
+logEntryExit:
+  showLog: false
+  showArgs: false
+  showResult: false
+  showExecutionTime: false
+  level: 
+  unit: 
 

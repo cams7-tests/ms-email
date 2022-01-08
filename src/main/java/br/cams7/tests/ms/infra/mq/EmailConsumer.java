@@ -2,6 +2,7 @@ package br.cams7.tests.ms.infra.mq;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
+import br.cams7.tests.ms.infra.logging.LogEntryExit;
 import javax.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -16,6 +17,7 @@ public class EmailConsumer {
 
   private final SendEmailDirectlyUseCase sendEmailUseCase;
 
+  @LogEntryExit(showArgs = true, showResult = true)
   @RabbitListener(queues = "${rabbitmq.queue}")
   Mono<Void> listen(@Payload final EmailDTO email) {
     try {
