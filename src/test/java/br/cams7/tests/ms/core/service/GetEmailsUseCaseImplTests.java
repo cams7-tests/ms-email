@@ -2,9 +2,9 @@ package br.cams7.tests.ms.core.service;
 
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
-import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.defaultPageDTO;
+import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.getPageDTO;
 import static br.cams7.tests.ms.core.port.pagination.SortDTOTestData.ORDER;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,9 +29,8 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class GetEmailsUseCaseImplTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY =
-      defaultPageDTO(DEFAULT_EMAIL_ENTITY);
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
+  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY = getPageDTO(DEFAULT_EMAIL_ENTITY);
 
   @InjectMocks private GetEmailsUseCaseImpl getAllEmailsUseCase;
 

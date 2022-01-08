@@ -1,8 +1,8 @@
 /** */
 package br.cams7.tests.ms.infra.smtp;
 
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
-import static br.cams7.tests.ms.infra.smtp.SimpleMailMessageTestData.defaultSimpleMailMessage;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.infra.smtp.SimpleMailMessageTestData.getSimpleMailMessage;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,8 +29,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 @ExtendWith(MockitoExtension.class)
 class SMTPSendEmailServiceTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final SimpleMailMessage DEFAULT_SIMPLE_MAIL_MESSAGE = defaultSimpleMailMessage();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
+  private static final SimpleMailMessage DEFAULT_SIMPLE_MAIL_MESSAGE = getSimpleMailMessage();
   private static final String ERROR_MESSAGE = "Error";
 
   @InjectMocks private SMTPSendEmailService sendEmailService;

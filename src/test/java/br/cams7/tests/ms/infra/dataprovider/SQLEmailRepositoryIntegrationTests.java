@@ -1,9 +1,9 @@
 package br.cams7.tests.ms.infra.dataprovider;
 
-import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.defaultOrderDTO;
+import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDTO;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.test.StepVerifier.create;
 
@@ -36,8 +36,8 @@ class SQLEmailRepositoryIntegrationTests {
 
   private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
   private static UUID WRONG_EMAIL_ID = UUID.fromString("0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05");
-  private static EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final OrderDTO DEFAULT_ORDER_DTO = defaultOrderDTO();
+  private static EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
+  private static final OrderDTO DEFAULT_ORDER_DTO = getOrderDTO();
 
   private static final int TOTAL_PAGES = 3;
   private static final long TOTAL_ELEMENTS = 11;

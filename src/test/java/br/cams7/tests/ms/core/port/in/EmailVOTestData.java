@@ -8,7 +8,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 
 public class EmailVOTestData {
 
-  public static EmailVO defaultEmailVO() {
+  public static EmailVO getEmailVO() {
     return new EmailVO(OWNER_REF, EMAIL_FROM, EMAIL_TO, MESSAGE_SUBJECT, MESSAGE_TEXT);
   }
 }

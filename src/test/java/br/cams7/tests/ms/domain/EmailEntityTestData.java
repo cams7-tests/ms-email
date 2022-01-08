@@ -19,7 +19,7 @@ public final class EmailEntityTestData {
           "2021-12-21 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
   public static EmailStatusEnum EMAIL_STATUS = EmailStatusEnum.SENT;
 
-  public static EmailEntity defaultEmailEntity() {
+  public static EmailEntity getEmailEntity() {
     return EmailEntity.builder()
         .emailId(EMAIL_ID)
         .ownerRef(OWNER_REF)

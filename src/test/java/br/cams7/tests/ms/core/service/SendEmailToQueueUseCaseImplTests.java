@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
-import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.core.port.in.EmailVOTestData.getEmailVO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,10 +32,10 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class SendEmailToQueueUseCaseImplTests {
 
-  private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
+  private static final EmailVO DEFAULT_EMAIL_VO = getEmailVO();
   private static final boolean IS_VALID_IDENTIFICATION_NUMBER = true;
   private static final boolean IS_INVALID_IDENTIFICATION_NUMBER = false;
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
   private static final String ERROR_MESSAGE = "Error";
 
   @InjectMocks private SendEmailToQueueUseCaseImpl sendEmailToQueueUseCase;

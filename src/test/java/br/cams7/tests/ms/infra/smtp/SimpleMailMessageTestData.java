@@ -8,7 +8,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import org.springframework.mail.SimpleMailMessage;
 
 public class SimpleMailMessageTestData {
-  public static SimpleMailMessage defaultSimpleMailMessage() {
+  public static SimpleMailMessage getSimpleMailMessage() {
     var message = new SimpleMailMessage();
     message.setFrom(EMAIL_FROM);
     message.setTo(EMAIL_TO);

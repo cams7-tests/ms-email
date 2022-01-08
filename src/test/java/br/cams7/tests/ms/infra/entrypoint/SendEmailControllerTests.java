@@ -1,10 +1,10 @@
 /** */
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.core.port.in.EmailVOTestData.getEmailVO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static br.cams7.tests.ms.infra.entrypoint.SendEmailRequestDTOTestData.defaultSendEmailRequestDTO;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.defaultEmailResponseDTO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.getEmailResponseDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,9 +33,9 @@ import reactor.core.publisher.Mono;
 class SendEmailControllerTests {
 
   private static final SendEmailRequestDTO SEND_EMAIL_REQUEST_DTO = defaultSendEmailRequestDTO();
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
-  private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
+  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = getEmailResponseDTO();
+  private static final EmailVO DEFAULT_EMAIL_VO = getEmailVO();
 
   @InjectMocks private SendEmailController sendEmailController;
 

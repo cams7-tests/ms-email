@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.webclient;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
-import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.aprovedCheckIdentificationNumberResponse;
-import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.notAprovedCheckIdentificationNumberResponse;
+import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.getAprovedCheckIdentificationNumberResponse;
+import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.getNotAprovedCheckIdentificationNumberResponse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -22,10 +22,10 @@ import reactor.core.publisher.Mono;
 class CheckIdentificationNumberServiceTests {
 
   private static final CheckIdentificationNumberResponse
-      APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE = aprovedCheckIdentificationNumberResponse();
+      APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE = getAprovedCheckIdentificationNumberResponse();
   private static final CheckIdentificationNumberResponse
       NOT_APROVED_CHECK_IDENTIFICATION_NUMBER_RESPONSE =
-          notAprovedCheckIdentificationNumberResponse();
+          getNotAprovedCheckIdentificationNumberResponse();
   private static final String IDENTIFICATION_NUMBER = OWNER_REF;
   private static final String ERROR_MESSAGE = "Error";
 

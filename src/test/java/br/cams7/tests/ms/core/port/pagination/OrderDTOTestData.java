@@ -5,7 +5,7 @@ public class OrderDTOTestData {
   public static final DirectionEnum DIRECTION = DirectionEnum.ASC;
   public static final String PROPERTY = "emailSentDate";
 
-  public static OrderDTO defaultOrderDTO() {
+  public static OrderDTO getOrderDTO() {
     var order = new OrderDTO();
     order.setDirection(DIRECTION);
     order.setProperty(PROPERTY);

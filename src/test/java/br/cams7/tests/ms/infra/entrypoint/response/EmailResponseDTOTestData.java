@@ -12,7 +12,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 
 public final class EmailResponseDTOTestData {
 
-  public static EmailResponseDTO defaultEmailResponseDTO() {
+  public static EmailResponseDTO getEmailResponseDTO() {
     var email = new EmailResponseDTO();
     email.setEmailId(EMAIL_ID);
     email.setIdentificationNumber(OWNER_REF);

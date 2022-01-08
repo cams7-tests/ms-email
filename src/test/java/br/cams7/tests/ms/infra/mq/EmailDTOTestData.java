@@ -7,7 +7,7 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 
 public class EmailDTOTestData {
-  public static EmailDTO defaultEmailDTO() {
+  public static EmailDTO getEmailDTO() {
     var email = new EmailDTO();
     email.setOwnerRef(OWNER_REF);
     email.setEmailFrom(EMAIL_FROM);

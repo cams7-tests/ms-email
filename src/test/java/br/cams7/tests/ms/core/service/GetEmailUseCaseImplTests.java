@@ -1,7 +1,7 @@
 package br.cams7.tests.ms.core.service;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class GetEmailUseCaseImplTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
 
   @InjectMocks private GetEmailUseCaseImpl getEmailUseCase;
 

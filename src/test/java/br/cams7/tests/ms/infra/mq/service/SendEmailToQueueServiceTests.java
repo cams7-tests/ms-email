@@ -1,6 +1,6 @@
 package br.cams7.tests.ms.infra.mq.service;
 
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +28,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestPropertySource(properties = {"rabbitmq.queue=test", "rabbitmq.exchange=test"})
 class SendEmailToQueueServiceTests {
 
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
   private static final String QUEUE = "test";
   private static final String EXCHANGE = "test";
   private static final String ERROR_MESSAGE = "Error";

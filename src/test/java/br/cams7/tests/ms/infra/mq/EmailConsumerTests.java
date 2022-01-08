@@ -1,8 +1,8 @@
 package br.cams7.tests.ms.infra.mq;
 
-import static br.cams7.tests.ms.core.port.in.EmailVOTestData.defaultEmailVO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
-import static br.cams7.tests.ms.infra.mq.EmailDTOTestData.defaultEmailDTO;
+import static br.cams7.tests.ms.core.port.in.EmailVOTestData.getEmailVO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.infra.mq.EmailDTOTestData.getEmailDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,9 +30,9 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class EmailConsumerTests {
 
-  private static final EmailDTO DEFAULT_EMAIL_DTO = defaultEmailDTO();
-  private static final EmailVO DEFAULT_EMAIL_VO = defaultEmailVO();
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
+  private static final EmailDTO DEFAULT_EMAIL_DTO = getEmailDTO();
+  private static final EmailVO DEFAULT_EMAIL_VO = getEmailVO();
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
 
   @InjectMocks private EmailConsumer emailConsumer;
 

@@ -1,13 +1,13 @@
 /** */
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.defaultOrderDTO;
+import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDTO;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
-import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.defaultPageDTO;
+import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.getPageDTO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.defaultEmailEntity;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.defaultEmailResponseDTO;
+import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.getEmailResponseDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -47,13 +47,12 @@ class GetEmailControllerTests {
   private static final String DEFAULT_SORT_FIELD = "emailSentDate";
   private static final Sort DEFAULT_SORT = Sort.by(DEFAULT_SORT_FIELD).ascending();
   private static final Pageable DEFAULT_PAGE = PageRequest.of(PAGE_NUMBER, PAGE_SIZE, DEFAULT_SORT);
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = defaultEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = defaultEmailResponseDTO();
-  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY =
-      defaultPageDTO(DEFAULT_EMAIL_ENTITY);
+  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
+  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = getEmailResponseDTO();
+  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY = getPageDTO(DEFAULT_EMAIL_ENTITY);
   private static final PageDTO<EmailResponseDTO> PAGE_DTO_OF_RESPONSE_DTO =
-      defaultPageDTO(DEFAULT_EMAIL_RESPONSE_DTO);
-  public static final OrderDTO DEFAULT_ORDER_DTO = defaultOrderDTO();
+      getPageDTO(DEFAULT_EMAIL_RESPONSE_DTO);
+  public static final OrderDTO DEFAULT_ORDER_DTO = getOrderDTO();
   private static final String ERROR_MESSAGE = "Email not found.";
 
   @InjectMocks private GetEmailController getEmailController;
