@@ -1,10 +1,16 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
+import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_FROM;
 import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_SUBJECT;
+import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_TEXT;
+import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.FIRST_EMAIL_TO;
 import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.INVALID_EMAIL_ID;
 import static br.cams7.tests.ms.infra.entrypoint.EmailResponseCreator.LAST_EMAIL_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,9 +113,29 @@ class GetEmailControllerIntegrationTests {
   @Test
   @DisplayName("Returns an email when pass a valid id")
   void getEmail_ReturnsAnEmail_WhenPassAValidId() {
-    testClient.get().uri("/emails/{id}", FIRST_EMAIL_ID).exchange().expectStatus().isOk();
-    // .expectBody(EmailResponseDTO.class)
-    // .isEqualTo(FIRST_EMAIL);
+    testClient
+        .get()
+        .uri("/emails/{id}", FIRST_EMAIL_ID)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.emailId")
+        .isEqualTo(FIRST_EMAIL_ID)
+        .jsonPath("$.identificationNumber")
+        .isEqualTo(FIRST_EMAIL_IDENTIFICATION_NUMBER)
+        .jsonPath("$.emailFrom")
+        .isEqualTo(FIRST_EMAIL_FROM)
+        .jsonPath("$.emailTo")
+        .isEqualTo(FIRST_EMAIL_TO)
+        .jsonPath("$.emailSentDate")
+        .isEqualTo("2022-01-06T21:27:30")
+        .jsonPath("$.emailStatus")
+        .isEqualTo(EmailStatusEnum.SENT.name())
+        .jsonPath("$.subject")
+        .isEqualTo(FIRST_EMAIL_SUBJECT)
+        .jsonPath("$.text")
+        .isEqualTo(FIRST_EMAIL_TEXT);
   }
 
   @Test
