@@ -8,7 +8,6 @@ import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import br.cams7.tests.ms.infra.dataprovider.model.EmailModel;
-import br.cams7.tests.ms.infra.logging.LogEntryExit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,13 +46,11 @@ public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, Sa
         });
   }
 
-  @LogEntryExit(showArgs = true, showResult = true)
   @Override
   public Mono<EmailEntity> save(EmailEntity email) {
     return emailRepository.save(getEmailModel(email)).map(this::getEmailEntity);
   }
 
-  @LogEntryExit(showArgs = true, showResult = true)
   @Override
   public Mono<PageDTO<EmailEntity>> findAll(int page, int size, List<OrderDTO> orders) {
     var pageable = PageRequest.of(page, size, Sort.by(getOrders(orders)));
@@ -66,7 +63,6 @@ public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, Sa
         .map(this::getPageDTO);
   }
 
-  @LogEntryExit(showArgs = true, showResult = true)
   @Override
   public Mono<EmailEntity> findById(UUID emailId) {
     return emailRepository.findById(emailId).map(this::getEmailEntity);

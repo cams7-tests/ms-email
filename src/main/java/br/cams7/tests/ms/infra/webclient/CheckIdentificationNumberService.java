@@ -5,7 +5,6 @@ import static br.cams7.tests.ms.infra.configuration.BeanConfiguration.WEB_CLIENT
 import static br.cams7.tests.ms.infra.webclient.response.IdentificationNumberStatusEnum.APPROVED;
 
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
-import br.cams7.tests.ms.infra.logging.LogEntryExit;
 import br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,6 @@ public class CheckIdentificationNumberService implements CheckIdentificationNumb
     this.checkIdentificationNumberWebClient = checkIdentificationNumberWebClient;
   }
 
-  @LogEntryExit(showArgs = true, showResult = true)
   @Override
   public Mono<Boolean> isValid(String identificationNumber) {
     return checkIdentificationNumberWebClient
