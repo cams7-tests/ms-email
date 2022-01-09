@@ -125,15 +125,16 @@ public class LoggingAspect {
       throws Throwable {
     var start = Instant.now();
     var response = point.proceed();
-    if (response != null)
-      if (response instanceof Mono || response instanceof Flux)
-        if (response instanceof Mono)
+    if (response != null) {
+      if (response instanceof Mono || response instanceof Flux) {
+        if (response instanceof Mono) {
           response =
               ((Mono<?>) response).doOnNext(data -> exitLog(logger, methodName, start, data));
-        else
+        } else
           response =
               ((Flux<?>) response).doOnNext(data -> exitLog(logger, methodName, start, data));
-      else exitLog(logger, methodName, start, response);
+      } else exitLog(logger, methodName, start, response);
+    }
     return response;
   }
 
