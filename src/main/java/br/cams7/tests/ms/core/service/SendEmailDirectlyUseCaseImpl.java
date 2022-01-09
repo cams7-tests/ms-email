@@ -21,6 +21,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
+  private static final String ERROR_MESSAGE = "An error occurred while trying to send email";
+
   private final ModelMapper modelMapper;
   private final SaveEmailGateway saveEmailGateway;
   private final SendEmailGateway sendEmailGateway;
@@ -52,7 +54,7 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
               }
               return newEmail;
             })
-        .switchIfEmpty(responseInternalServerErrorException());
+        .switchIfEmpty(responseInternalServerErrorException(ERROR_MESSAGE));
   }
 
   private Mono<EmailEntity> save(EmailEntity email) {

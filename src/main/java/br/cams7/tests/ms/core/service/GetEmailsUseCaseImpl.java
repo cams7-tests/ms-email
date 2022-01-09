@@ -14,12 +14,14 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GetEmailsUseCaseImpl implements GetEmailsUseCase {
 
+  private static final String ERROR_MESSAGE = "An error occurred while trying to load emails page";
+
   private final GetEmailsGateway getEmailsGateway;
 
   @Override
   public Mono<PageDTO<EmailEntity>> execute(int page, int size, List<OrderDTO> orders) {
     return getEmailsGateway
         .findAll(page, size, orders)
-        .switchIfEmpty(responseInternalServerErrorException());
+        .switchIfEmpty(responseInternalServerErrorException(ERROR_MESSAGE));
   }
 }

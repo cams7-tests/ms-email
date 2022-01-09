@@ -58,6 +58,16 @@ class SendEmailControllerIntegrationTests {
 
   private static final String ERROR_MESSAGE = "Error";
 
+  private static String TIMESTAMP_ATTRIBUTE = "$.timestamp";
+  private static String PATH_ATTRIBUTE = "$.path";
+  private static String ERROR_ATTRIBUTE = "$.error";
+  // private static String MESSAGE_ATTRIBUTE = "$.message";
+  private static String TRACE_ATTRIBUTE = "$.trace";
+  private static String REQUESTID_ATTRIBUTE = "$.requestId";
+  private static String ERRORS0_DEFAULT_MESSAGE_ATTRIBUTE = "$.errors[0].defaultMessage";
+  private static String ERRORS0_FIELD_ATTRIBUTE = "$.errors[0].field";
+  private static String EXCEPTION_ATTRIBUTE = "$.exception";
+
   @Autowired private WebTestClient testClient;
 
   @MockBean private CheckIdentificationNumberGateway checkIdentificationNumberGateway;
@@ -143,15 +153,34 @@ class SendEmailControllerIntegrationTests {
       "sendEmailDirectly returns error when pass empty subject and user is successfull authenticated and has ADMIN role")
   void
       sendEmailDirectly_ReturnsError_WhenPassEmptySubjectAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
+    final var URI = "/send-email-directly";
     testClient
         .post()
-        .uri("/send-email-directly")
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL_WITH_EMPTY_SUBJECT))
         .exchange()
         .expectStatus()
-        .is5xxServerError()
-        .expectBody();
+        .isBadRequest()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("BAD_REQUEST")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(ERRORS0_DEFAULT_MESSAGE_ATTRIBUTE)
+        .isEqualTo("must not be blank")
+        .jsonPath(ERRORS0_FIELD_ATTRIBUTE)
+        .isEqualTo("subject")
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("javax.validation.ConstraintViolationException");
   }
 
   @Test
@@ -160,15 +189,34 @@ class SendEmailControllerIntegrationTests {
       "sendEmailDirectly returns error when pass 'identification number' that isn't a valid CPF and user is successfull authenticated and has ADMIN role")
   void
       sendEmailDirectly_ReturnsError_WhenPassIdentificationNumberThatIsntAValidCpfAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
+    final var URI = "/send-email-directly";
     testClient
         .post()
-        .uri("/send-email-directly")
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL_WITH_INVALID_IDENTIFICATION_NUMBER))
         .exchange()
         .expectStatus()
-        .is5xxServerError()
-        .expectBody();
+        .isBadRequest()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("BAD_REQUEST")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(ERRORS0_DEFAULT_MESSAGE_ATTRIBUTE)
+        .isEqualTo("invalid Brazilian individual taxpayer registry number (CPF)")
+        .jsonPath(ERRORS0_FIELD_ATTRIBUTE)
+        .isEqualTo("identificationNumber")
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("javax.validation.ConstraintViolationException");
   }
 
   @Test
@@ -177,15 +225,34 @@ class SendEmailControllerIntegrationTests {
       "sendEmailDirectly returns error when pass invalid 'email from' and user is successfull authenticated and has ADMIN role")
   void
       sendEmailDirectly_ReturnsError_WhenPassInvalidEmailFromAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
+    final var URI = "/send-email-directly";
     testClient
         .post()
-        .uri("/send-email-directly")
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL_WITH_INVALID_EMAIL_FROM))
         .exchange()
         .expectStatus()
-        .is5xxServerError()
-        .expectBody();
+        .isBadRequest()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("BAD_REQUEST")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(ERRORS0_DEFAULT_MESSAGE_ATTRIBUTE)
+        .isEqualTo("must be a well-formed email address")
+        .jsonPath(ERRORS0_FIELD_ATTRIBUTE)
+        .isEqualTo("emailFrom")
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("javax.validation.ConstraintViolationException");
   }
 
   @Test
@@ -195,17 +262,73 @@ class SendEmailControllerIntegrationTests {
   void
       sendEmailDirectly_ReturnsError_WhenPassAInvalidIdentificationNumberAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
           throws SendEmailException {
+    final var URI = "/send-email-directly";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_INVALID_IDENTIFICATION_NUMBER));
     testClient
         .post()
-        .uri("/send-email-directly")
+        .uri(URI)
+        .contentType(APPLICATION_JSON)
+        .body(BodyInserters.fromValue(NEW_EMAIL))
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("BAD_REQUEST")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(ERRORS0_DEFAULT_MESSAGE_ATTRIBUTE)
+        .isEqualTo("The identification number \"" + OWNER_REF + "\" isn't valid")
+        .jsonPath(ERRORS0_FIELD_ATTRIBUTE)
+        .isEqualTo("identificationNumber")
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberException");
+
+    then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
+    then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN)
+  @DisplayName(
+      "sendEmailDirectly returns error when empty was returned during 'identification number' validation and user is successfull authenticated and has ADMIN role")
+  void
+      sendEmailDirectly_ReturnsError_WhenEmptyWasReturnedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
+          throws SendEmailException {
+    final var URI = "/send-email-directly";
+    given(checkIdentificationNumberGateway.isValid(anyString())).willReturn(Mono.empty());
+    testClient
+        .post()
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
-        .expectBody();
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("INTERNAL_SERVER_ERROR")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("br.cams7.tests.ms.core.port.in.exception.ResponseStatusException");
 
     then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
@@ -218,17 +341,30 @@ class SendEmailControllerIntegrationTests {
   void
       sendEmailDirectly_ReturnsError_WhenSomeErrorHappenedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
           throws SendEmailException {
+    final var URI = "/send-email-directly";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
     testClient
         .post()
-        .uri("/send-email-directly")
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
-        .expectBody();
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("Internal Server Error")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        //        .jsonPath(TRACE_ATTRIBUTE)
+        //        .isNotEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty();
 
     then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(never()).sendEmail(any(EmailEntity.class));
@@ -327,6 +463,7 @@ class SendEmailControllerIntegrationTests {
   void
       sendEmailToQueue_ReturnsError_WhenSomeErrorHappenedDuringTrySentEmailToQueueAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
           throws SendEmailException {
+    var URI = "/send-email-to-queue";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
     willThrow(new RuntimeException(ERROR_MESSAGE))
@@ -335,13 +472,25 @@ class SendEmailControllerIntegrationTests {
 
     testClient
         .post()
-        .uri("/send-email-to-queue")
+        .uri(URI)
         .contentType(APPLICATION_JSON)
         .body(BodyInserters.fromValue(NEW_EMAIL))
         .exchange()
         .expectStatus()
         .is5xxServerError()
-        .expectBody();
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo(URI)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("Internal Server Error")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        //        .jsonPath(TRACE_ATTRIBUTE)
+        //        .isNotEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty();
 
     then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailToQueueGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());

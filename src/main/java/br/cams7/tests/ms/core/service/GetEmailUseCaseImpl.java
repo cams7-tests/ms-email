@@ -12,10 +12,14 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GetEmailUseCaseImpl implements GetEmailUseCase {
 
+  private static final String ERROR_MESSAGE = "Email not found";
+
   private final GetEmailGateway getEmailGateway;
 
   @Override
   public Mono<EmailEntity> execute(UUID emailId) {
-    return getEmailGateway.findById(emailId).switchIfEmpty(responseNotFoundException());
+    return getEmailGateway
+        .findById(emailId)
+        .switchIfEmpty(responseNotFoundException(ERROR_MESSAGE));
   }
 }

@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import br.cams7.tests.ms.core.port.in.EmailVO;
 import br.cams7.tests.ms.core.port.in.SendEmailDirectlyUseCase;
 import br.cams7.tests.ms.core.port.in.SendEmailToQueueUseCase;
@@ -11,7 +13,6 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,7 +40,7 @@ public class SendEmailController {
       tags = {OPERATION_TAGS},
       security = @SecurityRequirement(name = SECURITY_SCHEME_NAME))
   @PostMapping(path = "/send-email-directly")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   Mono<EmailResponseDTO> sendEmailDirectly(
       @RequestBody final SendEmailRequestDTO sendEmailRequest) {
     return sendEmailDirectlyUseCase
@@ -52,7 +53,7 @@ public class SendEmailController {
       tags = {OPERATION_TAGS},
       security = @SecurityRequirement(name = SECURITY_SCHEME_NAME))
   @PostMapping(path = "/send-email-to-queue")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   Mono<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
     return sendEmailToQueueUseCase.execute(getEmail(sendEmailRequest));
   }

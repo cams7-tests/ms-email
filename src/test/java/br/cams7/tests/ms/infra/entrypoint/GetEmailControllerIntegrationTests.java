@@ -7,6 +7,7 @@ import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestDa
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TEXT;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TO;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_UUID;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -28,6 +29,14 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 class GetEmailControllerIntegrationTests {
 
   private static final String USER = "user";
+
+  private static String TIMESTAMP_ATTRIBUTE = "$.timestamp";
+  private static String PATH_ATTRIBUTE = "$.path";
+  private static String ERROR_ATTRIBUTE = "$.error";
+  // private static String MESSAGE_ATTRIBUTE = "$.message";
+  private static String TRACE_ATTRIBUTE = "$.trace";
+  private static String REQUESTID_ATTRIBUTE = "$.requestId";
+  private static String EXCEPTION_ATTRIBUTE = "$.exception";
 
   @Autowired private WebTestClient testClient;
 
@@ -162,15 +171,61 @@ class GetEmailControllerIntegrationTests {
 
   @Test
   @DisplayName("getEmail returns unauthorized when user isn't authenticated")
-  void getById_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+  void getEmail_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
     testClient.get().uri("/emails/{id}", FIRST_EMAIL_ID).exchange().expectStatus().isUnauthorized();
   }
 
   @Test
   @WithUserDetails(USER)
   @DisplayName(
-      "Returns error when pass a invalid id and user is successfull authenticated and has USER role")
+      "getEmail returns error when pass a invalid id and user is successfull authenticated and has USER role")
   void getEmail_ReturnsError_WhenPassAInvalidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
-    testClient.get().uri("/emails/{id}", INVALID_EMAIL_ID).exchange().expectStatus().isBadRequest();
+    testClient
+        .get()
+        .uri("/emails/{id}", INVALID_EMAIL_ID)
+        .exchange()
+        .expectStatus()
+        .isNotFound()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo("/emails/" + INVALID_EMAIL_ID)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("NOT_FOUND")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("br.cams7.tests.ms.core.port.in.exception.ResponseStatusException");
+  }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmail returns error when pass a invalid UUID and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsError_WhenPassAInvalidUuidAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails/{id}", INVALID_UUID)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo("/emails/" + INVALID_UUID)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("Bad Request")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        //                .jsonPath(TRACE_ATTRIBUTE)
+        //                .isNotEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty();
   }
 }

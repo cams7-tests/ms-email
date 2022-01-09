@@ -1,6 +1,7 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.http.HttpStatus.OK;
 
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
@@ -20,7 +21,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,7 +53,7 @@ public class GetEmailController {
       tags = {OPERATION_TAGS},
       security = @SecurityRequirement(name = SECURITY_SCHEME_NAME))
   @GetMapping(path = "/emails")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   Mono<PageDTO<EmailResponseDTO>> getEmails(
       @PageableDefault(
               page = DEFAULT_PAGE_NUMBER,
@@ -71,7 +71,7 @@ public class GetEmailController {
       tags = {OPERATION_TAGS},
       security = @SecurityRequirement(name = SECURITY_SCHEME_NAME))
   @GetMapping(path = "/emails/{emailId}")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
     return getEmailUseCase.execute(emailId).map(responseConverter::convert);
   }

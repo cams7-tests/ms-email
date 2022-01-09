@@ -18,7 +18,8 @@ import java.util.UUID;
 
 public final class EmailResponseDTOTestData {
 
-  public static final String INVALID_EMAIL_ID = "fa3758635-fe93-4735-bca0-51e754833221";
+  public static final String INVALID_EMAIL_ID = "0263d741-c187-4598-9b2e-8464a91bb78e";
+  public static final String INVALID_UUID = "fa3758635-fe93-4735-bca0-51e754833221";
 
   public static final String FIRST_EMAIL_ID = "fd0622c0-6101-11ec-902c-8f89d045b40c";
   public static final String FIRST_EMAIL_IDENTIFICATION_NUMBER = "46384730081";
