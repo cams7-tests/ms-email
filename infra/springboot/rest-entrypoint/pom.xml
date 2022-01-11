@@ -8,41 +8,42 @@
 		<version>2.6.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.cams7.tests.ms</groupId>
-	<artifactId>stringboot-rest-entrypoint</artifactId>
+	<groupId>br.cams7.tests.ms.springboot</groupId>
+	<artifactId>rest-entrypoint</artifactId>
 	<version>0.3.0-SNAPSHOT</version>
-	<name>MS - String Boot Rest Entrypoint</name>
+
+	<name>MS - Rest Entrypoint</name>
 	<description />
 	
 	<properties>
-	  <java.version>11</java.version>	 
+	 	<java.version>11</java.version>	 
 	</properties>
 	
 	<dependencies>
-	    <dependency>
-		    <groupId>br.cams7.tests.ms</groupId>
-		    <artifactId>core</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
+		<dependency>
+		    	<groupId>br.cams7.tests.ms</groupId>
+		    	<artifactId>core</artifactId>
+		    	<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		    <groupId>br.cams7.tests.ms</groupId>
-		    <artifactId>postgres-dataprovider</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
+		    	<groupId>br.cams7.tests.ms.springboot</groupId>
+		    	<artifactId>postgres-dataprovider</artifactId>
+		    	<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		    <groupId>br.cams7.tests.ms</groupId>
-		    <artifactId>rabbitmq</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
+		    	<groupId>br.cams7.tests.ms.springboot</groupId>
+		    	<artifactId>rabbitmq</artifactId>
+		    	<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		    <groupId>br.cams7.tests.ms</groupId>
-		    <artifactId>smtp</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
+		    	<groupId>br.cams7.tests.ms.springboot</groupId>
+		    	<artifactId>smtp</artifactId>
+		    	<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		    <groupId>br.cams7.tests</groupId>
-		    <artifactId>check-identification-number</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
+		    	<groupId>br.cams7.tests.springboot</groupId>
+		    	<artifactId>check-identification-number</artifactId>
+		    	<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
@@ -85,9 +86,9 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>		
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>             
+            		<groupId>org.springframework.boot</groupId>
+            		<artifactId>spring-boot-starter-amqp</artifactId>
+        	</dependency>             
 		
 		<dependency>
 			<groupId>org.modelmapper</groupId>
@@ -138,14 +139,15 @@
 	</dependencies>
 
 	<build>
-	    <resources>
+	  	<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
 		<plugins>
-		    <plugin>
+		    	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -168,15 +170,15 @@
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
-			    <artifactId>jacoco-maven-plugin</artifactId>
-			    <version>0.8.7</version>
-			    <configuration>
-	                <excludes>
-	                    <exclude>**/EmailApplication.*</exclude>
-	                    <exclude>**/configuration/*.*</exclude>
-	                    <exclude>**/logging/*.*</exclude>
-	                </excludes>
-	            </configuration>
+			    	<artifactId>jacoco-maven-plugin</artifactId>
+			    	<version>0.8.7</version>
+			    	<configuration>
+	                		<excludes>
+	                    			<exclude>**/EmailApplication.*</exclude>
+	                    			<exclude>**/configuration/*.*</exclude>
+	                    			<exclude>**/logging/*.*</exclude>
+	                		</excludes>
+	            		</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -194,7 +196,6 @@
 			</plugin>						
 		</plugins>
 	</build>
-
 
 	<dependencyManagement>
 		<dependencies>

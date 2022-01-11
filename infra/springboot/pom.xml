@@ -4,18 +4,22 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.cams7.tests</groupId>
-	<artifactId>infra</artifactId>
+	<artifactId>springboot</artifactId>
 	<version>0.3.0-SNAPSHOT</version>
         <packaging>pom</packaging>
 		
-	<name>Infra</name>
+	<name>Spring Boot</name>
 	<description />
 	
 	<properties>
 	</properties>
 
 	<modules>
-		<module>springboot</module>
+		<module>postgres-dataprovider</module>
+		<module>rabbitmq</module>
+		<module>smtp</module>
+		<module>check-identification-number</module>
+		<module>rest-entrypoint</module>
 	</modules>
 	
 	<dependencies>		
