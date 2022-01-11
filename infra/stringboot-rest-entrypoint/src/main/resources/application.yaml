@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:15432/ms_email
+    username: ms_email
+    password: ms_email
+  mail:
+    host: 127.0.0.1
+    port: 2525
+    username: ms@cams7.test
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+    
+rabbitmq:
+  uri: amqp://admin:admin@127.0.0.1:5672
+  queue: ms-queue
+  exchange: ms-exchange
+  
+api:
+  check:
+    identificationNumber: 
+      url: http://localhost:3000
+      
+logEntryExit:
+  showLog: true
+  showArgs: true
+  showResult: true
+  showExecutionTime: true
+  level: INFO
+  unit: MILLIS

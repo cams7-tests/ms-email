@@ -1,0 +1,36 @@
+spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///ms_email?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  mail:
+    host: 127.0.0.1
+    port: 25
+    username: test@test
+    password:
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+        
+  main:
+    allow-bean-definition-overriding: true
+
+rabbitmq:
+  uri: amqp://test:test@127.0.0.1:5672
+  queue: test
+  exchange: test
+  
+api:
+  check:
+    identificationNumber: 
+      url: test
+      
+logEntryExit:
+  showLog: false
+  showArgs: false
+  showResult: false
+  showExecutionTime: false
+  level: 
+  unit: 
+
