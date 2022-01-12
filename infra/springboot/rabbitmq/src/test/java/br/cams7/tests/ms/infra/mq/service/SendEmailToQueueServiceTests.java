@@ -1,8 +1,7 @@
 package br.cams7.tests.ms.infra.mq.service;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
+import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
@@ -44,7 +44,11 @@ class SendEmailToQueueServiceTests {
         .given(rabbitTemplate)
         .convertAndSend(anyString(), anyString(), any(Object.class));
 
-    sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY);
+    create(sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY))
+        .expectSubscription()
+        .expectNext(SENT)
+        .verifyComplete();
+
     then(rabbitTemplate)
         .should(times(1))
         .convertAndSend(eq(EXCHANGE), eq(QUEUE), eq(DEFAULT_EMAIL_ENTITY));
@@ -57,14 +61,10 @@ class SendEmailToQueueServiceTests {
         .given(rabbitTemplate)
         .convertAndSend(anyString(), anyString(), any(Object.class));
 
-    var thrown =
-        assertThrows(
-            RuntimeException.class,
-            () -> {
-              sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY);
-            });
-
-    assertThat(thrown.getMessage()).isEqualTo(ERROR_MESSAGE);
+    create(sendEmailToQueueGateway.sendEmail(DEFAULT_EMAIL_ENTITY))
+        .expectSubscription()
+        .expectError(RuntimeException.class)
+        .verify();
 
     then(rabbitTemplate)
         .should(times(1))

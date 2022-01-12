@@ -6,6 +6,8 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_SUBJECT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.MESSAGE_TEXT;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.NEW_EMAIL_ENTITY;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL;
 import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL_WITH_EMPTY_SUBJECT;
 import static br.cams7.tests.ms.infra.entrypoint.request.SendEmailRequestDTOTestData.NEW_EMAIL_WITH_INVALID_EMAIL_FROM;
@@ -16,8 +18,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -26,9 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
 import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.core.port.out.SendEmailToQueueGateway;
-import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailStatusEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -81,11 +79,10 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailDirectly returns a registred email and sent an email directly when pass valid params and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailDirectly_ReturnsARegistredEmailAndSendAnEmailDirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailDirectly_ReturnsARegistredEmailAndSendAnEmailDirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willDoNothing().given(sendEmailGateway).sendEmail(any(EmailEntity.class));
+    given(sendEmailGateway.sendEmail(any(EmailEntity.class))).willReturn(Mono.just(SENT));
 
     testClient
         .post()
@@ -107,7 +104,7 @@ class SendEmailControllerIntegrationTests {
         .jsonPath("$.text")
         .isEqualTo(MESSAGE_TEXT)
         .jsonPath("$.emailStatus")
-        .isEqualTo(EmailStatusEnum.SENT.name())
+        .isEqualTo(SENT.name())
         .jsonPath("$.emailSentDate")
         .isNotEmpty()
         .jsonPath("$.emailId")
@@ -260,8 +257,7 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailDirectly returns error when pass a invalid 'identification number' and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailDirectly_ReturnsError_WhenPassAInvalidIdentificationNumberAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailDirectly_ReturnsError_WhenPassAInvalidIdentificationNumberAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     final var URI = "/send-email-directly";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_INVALID_IDENTIFICATION_NUMBER));
@@ -302,8 +298,7 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailDirectly returns error when empty was returned during 'identification number' validation and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailDirectly_ReturnsError_WhenEmptyWasReturnedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailDirectly_ReturnsError_WhenEmptyWasReturnedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     final var URI = "/send-email-directly";
     given(checkIdentificationNumberGateway.isValid(anyString())).willReturn(Mono.empty());
     testClient
@@ -339,8 +334,7 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailDirectly returns error when some error happened during 'identification number' validation and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailDirectly_ReturnsError_WhenSomeErrorHappenedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailDirectly_ReturnsError_WhenSomeErrorHappenedDuringIdentificationNumberValidationAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     final var URI = "/send-email-directly";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
@@ -375,13 +369,10 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailDirectly returns a registred email with error status and don't sent an email when some error happened during try sent email and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailDirectly_ReturnsARegistredEmailWithErrorStatusAndDontSentAndEmail_WhenSomeErrorHappenedDuringTrySendEmailAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailDirectly_ReturnsARegistredEmailWithErrorStatusAndDontSentAndEmail_WhenSomeErrorHappenedDuringTrySendEmailAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willThrow(new SendEmailException(ERROR_MESSAGE, null))
-        .given(sendEmailGateway)
-        .sendEmail(any(EmailEntity.class));
+    given(sendEmailGateway.sendEmail(any(EmailEntity.class))).willReturn(Mono.just(ERROR));
 
     testClient
         .post()
@@ -393,12 +384,12 @@ class SendEmailControllerIntegrationTests {
         .isOk()
         .expectBody()
         .jsonPath("$.emailStatus")
-        .isEqualTo(EmailStatusEnum.ERROR.name());
+        .isEqualTo(ERROR.name());
 
     then(checkIdentificationNumberGateway).should(times(1)).isValid(eq(OWNER_REF));
     then(sendEmailGateway).should(times(1)).sendEmail(emailEntityCaptor.capture());
     assertThat(emailEntityCaptor.getValue().withEmailId(null).withEmailSentDate(null))
-        .isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(EmailStatusEnum.ERROR));
+        .isEqualTo(NEW_EMAIL_ENTITY.withEmailStatus(ERROR));
   }
 
   @Test
@@ -406,11 +397,10 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailToQueue returns void and sent an email indirectly when pass valid params and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailToQueue_ReturnsVoidAndSendAnEmailIndirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailToQueue_ReturnsVoidAndSendAnEmailIndirectly_WhenPassValidParamsAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willDoNothing().given(sendEmailToQueueGateway).sendEmail(any(EmailEntity.class));
+    given(sendEmailToQueueGateway.sendEmail(any(EmailEntity.class))).willReturn(Mono.just(SENT));
 
     testClient
         .post()
@@ -461,14 +451,12 @@ class SendEmailControllerIntegrationTests {
   @DisplayName(
       "sendEmailToQueue returns error when some error happened during try sent email to queue and user is successfull authenticated and has ADMIN role")
   void
-      sendEmailToQueue_ReturnsError_WhenSomeErrorHappenedDuringTrySentEmailToQueueAndUserIsSuccessfullAuthenticatedAndHasAdminRole()
-          throws SendEmailException {
+      sendEmailToQueue_ReturnsError_WhenSomeErrorHappenedDuringTrySentEmailToQueueAndUserIsSuccessfullAuthenticatedAndHasAdminRole() {
     var URI = "/send-email-to-queue";
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willThrow(new RuntimeException(ERROR_MESSAGE))
-        .given(sendEmailToQueueGateway)
-        .sendEmail(any(EmailEntity.class));
+    given(sendEmailToQueueGateway.sendEmail(any(EmailEntity.class)))
+        .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
 
     testClient
         .post()

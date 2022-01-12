@@ -2,17 +2,18 @@
 package br.cams7.tests.ms.infra.smtp;
 
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static br.cams7.tests.ms.infra.smtp.SimpleMailMessageTestData.getSimpleMailMessage;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static reactor.test.StepVerifier.create;
 
-import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,24 +42,26 @@ class SMTPSendEmailServiceTests {
 
   @Test
   @DisplayName("sendEmail when successfull")
-  void sendEmail_WhenSuccessful() throws SendEmailException {
+  void sendEmail_WhenSuccessful() {
 
     willDoNothing().given(emailSender).send(any(SimpleMailMessage.class));
 
-    sendEmailService.sendEmail(DEFAULT_EMAIL_ENTITY);
+    create(sendEmailService.sendEmail(DEFAULT_EMAIL_ENTITY))
+        .expectSubscription()
+        .expectNext(SENT)
+        .verifyComplete();
 
     then(emailSender).should(times(1)).send(simpleMailMessageCaptor.capture());
     assertThat(simpleMailMessageCaptor.getValue()).isEqualTo(DEFAULT_SIMPLE_MAIL_MESSAGE);
   }
 
   @Test
-  @DisplayName("sendEmail throws error when pass null email entity")
-  void sendEmail_ThrowsError_WhenPassNullEmailEntity() {
-    assertThrows(
-        NullPointerException.class,
-        () -> {
-          sendEmailService.sendEmail(null);
-        });
+  @DisplayName("sendEmail returns error when pass null email entity")
+  void sendEmail_ReturnsError_WhenPassNullEmailEntity() {
+    create(sendEmailService.sendEmail(null))
+        .expectSubscription()
+        .expectError(NullPointerException.class)
+        .verify();
 
     then(emailSender).should(never()).send(any(SimpleMailMessage.class));
   }
@@ -73,14 +76,10 @@ class SMTPSendEmailServiceTests {
         .given(emailSender)
         .send(any(SimpleMailMessage.class));
 
-    var thrown =
-        assertThrows(
-            SendEmailException.class,
-            () -> {
-              sendEmailService.sendEmail(DEFAULT_EMAIL_ENTITY);
-            });
-
-    assertThat(thrown.getMessage()).isEqualTo(ERROR_MESSAGE);
+    create(sendEmailService.sendEmail(DEFAULT_EMAIL_ENTITY))
+        .expectSubscription()
+        .expectNext(ERROR)
+        .verifyComplete();
 
     then(emailSender).should(times(1)).send(simpleMailMessageCaptor.capture());
     assertThat(simpleMailMessageCaptor.getValue()).isEqualTo(DEFAULT_SIMPLE_MAIL_MESSAGE);

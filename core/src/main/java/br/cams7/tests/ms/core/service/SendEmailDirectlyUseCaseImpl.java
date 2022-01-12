@@ -1,8 +1,6 @@
 package br.cams7.tests.ms.core.service;
 
 import static br.cams7.tests.ms.core.port.in.exception.CommonExceptions.responseInternalServerErrorException;
-import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
-import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static java.lang.Boolean.TRUE;
 
 import br.cams7.tests.ms.core.port.in.EmailVO;
@@ -11,7 +9,6 @@ import br.cams7.tests.ms.core.port.in.exception.InvalidIdentificationNumberExcep
 import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
 import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.out.SendEmailGateway;
-import br.cams7.tests.ms.core.port.out.exception.SendEmailException;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -43,16 +40,13 @@ public class SendEmailDirectlyUseCaseImpl implements SendEmailDirectlyUseCase {
 
               entity.setEmailSentDate(LocalDateTime.now());
 
-              Mono<EmailEntity> newEmail = Mono.empty();
-              try {
-                sendEmailGateway.sendEmail(entity);
-                entity.setEmailStatus(SENT);
-              } catch (SendEmailException e) {
-                entity.setEmailStatus(ERROR);
-              } finally {
-                newEmail = save(entity);
-              }
-              return newEmail;
+              return sendEmailGateway
+                  .sendEmail(entity)
+                  .flatMap(
+                      emailStatus -> {
+                        entity.setEmailStatus(emailStatus);
+                        return save(entity);
+                      });
             })
         .switchIfEmpty(responseInternalServerErrorException(ERROR_MESSAGE));
   }

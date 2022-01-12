@@ -55,7 +55,9 @@ public class SendEmailController {
   @PostMapping(path = "/send-email-to-queue")
   @ResponseStatus(OK)
   Mono<Void> sendEmailToQueue(@RequestBody final SendEmailRequestDTO sendEmailRequest) {
-    return sendEmailToQueueUseCase.execute(getEmail(sendEmailRequest));
+    return sendEmailToQueueUseCase
+        .execute(getEmail(sendEmailRequest))
+        .flatMap(status -> Mono.empty());
   }
 
   private static EmailVO getEmail(SendEmailRequestDTO sendEmailRequest) {

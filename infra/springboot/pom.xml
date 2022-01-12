@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>postgres-dataprovider</module>
+		<module>mongodb-dataprovider</module>
 		<module>rabbitmq</module>
 		<module>smtp</module>
 		<module>check-identification-number</module>

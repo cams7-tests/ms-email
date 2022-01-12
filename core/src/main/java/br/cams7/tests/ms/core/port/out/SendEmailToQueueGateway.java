@@ -1,9 +1,11 @@
 package br.cams7.tests.ms.core.port.out;
 
 import br.cams7.tests.ms.domain.EmailEntity;
+import br.cams7.tests.ms.domain.EmailStatusEnum;
+import reactor.core.publisher.Mono;
 
 @FunctionalInterface
 public interface SendEmailToQueueGateway {
 
-  void sendEmail(EmailEntity email);
+  Mono<EmailStatusEnum> sendEmail(EmailEntity email);
 }

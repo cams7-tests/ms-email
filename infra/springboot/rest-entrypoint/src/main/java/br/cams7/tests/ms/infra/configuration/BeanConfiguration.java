@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.infra.configuration;
 
+import static br.cams7.tests.ms.infra.webclient.config.Constants.WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER;
+
 import br.cams7.tests.ms.EmailApplication;
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
@@ -26,8 +28,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @ComponentScan(basePackageClasses = EmailApplication.class)
 public class BeanConfiguration {
-
-  public static final String WEB_CLIENT_CHECK_IDENTIFICATION_NUMBER = "checkIdentificationNumber";
 
   @Value("${api.check.identificationNumber.url}")
   private String identificationNumberUrl;

@@ -2,14 +2,13 @@ package br.cams7.tests.ms.core.service;
 
 import static br.cams7.tests.ms.core.port.in.EmailVOTestData.getEmailVO;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static reactor.test.StepVerifier.create;
@@ -49,14 +48,14 @@ class SendEmailToQueueUseCaseImplTests {
   void sendEmail_WhenSuccessful() {
     given(checkIdentificationNumberGateway.isValid(anyString()))
         .willReturn(Mono.just(IS_VALID_IDENTIFICATION_NUMBER));
-    willDoNothing().given(sendEmailGateway).sendEmail(any(EmailEntity.class));
+    given(sendEmailGateway.sendEmail(any(EmailEntity.class))).willReturn(Mono.just(SENT));
 
     var newEmail =
         DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailSentDate(null).withEmailStatus(null);
 
     create(sendEmailToQueueUseCase.execute(DEFAULT_EMAIL_VO))
         .expectSubscription()
-        .expectNextCount(0)
+        .expectNext(SENT)
         .verifyComplete();
 
     then(checkIdentificationNumberGateway)
@@ -103,9 +102,8 @@ class SendEmailToQueueUseCaseImplTests {
 
     var newEmail =
         DEFAULT_EMAIL_ENTITY.withEmailId(null).withEmailSentDate(null).withEmailStatus(null);
-    willThrow(new RuntimeException(ERROR_MESSAGE))
-        .given(sendEmailGateway)
-        .sendEmail(any(EmailEntity.class));
+    given(sendEmailGateway.sendEmail(any(EmailEntity.class)))
+        .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
 
     create(sendEmailToQueueUseCase.execute(DEFAULT_EMAIL_VO))
         .expectSubscription()
