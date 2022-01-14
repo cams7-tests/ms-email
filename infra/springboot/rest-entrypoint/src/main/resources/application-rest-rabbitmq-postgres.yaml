@@ -1,0 +1,6 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:15432/ms_email
+    username: ms_email
+    password: ms_email
+

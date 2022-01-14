@@ -24,12 +24,7 @@
 		    <groupId>br.cams7.tests.ms</groupId>
 		    <artifactId>core</artifactId>
 		    <version>0.3.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		    <groupId>br.cams7.tests.ms.springboot</groupId>
-		    <artifactId>postgres-dataprovider</artifactId>
-		    <version>0.3.0-SNAPSHOT</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 		    <groupId>br.cams7.tests.ms.springboot</groupId>
 		    <artifactId>rabbitmq</artifactId>
@@ -57,16 +52,7 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
-		</dependency>	
-		<dependency>
-			<groupId>io.r2dbc</groupId>
-			<artifactId>r2dbc-postgresql</artifactId>
-		</dependency>
+		</dependency>		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -119,18 +105,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.tngtech.archunit</groupId>
-			<artifactId>archunit</artifactId>
-			<version>0.22.0</version>
-			<scope>test</scope>
-		</dependency>					
-		<dependency>
-			<groupId>io.r2dbc</groupId>
-			<artifactId>r2dbc-h2</artifactId>
-			<scope>test</scope>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
@@ -208,4 +183,60 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>rest-rabbitmq-postgres</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>rest-rabbitmq-postgres</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>rest-rabbitmq-postgres</spring.profiles.active>
+			</properties>
+			<dependencies>
+				<dependency>
+				    <groupId>br.cams7.tests.ms.springboot</groupId>
+				    <artifactId>postgres-dataprovider</artifactId>
+				    <version>0.3.0-SNAPSHOT</version>
+				</dependency>
+
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-r2dbc</artifactId>
+				</dependency>	
+				<dependency>
+					<groupId>io.r2dbc</groupId>
+					<artifactId>r2dbc-postgresql</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>io.r2dbc</groupId>
+					<artifactId>r2dbc-h2</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>rest-rabbitmq-mongodb</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>rest-rabbitmq-mongodb</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>rest-rabbitmq-mongodb</spring.profiles.active>
+			</properties>
+			<dependencies>
+			</dependencies>
+		</profile>		
+	</profiles>
 </project>
