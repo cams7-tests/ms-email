@@ -1,5 +1,12 @@
 spring:
   data:
     mongodb:
-      url: mongodb://localhost:27017/ms_email
+      host: 127.0.0.1
+      port: 27017
+      database: ms_email
+#      authentication-database: admin
+#      username: admin
+#      password:
+#      - admin
+      
 
