@@ -3,7 +3,7 @@ package br.cams7.tests.ms.core.service;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -14,7 +14,6 @@ import static reactor.test.StepVerifier.create;
 import br.cams7.tests.ms.core.port.in.exception.ResponseStatusException;
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +37,7 @@ class GetEmailUseCaseImplTests {
   @Test
   @DisplayName("findById returns an email when successfull")
   void findById_ReturnsAnEmail_WhenSuccessful() {
-    given(getEmailGateway.findById(any(UUID.class))).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
+    given(getEmailGateway.findById(anyString())).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
 
     create(getEmailUseCase.execute(EMAIL_ID))
         .expectSubscription()
@@ -51,7 +50,7 @@ class GetEmailUseCaseImplTests {
   @Test
   @DisplayName("findById returns error when empty is returned")
   void findById_ReturnsError_WhenEmptyIsReturned() {
-    given(getEmailGateway.findById(any(UUID.class))).willReturn(Mono.empty());
+    given(getEmailGateway.findById(anyString())).willReturn(Mono.empty());
 
     create(getEmailUseCase.execute(EMAIL_ID))
         .expectSubscription()
@@ -77,7 +76,7 @@ class GetEmailUseCaseImplTests {
   @Test
   @DisplayName("findById returns error when some error happened during get email")
   void findById_ReturnsError_WhenSomeErrorHappenedDuringGetEmail() {
-    given(getEmailGateway.findById(any(UUID.class))).willReturn(Mono.error(new RuntimeException()));
+    given(getEmailGateway.findById(anyString())).willReturn(Mono.error(new RuntimeException()));
 
     create(getEmailUseCase.execute(EMAIL_ID))
         .expectSubscription()

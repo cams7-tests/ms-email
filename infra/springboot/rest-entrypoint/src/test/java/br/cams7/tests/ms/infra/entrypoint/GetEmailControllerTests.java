@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -25,7 +26,6 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
 import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,7 +88,7 @@ class GetEmailControllerTests {
   @DisplayName("getEmail returns an email when successfull")
   void getEmail_ReturnsAnEmail_WhenSuccessful() {
 
-    given(getEmailUseCase.execute(any(UUID.class))).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
+    given(getEmailUseCase.execute(anyString())).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
     given(responseConverter.convert(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
 
     create(getEmailController.getEmail(EMAIL_ID))
@@ -104,7 +104,7 @@ class GetEmailControllerTests {
   @DisplayName("getEmail returns an error message when get empty email")
   void getEmail_ReturnsAnErrorMessage_WhenGetEmptyEmail() {
 
-    given(getEmailUseCase.execute(any(UUID.class)))
+    given(getEmailUseCase.execute(anyString()))
         .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
 
     create(getEmailController.getEmail(EMAIL_ID))

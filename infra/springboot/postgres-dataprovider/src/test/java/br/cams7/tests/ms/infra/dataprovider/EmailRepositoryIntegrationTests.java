@@ -4,7 +4,7 @@ import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDT
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
-import static br.cams7.tests.ms.infra.dataprovider.SQLEmailRepositoryIntegrationTests.R2DBC_URL;
+import static br.cams7.tests.ms.infra.dataprovider.EmailRepositoryIntegrationTests.R2DBC_URL;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.test.StepVerifier.create;
 
@@ -14,7 +14,6 @@ import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -32,15 +31,15 @@ import org.springframework.context.annotation.Import;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @DataR2dbcTest(properties = {R2DBC_URL})
-@Import({SQLEmailRepository.class})
+@Import({EmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
-class SQLEmailRepositoryIntegrationTests {
+class EmailRepositoryIntegrationTests {
 
   public static final String R2DBC_URL =
       "spring.r2dbc.url=r2dbc:h2:mem:///sql-email-repository-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
 
-  private static UUID EMAIL_ID = UUID.fromString("fd0622c0-6101-11ec-902c-8f89d045b40c");
-  private static UUID WRONG_EMAIL_ID = UUID.fromString("0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05");
+  private static String EMAIL_ID = "fd0622c0-6101-11ec-902c-8f89d045b40c";
+  private static String WRONG_EMAIL_ID = "0df7dbda-7277-4d6e-a4e9-ee60bf7cbb05";
   private static EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
   private static final OrderDTO DEFAULT_ORDER_DTO = getOrderDTO();
 
@@ -204,7 +203,7 @@ class SQLEmailRepositoryIntegrationTests {
   @DisplayName("findById throws error when pass null \"email id\"")
   void findById_ThrowsError_WhenPassNullEmailId() {
     assertThrows(
-        IllegalArgumentException.class,
+        NullPointerException.class,
         () -> {
           getEmailGateway.findById(null);
         });

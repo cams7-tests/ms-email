@@ -1,28 +1,33 @@
 package br.cams7.tests.ms.infra.dataprovider.model;
 
+import static br.cams7.tests.ms.infra.dataprovider.model.UserModel.COLLECTION;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
-@Table("tb_user")
+@Document(collection = COLLECTION)
 public class UserModel implements UserDetails {
 
-  private static final long serialVersionUID = -1382391212236708389L;
+  private static final long serialVersionUID = 3571097919534468431L;
+
+  public static final String COLLECTION = "user";
+  public static final String FIELD_EMAIL_ID = "_id";
+  public static final String FIELD_NAME = "name";
+  public static final String FIELD_USERNAME = "username";
+  public static final String FIELD_PASSWORD = "password";
+  public static final String FIELD_AUTHORITIES = "authorities";
 
   private static final String AUTHORITIES_SEPARATOR = ",";
 
-  @Id
-  @Column("id_user")
-  private UUID id;
+  @Id private String id;
 
   private String name;
 

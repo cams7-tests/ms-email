@@ -5,7 +5,6 @@ import static br.cams7.tests.ms.core.port.in.exception.CommonExceptions.response
 import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +16,7 @@ public class GetEmailUseCaseImpl implements GetEmailUseCase {
   private final GetEmailGateway getEmailGateway;
 
   @Override
-  public Mono<EmailEntity> execute(UUID emailId) {
+  public Mono<EmailEntity> execute(String emailId) {
     return getEmailGateway
         .findById(emailId)
         .switchIfEmpty(responseNotFoundException(ERROR_MESSAGE));

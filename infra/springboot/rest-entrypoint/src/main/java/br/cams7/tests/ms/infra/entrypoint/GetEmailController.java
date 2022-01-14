@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -72,7 +71,7 @@ public class GetEmailController {
       security = @SecurityRequirement(name = SECURITY_SCHEME_NAME))
   @GetMapping(path = "/emails/{emailId}")
   @ResponseStatus(OK)
-  Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final UUID emailId) {
+  Mono<EmailResponseDTO> getEmail(@PathVariable(value = "emailId") final String emailId) {
     return getEmailUseCase.execute(emailId).map(responseConverter::convert);
   }
 

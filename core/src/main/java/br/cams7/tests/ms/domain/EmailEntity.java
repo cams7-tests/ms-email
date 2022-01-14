@@ -1,7 +1,6 @@
 package br.cams7.tests.ms.domain;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,7 @@ import lombok.With;
 @EqualsAndHashCode(callSuper = false)
 public class EmailEntity {
 
-  private UUID emailId;
+  private String emailId;
   private String ownerRef;
   private String emailFrom;
   private String emailTo;

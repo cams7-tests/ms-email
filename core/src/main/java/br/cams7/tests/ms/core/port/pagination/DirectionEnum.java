@@ -1,7 +1,6 @@
 /** */
 package br.cams7.tests.ms.core.port.pagination;
 
-/** @author CIANDT\cmagalhaes */
 public enum DirectionEnum {
   // Direction
   ASC,

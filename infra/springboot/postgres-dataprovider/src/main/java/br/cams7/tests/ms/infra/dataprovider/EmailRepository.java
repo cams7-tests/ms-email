@@ -1,5 +1,7 @@
 package br.cams7.tests.ms.infra.dataprovider;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
 import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
 import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
@@ -13,23 +15,21 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-@Component
-@Primary
-public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, SaveEmailGateway {
+@Service
+public class EmailRepository implements GetEmailsGateway, GetEmailGateway, SaveEmailGateway {
 
   private final ModelMapper modelMapper;
-  private final SpringDataSQLEmailRepository emailRepository;
+  private final SpringDataEmailRepository emailRepository;
 
-  SQLEmailRepository(ModelMapper modelMapper, SpringDataSQLEmailRepository emailRepository) {
+  EmailRepository(ModelMapper modelMapper, SpringDataEmailRepository emailRepository) {
     super();
     this.modelMapper = modelMapper;
     this.emailRepository = emailRepository;
@@ -42,6 +42,7 @@ public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, Sa
           @Override
           protected void configure() {
             skip(destination.getEmailStatus());
+            skip(destination.getEmailId());
           }
         });
   }
@@ -64,13 +65,14 @@ public class SQLEmailRepository implements GetEmailsGateway, GetEmailGateway, Sa
   }
 
   @Override
-  public Mono<EmailEntity> findById(UUID emailId) {
-    return emailRepository.findById(emailId).map(this::getEmailEntity);
+  public Mono<EmailEntity> findById(String emailId) {
+    return emailRepository.findById(UUID.fromString(emailId)).map(this::getEmailEntity);
   }
 
   private EmailModel getEmailModel(EmailEntity email) {
     EmailModel model = modelMapper.map(email, EmailModel.class);
     model.setEmailStatus(getIndexOfEmailStatus(email.getEmailStatus()));
+    model.setEmailId(!isEmpty(email.getEmailId()) ? UUID.fromString(email.getEmailId()) : null);
     return model;
   }
 

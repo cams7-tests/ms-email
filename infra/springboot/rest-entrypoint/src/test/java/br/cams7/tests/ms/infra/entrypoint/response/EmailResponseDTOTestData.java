@@ -14,7 +14,6 @@ import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 public final class EmailResponseDTOTestData {
 
@@ -47,7 +46,7 @@ public final class EmailResponseDTOTestData {
 
   private static EmailResponseDTO getFistEmailResponseDTO() {
     var email = new EmailResponseDTO();
-    email.setEmailId(UUID.fromString(FIRST_EMAIL_ID));
+    email.setEmailId(FIRST_EMAIL_ID);
     email.setIdentificationNumber(FIRST_EMAIL_IDENTIFICATION_NUMBER);
     email.setEmailFrom(FIRST_EMAIL_FROM);
     email.setEmailTo(FIRST_EMAIL_TO);
@@ -60,7 +59,7 @@ public final class EmailResponseDTOTestData {
 
   private static EmailResponseDTO getLastEmailResponseDTOEmail() {
     var email = new EmailResponseDTO();
-    email.setEmailId(UUID.fromString(LAST_EMAIL_ID));
+    email.setEmailId(LAST_EMAIL_ID);
     email.setIdentificationNumber("90978373081");
     email.setEmailFrom("from3@tests.cams7.br");
     email.setEmailTo("to1@tests.cams7.br");
