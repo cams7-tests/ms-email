@@ -1,0 +1,112 @@
+[
+    {
+	"_id": "61e2b7c6adf831316b1edba6",
+	"email_from": "from1@tests.cams7.br",
+        "email_sent_date": "2022-01-07T00:27:30+00:00",
+        "email_status": "SENT",
+        "email_to": "to1@tests.cams7.br",
+        "owner_ref": "46384730081",
+        "subject": "E-mail subject 01",
+        "text": "E-mail message 01"
+    },
+    {
+	"_id": "61e2bfd8a857a85496dc73c5",
+	"email_from": "from2@tests.cams7.br",
+        "email_sent_date": "2022-01-06T09:20:10+00:00",
+        "email_status": "ERROR",
+        "email_to": "to2@tests.cams7.br",
+        "owner_ref": "71141101033",
+        "subject": "E-mail subject 02",
+        "text": "E-mail message 02"
+    },
+    {
+	"_id": "61e2bfebbaba227089f9aeef",
+	"email_from": "from3@tests.cams7.br",
+        "email_sent_date": "2022-01-05T11:40:05+00:00",
+        "email_status": "SENT",
+        "email_to": "to3@tests.cams7.br",
+        "owner_ref": "90978373081",
+        "subject": "E-mail subject 03",
+        "text": "E-mail message 03"
+    },
+    {
+	"_id": "61e2bffefde7de23bb23ec8a",
+	"email_from": "from4@tests.cams7.br",
+        "email_sent_date": "2022-01-04T12:20:15+00:00",
+        "email_status": "SENT",
+        "email_to": "to2@tests.cams7.br",
+        "owner_ref": "27869644072",
+        "subject": "E-mail subject 04",
+        "text": "E-mail message 04"
+    },
+    {
+	"_id": "61e2c08e9e967e25bcef4828",
+	"email_from": "from5@tests.cams7.br",
+        "email_sent_date": "2022-01-02T13:10:30+00:00",
+        "email_status": "ERROR",
+        "email_to": "to1@tests.cams7.br",
+        "owner_ref": "50431751099",
+        "subject": "E-mail subject 05",
+        "text": "E-mail message 05"
+    },
+    {
+	"_id": "61e2c07638d2f02f6aec9e37",
+	"email_from": "from4@tests.cams7.br",
+        "email_sent_date": "2021-12-30T12:05:50+00:00",
+        "email_status": "ERROR",
+        "email_to": "to2@tests.cams7.br",
+        "owner_ref": "27869644072",
+        "subject": "E-mail subject 06",
+        "text": "E-mail message 06"
+    },
+    {
+	"_id": "61e2c0630e39de5174a9de44",
+	"email_from": "from3@tests.cams7.br",
+        "email_sent_date": "2021-12-29T12:25:20+00:00",
+        "email_status": "SENT",
+        "email_to": "to2@tests.cams7.br",
+        "owner_ref": "90978373081",
+        "subject": "E-mail subject 07",
+        "text": "E-mail message 07"
+    },
+    {
+	"_id": "61e2c0526096a738a184e4b9",
+	"email_from": "from2@tests.cams7.br",
+        "email_sent_date": "2021-12-28T15:55:20+00:00",
+        "email_status": "SENT",
+        "email_to": "to3@tests.cams7.br",
+        "owner_ref": "71141101033",
+        "subject": "E-mail subject 08",
+        "text": "E-mail message 08"
+    },
+    {
+	"_id": "61e2c03ae300354cd9e71629",
+	"email_from": "from1@tests.cams7.br",
+        "email_sent_date": "2021-12-27T16:38:30+00:00",
+        "email_status": "SENT",
+        "email_to": "to3@tests.cams7.br",
+        "owner_ref": "46384730081",
+        "subject": "E-mail subject 09",
+        "text": "E-mail message 09"
+    },
+    {
+	"_id": "61e2c0295ad8550aac444c99",
+	"email_from": "from2@tests.cams7.br",
+        "email_sent_date": "2021-12-26T17:05:20+00:00",
+        "email_status": "ERROR",
+        "email_to": "to2@tests.cams7.br",
+        "owner_ref": "71141101033",
+        "subject": "E-mail subject 10",
+        "text": "E-mail message 10"
+    },
+    {
+	"_id": "61e2c0174f69e879a2201bfc",
+	"email_from": "from3@tests.cams7.br",
+        "email_sent_date": "2021-12-23T17:43:15+00:00",
+        "email_status": "SENT",
+        "email_to": "to1@tests.cams7.br",
+        "owner_ref": "90978373081",
+        "subject": "E-mail subject 11",
+        "text": "E-mail message 11"
+    }
+]
