@@ -14,7 +14,6 @@ import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_EMAIL_
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_OWNER_REF;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_SUBJECT;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_TEXT;
-import static java.util.Objects.isNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.test.StepVerifier.create;
 
@@ -91,24 +90,12 @@ public class EmailRepositoryIntegrationTests {
 
   @BeforeEach
   void setUp() {
-    var newEmails =
-        mongoTemplate
-            .dropCollection(COLLECTION)
-            .thenMany(Flux.fromIterable(getEmails(dataResource)).flatMap(mongoTemplate::save));
-
-    create(newEmails)
+    create(
+            mongoTemplate
+                .dropCollection(COLLECTION)
+                .thenMany(Flux.fromIterable(getEmails(dataResource)).flatMap(mongoTemplate::save))
+                .then())
         .expectSubscription()
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
-        .expectNextMatches(email -> !isNull(email))
         .verifyComplete();
   }
 
