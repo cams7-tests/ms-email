@@ -15,6 +15,7 @@
 	</properties>
 
 	<modules>
+		<module>common</module>
 		<module>postgres-dataprovider</module>
 		<module>mongodb-dataprovider</module>
 		<module>rabbitmq</module>

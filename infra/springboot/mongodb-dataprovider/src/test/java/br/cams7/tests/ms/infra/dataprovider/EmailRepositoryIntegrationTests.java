@@ -4,6 +4,8 @@ import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDT
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
+import static br.cams7.tests.ms.infra.common.FileUtils.getContentFile;
+import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.COLLECTION;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_EMAIL_FROM;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_EMAIL_ID;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_EMAIL_SENT_DATE;
@@ -24,9 +26,6 @@ import br.cams7.tests.ms.domain.EmailEntity;
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import br.cams7.tests.ms.infra.dataprovider.model.EmailModel;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -37,6 +36,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.json.JsonParser;
@@ -45,7 +45,8 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import reactor.core.publisher.Flux;
 
 @SpringBootConfiguration
@@ -75,7 +76,10 @@ public class EmailRepositoryIntegrationTests {
   @Autowired private GetEmailGateway getEmailGateway;
   @Autowired private SaveEmailGateway saveEmailGateway;
 
-  @Autowired private SpringDataEmailRepository emailRepository;
+  @Autowired private ReactiveMongoOperations mongoTemplate;
+
+  @Value("classpath:email-data.json")
+  private Resource dataResource;
 
   @TestConfiguration
   static class SQLEmailRepositoryTestsContextConfiguration {
@@ -88,9 +92,9 @@ public class EmailRepositoryIntegrationTests {
   @BeforeEach
   void setUp() {
     var newEmails =
-        emailRepository
-            .deleteAll()
-            .thenMany(Flux.fromIterable(getEmails()).flatMap(emailRepository::save));
+        mongoTemplate
+            .dropCollection(COLLECTION)
+            .thenMany(Flux.fromIterable(getEmails(dataResource)).flatMap(mongoTemplate::save));
 
     create(newEmails)
         .expectSubscription()
@@ -279,10 +283,10 @@ public class EmailRepositoryIntegrationTests {
         });
   }
 
-  private static List<EmailModel> getEmails() {
+  private static List<EmailModel> getEmails(Resource dataResource) {
     JsonParser parser = JsonParserFactory.getJsonParser();
     try {
-      return parser.parseList(getEmailData()).stream()
+      return parser.parseList(getContentFile(dataResource)).stream()
           .map(
               object -> {
                 @SuppressWarnings("unchecked")
@@ -308,14 +312,5 @@ public class EmailRepositoryIntegrationTests {
     }
 
     return List.of();
-  }
-
-  private static String getEmailData() throws IOException {
-    String content = Files.readString(loadEmailData(), StandardCharsets.UTF_8);
-    return content.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\t", "");
-  }
-
-  private static Path loadEmailData() throws IOException {
-    return new ClassPathResource("email-data.json").getFile().toPath();
   }
 }

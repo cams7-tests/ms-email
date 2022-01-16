@@ -1,0 +1,14 @@
+[
+    {
+	"name": "Some User",
+        "username": "user",
+        "password": "{bcrypt}$2a$10$8RRftD6fhCnp0Psyl.8VGeRb6wEOuUX8bqsVqnWzTZXw2x.C0cepO",
+        "authorities": "ROLE_USER"
+    },
+    {
+	"name": "Administrator",
+        "username": "admin",
+        "password": "{bcrypt}$2a$10$NOcV6G.vaf5cPc7ZLSoSfO495Z/mWUibm11hpFkS6lr2fP48.e1.u",
+        "authorities": "ROLE_USER,ROLE_ADMIN"
+    }    
+]
