@@ -1,14 +1,11 @@
 package br.cams7.tests.ms.infra.dataprovider;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
 import br.cams7.tests.ms.core.port.out.GetEmailsGateway;
 import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.core.port.pagination.PageDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.domain.EmailStatusEnum;
 import br.cams7.tests.ms.infra.dataprovider.model.EmailModel;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +42,14 @@ public class EmailRepository implements GetEmailsGateway, GetEmailGateway, SaveE
             skip(destination.getEmailId());
           }
         });
+    modelMapper.addMappings(
+        new PropertyMap<EmailModel, EmailEntity>() {
+          @Override
+          protected void configure() {
+            skip(destination.getEmailStatus());
+            skip(destination.getEmailId());
+          }
+        });
   }
 
   @Override
@@ -71,23 +76,16 @@ public class EmailRepository implements GetEmailsGateway, GetEmailGateway, SaveE
 
   private EmailModel getEmailModel(EmailEntity email) {
     EmailModel model = modelMapper.map(email, EmailModel.class);
-    model.setEmailStatus(getIndexOfEmailStatus(email.getEmailStatus()));
-    model.setEmailId(!isEmpty(email.getEmailId()) ? UUID.fromString(email.getEmailId()) : null);
+    model.setEmailStatus(email.getEmailStatus());
+    model.setEmailId(email.getEmailId());
     return model;
-  }
-
-  private static byte getIndexOfEmailStatus(EmailStatusEnum emailStatus) {
-    return (byte) emailStatus.ordinal();
   }
 
   private EmailEntity getEmailEntity(EmailModel email) {
     EmailEntity entity = modelMapper.map(email, EmailEntity.class);
-    entity.setEmailStatus(getEmailStatusByIndex(email.getEmailStatus()));
+    entity.setEmailStatus(email.getEmailStatus());
+    entity.setEmailId(email.getEmailId());
     return entity;
-  }
-
-  private static EmailStatusEnum getEmailStatusByIndex(byte index) {
-    return EmailStatusEnum.values()[index];
   }
 
   @SuppressWarnings("unchecked")

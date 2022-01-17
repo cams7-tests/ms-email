@@ -1,9 +1,11 @@
 package br.cams7.tests.ms.infra.dataprovider.model;
 
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.COLLECTION;
+import static java.util.Objects.isNull;
 
 import br.cams7.tests.ms.domain.EmailStatusEnum;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -45,4 +47,12 @@ public class EmailModel {
 
   @Field(name = FIELD_EMAIL_STATUS)
   private EmailStatusEnum emailStatus;
+
+  public void setEmailId(String emailId) {
+    this.id = emailId;
+  }
+
+  public void setEmailId(UUID emailId) {
+    if (!isNull(emailId)) setEmailId(String.valueOf(emailId));
+  }
 }

@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +51,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-
 import reactor.blockhound.BlockHound;
 import reactor.blockhound.BlockingOperationError;
 import reactor.core.publisher.Flux;
@@ -97,7 +95,7 @@ public class EmailRepositoryTests {
       return new ModelMapper();
     }
   }
-  
+
   @BeforeAll
   static void blockHoundSetup() {
     BlockHound.install();

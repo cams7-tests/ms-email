@@ -40,7 +40,8 @@ import reactor.core.scheduler.Schedulers;
 @SpringBootTest(
     webEnvironment = RANDOM_PORT,
     properties = {
-      "spring.r2dbc.url=r2dbc:h2:mem:///get-email-controller-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+      "spring.r2dbc.url=r2dbc:h2:mem:///get-email-controller-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+      "spring.mongodb.embedded.version=3.5.5"
     })
 @AutoConfigureWebTestClient
 class GetEmailControllerTests {
