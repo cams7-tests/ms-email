@@ -1,16 +1,23 @@
 package br.cams7.tests.ms.infra.entrypoint;
 
+import static br.cams7.tests.ms.infra.common.ProfileUtils.REST_RABBITMQ_MONOGODB_PROFILE;
+import static br.cams7.tests.ms.infra.common.ProfileUtils.REST_RABBITMQ_POSTGRES_PROFILE;
+import static br.cams7.tests.ms.infra.common.ProfileUtils.getActiveProfile;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_FROM;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_ID;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_ID_MONGO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_ID_UUID;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_SUBJECT;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TEXT;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TO;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID_MONGO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID_UUID;
 import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_UUID;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID_MONGO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID_UUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import br.cams7.tests.ms.domain.EmailStatusEnum;
@@ -22,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.security.test.context.support.WithUserDetails;
 // import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -48,6 +56,8 @@ class GetEmailControllerTests {
   private static String EXCEPTION_ATTRIBUTE = "$.exception";
 
   @Autowired private WebTestClient testClient;
+
+  @Autowired private Environment environment;
 
   @BeforeAll
   static void blockHoundSetup() {
@@ -86,9 +96,9 @@ class GetEmailControllerTests {
         .isOk()
         .expectBody()
         .jsonPath("$.content[0].emailId")
-        .isEqualTo(FIRST_EMAIL_ID)
+        .isEqualTo(getFirstEmailId())
         .jsonPath("$.content[10].emailId")
-        .isEqualTo(LAST_EMAIL_ID)
+        .isEqualTo(getLastEmailId())
         .jsonPath("$.totalPages")
         .isEqualTo(1)
         .jsonPath("$.totalElements")
@@ -129,9 +139,9 @@ class GetEmailControllerTests {
         .isOk()
         .expectBody()
         .jsonPath("$.content[10].emailId")
-        .isEqualTo(FIRST_EMAIL_ID)
+        .isEqualTo(getFirstEmailId())
         .jsonPath("$.content[0].emailId")
-        .isEqualTo(LAST_EMAIL_ID)
+        .isEqualTo(getLastEmailId())
         .jsonPath("$.size")
         .isEqualTo(15);
   }
@@ -174,15 +184,16 @@ class GetEmailControllerTests {
   @DisplayName(
       "getEmail returns an email when pass a valid id and user is successfull authenticated and has USER role")
   void getEmail_ReturnsAnEmail_WhenPassAValidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    var firstEmailId = getFirstEmailId();
     testClient
         .get()
-        .uri("/emails/{id}", FIRST_EMAIL_ID)
+        .uri("/emails/{id}", firstEmailId)
         .exchange()
         .expectStatus()
         .isOk()
         .expectBody()
         .jsonPath("$.emailId")
-        .isEqualTo(FIRST_EMAIL_ID)
+        .isEqualTo(firstEmailId)
         .jsonPath("$.identificationNumber")
         .isEqualTo(FIRST_EMAIL_IDENTIFICATION_NUMBER)
         .jsonPath("$.emailFrom")
@@ -213,9 +224,10 @@ class GetEmailControllerTests {
   @DisplayName(
       "getEmail returns error when pass a invalid id and user is successfull authenticated and has USER role")
   void getEmail_ReturnsError_WhenPassAInvalidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    var invalidEmailId = getInvalidEmailId();
     testClient
         .get()
-        .uri("/emails/{id}", INVALID_EMAIL_ID)
+        .uri("/emails/{id}", invalidEmailId)
         .exchange()
         .expectStatus()
         .isNotFound()
@@ -223,7 +235,7 @@ class GetEmailControllerTests {
         .jsonPath(TIMESTAMP_ATTRIBUTE)
         .isNotEmpty()
         .jsonPath(PATH_ATTRIBUTE)
-        .isEqualTo("/emails/" + INVALID_EMAIL_ID)
+        .isEqualTo("/emails/" + invalidEmailId)
         .jsonPath(ERROR_ATTRIBUTE)
         .isEqualTo("NOT_FOUND")
         // .jsonPath(MESSAGE_ATTRIBUTE)
@@ -241,6 +253,7 @@ class GetEmailControllerTests {
   @DisplayName(
       "getEmail returns error when pass a invalid UUID and user is successfull authenticated and has USER role")
   void getEmail_ReturnsError_WhenPassAInvalidUuidAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    assumeTrue(REST_RABBITMQ_POSTGRES_PROFILE.equals(getActiveProfile(environment)));
     testClient
         .get()
         .uri("/emails/{id}", INVALID_UUID)
@@ -260,5 +273,23 @@ class GetEmailControllerTests {
         //                .isNotEmpty()
         .jsonPath(REQUESTID_ATTRIBUTE)
         .isNotEmpty();
+  }
+
+  private String getFirstEmailId() {
+    return REST_RABBITMQ_MONOGODB_PROFILE.equals(getActiveProfile(environment))
+        ? FIRST_EMAIL_ID_MONGO
+        : FIRST_EMAIL_ID_UUID;
+  }
+
+  private String getLastEmailId() {
+    return REST_RABBITMQ_MONOGODB_PROFILE.equals(getActiveProfile(environment))
+        ? LAST_EMAIL_ID_MONGO
+        : LAST_EMAIL_ID_UUID;
+  }
+
+  private String getInvalidEmailId() {
+    return REST_RABBITMQ_MONOGODB_PROFILE.equals(getActiveProfile(environment))
+        ? INVALID_EMAIL_ID_MONGO
+        : INVALID_EMAIL_ID_UUID;
   }
 }

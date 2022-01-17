@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public final class EmailEntityTestData {
 
-  public static String EMAIL_ID = "c7095a67-4df4-4642-af27-c25ac518affe";
+  public static String EMAIL_ID_UUID = "c7095a67-4df4-4642-af27-c25ac518affe";
   public static String OWNER_REF = "56317992002";
   public static String EMAIL_FROM = "from@tests.cams7.br";
   public static String EMAIL_TO = "to@tests.cams7.br";
@@ -19,9 +19,9 @@ public final class EmailEntityTestData {
 
   public static final EmailEntity NEW_EMAIL_ENTITY = getNewEmailEntity();
 
-  public static EmailEntity getEmailEntity() {
+  public static EmailEntity getEmailEntityWithUUID() {
     return EmailEntity.builder()
-        .emailId(EMAIL_ID)
+        .emailId(EMAIL_ID_UUID)
         .ownerRef(OWNER_REF)
         .emailFrom(EMAIL_FROM)
         .emailTo(EMAIL_TO)
@@ -33,6 +33,6 @@ public final class EmailEntityTestData {
   }
 
   private static EmailEntity getNewEmailEntity() {
-    return getEmailEntity().withEmailId(null).withEmailSentDate(null);
+    return getEmailEntityWithUUID().withEmailId(null).withEmailSentDate(null);
   }
 }
