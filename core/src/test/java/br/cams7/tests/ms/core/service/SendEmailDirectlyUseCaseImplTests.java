@@ -6,6 +6,8 @@ import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -21,6 +23,9 @@ import br.cams7.tests.ms.core.port.out.CheckIdentificationNumberGateway;
 import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.out.SendEmailGateway;
 import br.cams7.tests.ms.domain.EmailEntity;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +36,10 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @ExtendWith(MockitoExtension.class)
 class SendEmailDirectlyUseCaseImplTests {
@@ -49,6 +57,29 @@ class SendEmailDirectlyUseCaseImplTests {
   @Mock private CheckIdentificationNumberGateway checkIdentificationNumberGateway;
 
   @Captor private ArgumentCaptor<EmailEntity> emailEntityCaptor;
+
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
+  }
+
+  @Test
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
+
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
+    }
+  }
 
   @Test
   @DisplayName("sendEmail returns email with sent status when successfull")

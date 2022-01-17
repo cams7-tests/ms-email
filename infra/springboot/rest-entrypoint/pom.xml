@@ -77,9 +77,9 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>		
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency> 
+            		<groupId>org.springframework.boot</groupId>
+            		<artifactId>spring-boot-starter-amqp</artifactId>
+        	</dependency> 
 		
 		<dependency>
 			<groupId>org.modelmapper</groupId>
@@ -111,15 +111,21 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>	
-		<dependency>
+		<!--dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
 			<scope>test</scope>
-		</dependency>	
+		</dependency-->	
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.projectreactor.tools</groupId>
+		    <artifactId>blockhound</artifactId>
+		    <version>1.0.6.RELEASE</version>
+		    <scope>test</scope>
 		</dependency>		
 	</dependencies>
 

@@ -4,11 +4,16 @@ import static br.cams7.tests.ms.domain.EmailEntityTestData.OWNER_REF;
 import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.getAprovedCheckIdentificationNumberResponse;
 import static br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponseTestData.getNotAprovedCheckIdentificationNumberResponse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.infra.webclient.response.CheckIdentificationNumberResponse;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @ExtendWith(MockitoExtension.class)
 class CheckIdentificationNumberServiceTests {
@@ -32,6 +40,29 @@ class CheckIdentificationNumberServiceTests {
   @InjectMocks private CheckIdentificationNumberService checkIdentificationNumberService;
 
   @Mock private WebClient checkIdentificationNumberWebClient;
+
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
+  }
+
+  @Test
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
+
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
+    }
+  }
 
   @Test
   @DisplayName("isValid when aproved")

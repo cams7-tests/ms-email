@@ -4,8 +4,10 @@ import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDT
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
 import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
 import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
-import static br.cams7.tests.ms.infra.dataprovider.EmailRepositoryIntegrationTests.R2DBC_URL;
+import static br.cams7.tests.ms.infra.dataprovider.EmailRepositoryTests.R2DBC_URL;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
@@ -14,6 +16,9 @@ import br.cams7.tests.ms.core.port.out.SaveEmailGateway;
 import br.cams7.tests.ms.core.port.pagination.OrderDTO;
 import br.cams7.tests.ms.domain.EmailEntity;
 import java.util.List;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -27,13 +32,16 @@ import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
+import reactor.core.scheduler.Schedulers;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @DataR2dbcTest(properties = {R2DBC_URL})
 @Import({EmailRepository.class})
 @TestMethodOrder(OrderAnnotation.class)
-class EmailRepositoryIntegrationTests {
+class EmailRepositoryTests {
 
   public static final String R2DBC_URL =
       "spring.r2dbc.url=r2dbc:h2:mem:///sql-email-repository-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
@@ -64,6 +72,29 @@ class EmailRepositoryIntegrationTests {
     @Bean
     ModelMapper modelMapper() {
       return new ModelMapper();
+    }
+  }
+
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
+  }
+
+  @Test
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
+
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
     }
   }
 

@@ -6,6 +6,8 @@ import static br.cams7.tests.ms.domain.EmailStatusEnum.ERROR;
 import static br.cams7.tests.ms.domain.EmailStatusEnum.SENT;
 import static br.cams7.tests.ms.infra.smtp.SimpleMailMessageTestData.getSimpleMailMessage;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -15,6 +17,9 @@ import static org.mockito.Mockito.times;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.domain.EmailEntity;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +31,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
+import reactor.core.scheduler.Schedulers;
 
 @ExtendWith(MockitoExtension.class)
 class SMTPSendEmailServiceTests {
@@ -39,6 +47,29 @@ class SMTPSendEmailServiceTests {
   @Mock private JavaMailSender emailSender;
 
   @Captor private ArgumentCaptor<SimpleMailMessage> simpleMailMessageCaptor;
+
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
+  }
+
+  @Test
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
+
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
+    }
+  }
 
   @Test
   @DisplayName("sendEmail when successfull")

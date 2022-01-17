@@ -1,117 +1,264 @@
-/** */
 package br.cams7.tests.ms.infra.entrypoint;
 
-import static br.cams7.tests.ms.core.port.pagination.OrderDTOTestData.getOrderDTO;
-import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_NUMBER;
-import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.PAGE_SIZE;
-import static br.cams7.tests.ms.core.port.pagination.PageDTOTestData.getPageDTO;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.EMAIL_ID;
-import static br.cams7.tests.ms.domain.EmailEntityTestData.getEmailEntity;
-import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.getEmailResponseDTO;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static reactor.test.StepVerifier.create;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_FROM;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_IDENTIFICATION_NUMBER;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_SUBJECT;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TEXT;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.FIRST_EMAIL_TO;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_EMAIL_ID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.INVALID_UUID;
+import static br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTOTestData.LAST_EMAIL_ID;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import br.cams7.tests.ms.core.port.in.GetEmailUseCase;
-import br.cams7.tests.ms.core.port.in.GetEmailsUseCase;
-import br.cams7.tests.ms.core.port.pagination.OrderDTO;
-import br.cams7.tests.ms.core.port.pagination.PageDTO;
-import br.cams7.tests.ms.domain.EmailEntity;
-import br.cams7.tests.ms.infra.entrypoint.mapper.ResponseConverter;
-import br.cams7.tests.ms.infra.entrypoint.response.EmailResponseDTO;
-import java.util.List;
+import br.cams7.tests.ms.domain.EmailStatusEnum;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import reactor.core.publisher.Mono;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
+// import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
+import reactor.core.scheduler.Schedulers;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(
+    webEnvironment = RANDOM_PORT,
+    properties = {
+      "spring.r2dbc.url=r2dbc:h2:mem:///get-email-controller-tests?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    })
+@AutoConfigureWebTestClient
 class GetEmailControllerTests {
 
-  private static final String DEFAULT_SORT_FIELD = "emailSentDate";
-  private static final Sort DEFAULT_SORT = Sort.by(DEFAULT_SORT_FIELD).ascending();
-  private static final Pageable DEFAULT_PAGE = PageRequest.of(PAGE_NUMBER, PAGE_SIZE, DEFAULT_SORT);
-  private static final EmailEntity DEFAULT_EMAIL_ENTITY = getEmailEntity();
-  private static final EmailResponseDTO DEFAULT_EMAIL_RESPONSE_DTO = getEmailResponseDTO();
-  private static final PageDTO<EmailEntity> PAGE_DTO_OF_ENTITY = getPageDTO(DEFAULT_EMAIL_ENTITY);
-  private static final PageDTO<EmailResponseDTO> PAGE_DTO_OF_RESPONSE_DTO =
-      getPageDTO(DEFAULT_EMAIL_RESPONSE_DTO);
-  public static final OrderDTO DEFAULT_ORDER_DTO = getOrderDTO();
-  private static final String ERROR_MESSAGE = "Email not found.";
+  private static final String USER = "user";
 
-  @InjectMocks private GetEmailController getEmailController;
+  private static String TIMESTAMP_ATTRIBUTE = "$.timestamp";
+  private static String PATH_ATTRIBUTE = "$.path";
+  private static String ERROR_ATTRIBUTE = "$.error";
+  // private static String MESSAGE_ATTRIBUTE = "$.message";
+  private static String TRACE_ATTRIBUTE = "$.trace";
+  private static String REQUESTID_ATTRIBUTE = "$.requestId";
+  private static String EXCEPTION_ATTRIBUTE = "$.exception";
 
-  @Spy private ModelMapper modelMapper = new ModelMapper();
-  @Mock private GetEmailsUseCase getAllEmailsUseCase;
-  @Mock private GetEmailUseCase getEmailUseCase;
-  @Mock private ResponseConverter responseConverter;
+  @Autowired private WebTestClient testClient;
 
-  @Captor private ArgumentCaptor<List<OrderDTO>> orderDTOCaptor;
-
-  @SuppressWarnings("unchecked")
-  @Test
-  @DisplayName("getEmails returns emails when successfull")
-  void getEmails_ReturnsEmails_WhenSuccessful() {
-    given(getAllEmailsUseCase.execute(anyInt(), anyInt(), anyList()))
-        .willReturn(Mono.just(PAGE_DTO_OF_ENTITY));
-    given(responseConverter.convert(any(PageDTO.class))).willReturn(PAGE_DTO_OF_RESPONSE_DTO);
-
-    create(getEmailController.getEmails(DEFAULT_PAGE))
-        .expectSubscription()
-        .expectNext(PAGE_DTO_OF_RESPONSE_DTO)
-        .verifyComplete();
-
-    then(getAllEmailsUseCase)
-        .should()
-        .execute(eq(PAGE_NUMBER), eq(PAGE_SIZE), orderDTOCaptor.capture());
-    assertThat(orderDTOCaptor.getValue()).isEqualTo(List.of(DEFAULT_ORDER_DTO));
-    then(responseConverter).should().convert(eq(PAGE_DTO_OF_ENTITY));
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
   }
 
   @Test
-  @DisplayName("getEmail returns an email when successfull")
-  void getEmail_ReturnsAnEmail_WhenSuccessful() {
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
 
-    given(getEmailUseCase.execute(anyString())).willReturn(Mono.just(DEFAULT_EMAIL_ENTITY));
-    given(responseConverter.convert(any(EmailEntity.class))).willReturn(DEFAULT_EMAIL_RESPONSE_DTO);
-
-    create(getEmailController.getEmail(EMAIL_ID))
-        .expectSubscription()
-        .expectNext(DEFAULT_EMAIL_RESPONSE_DTO)
-        .verifyComplete();
-
-    then(getEmailUseCase).should().execute(eq(EMAIL_ID));
-    then(responseConverter).should().convert(eq(DEFAULT_EMAIL_ENTITY));
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
+    }
   }
 
   @Test
-  @DisplayName("getEmail returns an error message when get empty email")
-  void getEmail_ReturnsAnErrorMessage_WhenGetEmptyEmail() {
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns all emails when pass 'page number' is 0 and 'page size' is 20 and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsAllEmails_WhenPassPageNumberIs0AndPageSizeIs20AndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails?page=0&size=20&sort=emailSentDate,desc")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.content[0].emailId")
+        .isEqualTo(FIRST_EMAIL_ID)
+        .jsonPath("$.content[10].emailId")
+        .isEqualTo(LAST_EMAIL_ID)
+        .jsonPath("$.totalPages")
+        .isEqualTo(1)
+        .jsonPath("$.totalElements")
+        .isEqualTo(11)
+        .jsonPath("$.number")
+        .isEqualTo(0)
+        .jsonPath("$.size")
+        .isEqualTo(20)
+        .jsonPath("$.numberOfElements")
+        .isEqualTo(11)
+        .jsonPath("$.last")
+        .isEqualTo(true)
+        .jsonPath("$.first")
+        .isEqualTo(true)
+        .jsonPath("$.hasNext")
+        .isEqualTo(false)
+        .jsonPath("$.hasPrevious")
+        .isEqualTo(false);
+  }
 
-    given(getEmailUseCase.execute(anyString()))
-        .willReturn(Mono.error(new RuntimeException(ERROR_MESSAGE)));
+  //    @Test
+  //    @DisplayName("getEmails returns unauthorized when user isn't authenticated")
+  //    void getEmails_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+  //      testClient.get().uri("/emails").exchange().expectStatus().isUnauthorized();
+  //    }
 
-    create(getEmailController.getEmail(EMAIL_ID))
-        .expectSubscription()
-        .expectError(RuntimeException.class)
-        .verify();
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns sorted emails when pass 'email sent date' ascending and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsSortedEmails_WhenPassPageEmailSentDateAscendingAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails?page=0&size=15&sort=emailSentDate,asc")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.content[10].emailId")
+        .isEqualTo(FIRST_EMAIL_ID)
+        .jsonPath("$.content[0].emailId")
+        .isEqualTo(LAST_EMAIL_ID)
+        .jsonPath("$.size")
+        .isEqualTo(15);
+  }
 
-    then(getEmailUseCase).should().execute(eq(EMAIL_ID));
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmails returns no emails when pass 'page number' is 2 and 'page size' is 10 and user is successfull authenticated and has USER role")
+  void
+      getEmails_ReturnsNoEmails_WhenPassPageNumberIs2AndPageSizeIs10AndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails?page=2&size=10")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.totalPages")
+        .isEqualTo(2)
+        .jsonPath("$.totalElements")
+        .isEqualTo(11)
+        .jsonPath("$.number")
+        .isEqualTo(2)
+        .jsonPath("$.size")
+        .isEqualTo(10)
+        .jsonPath("$.numberOfElements")
+        .isEqualTo(0)
+        .jsonPath("$.last")
+        .isEqualTo(true)
+        .jsonPath("$.first")
+        .isEqualTo(false)
+        .jsonPath("$.hasNext")
+        .isEqualTo(false)
+        .jsonPath("$.hasPrevious")
+        .isEqualTo(true);
+  }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmail returns an email when pass a valid id and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsAnEmail_WhenPassAValidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails/{id}", FIRST_EMAIL_ID)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.emailId")
+        .isEqualTo(FIRST_EMAIL_ID)
+        .jsonPath("$.identificationNumber")
+        .isEqualTo(FIRST_EMAIL_IDENTIFICATION_NUMBER)
+        .jsonPath("$.emailFrom")
+        .isEqualTo(FIRST_EMAIL_FROM)
+        .jsonPath("$.emailTo")
+        .isEqualTo(FIRST_EMAIL_TO)
+        // FIXME In Github Actions enviroment the datetime is UTC, but in my local enviroment the
+        // datetime is local
+        // .jsonPath("$.emailSentDate")
+        // .isEqualTo("2022-01-06T21:27:30")
+        .jsonPath("$.emailStatus")
+        .isEqualTo(EmailStatusEnum.SENT.name())
+        .jsonPath("$.subject")
+        .isEqualTo(FIRST_EMAIL_SUBJECT)
+        .jsonPath("$.text")
+        .isEqualTo(FIRST_EMAIL_TEXT);
+  }
+
+  //    @Test
+  //    @DisplayName("getEmail returns unauthorized when user isn't authenticated")
+  //    void getEmail_ReturnsUnauthorized_WhenUserIsNotAuthenticated() {
+  //      testClient.get().uri("/emails/{id}",
+  //   FIRST_EMAIL_ID).exchange().expectStatus().isUnauthorized();
+  //    }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmail returns error when pass a invalid id and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsError_WhenPassAInvalidIdAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails/{id}", INVALID_EMAIL_ID)
+        .exchange()
+        .expectStatus()
+        .isNotFound()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo("/emails/" + INVALID_EMAIL_ID)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("NOT_FOUND")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        .jsonPath(TRACE_ATTRIBUTE)
+        .isEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(EXCEPTION_ATTRIBUTE)
+        .isEqualTo("br.cams7.tests.ms.core.port.in.exception.ResponseStatusException");
+  }
+
+  @Test
+  @WithUserDetails(USER)
+  @DisplayName(
+      "getEmail returns error when pass a invalid UUID and user is successfull authenticated and has USER role")
+  void getEmail_ReturnsError_WhenPassAInvalidUuidAndUserIsSuccessfullAuthenticatedAndHasUserRole() {
+    testClient
+        .get()
+        .uri("/emails/{id}", INVALID_UUID)
+        .exchange()
+        .expectStatus()
+        .is5xxServerError()
+        .expectBody()
+        .jsonPath(TIMESTAMP_ATTRIBUTE)
+        .isNotEmpty()
+        .jsonPath(PATH_ATTRIBUTE)
+        .isEqualTo("/emails/" + INVALID_UUID)
+        .jsonPath(ERROR_ATTRIBUTE)
+        .isEqualTo("Internal Server Error")
+        // .jsonPath(MESSAGE_ATTRIBUTE)
+        // .isNotEmpty()
+        //                .jsonPath(TRACE_ATTRIBUTE)
+        //                .isNotEmpty()
+        .jsonPath(REQUESTID_ATTRIBUTE)
+        .isNotEmpty();
   }
 }

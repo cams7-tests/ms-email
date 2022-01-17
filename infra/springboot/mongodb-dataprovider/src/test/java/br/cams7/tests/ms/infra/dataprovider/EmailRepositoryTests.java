@@ -15,6 +15,8 @@ import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_OWNER_
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_SUBJECT;
 import static br.cams7.tests.ms.infra.dataprovider.model.EmailModel.FIELD_TEXT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static reactor.test.StepVerifier.create;
 
 import br.cams7.tests.ms.core.port.out.GetEmailGateway;
@@ -29,7 +31,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,13 +52,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @DataMongoTest(properties = {"spring.mongodb.embedded.version=3.5.5"})
 @Import({EmailRepository.class})
-public class EmailRepositoryIntegrationTests {
+public class EmailRepositoryTests {
 
   private static String EMAIL_ID = "61e2b7c6adf831316b1edba6";
   private static String WRONG_EMAIL_ID = "61e2d5838328b90aae3edeeb";
@@ -85,6 +95,29 @@ public class EmailRepositoryIntegrationTests {
     @Bean
     ModelMapper modelMapper() {
       return new ModelMapper();
+    }
+  }
+  
+  @BeforeAll
+  static void blockHoundSetup() {
+    BlockHound.install();
+  }
+
+  @Test
+  void blockHoundWorks() {
+    try {
+      FutureTask<?> task =
+          new FutureTask<>(
+              () -> {
+                Thread.sleep(0); // NOSONAR
+                return "";
+              });
+      Schedulers.parallel().schedule(task);
+
+      task.get(10, TimeUnit.SECONDS);
+      fail("should fail");
+    } catch (Exception e) {
+      assertTrue(e.getCause() instanceof BlockingOperationError);
     }
   }
 

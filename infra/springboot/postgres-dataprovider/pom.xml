@@ -86,7 +86,13 @@
 	       	<artifactId>reactor-test</artifactId>
 	       	<version>3.4.12</version>
 	       	<scope>test</scope>
-	    </dependency>		
+	    </dependency>
+	    <dependency>
+		    <groupId>io.projectreactor.tools</groupId>
+		    <artifactId>blockhound</artifactId>
+		    <version>1.0.6.RELEASE</version>
+		    <scope>test</scope>
+		</dependency>		
 	</dependencies>
 
 	<build>

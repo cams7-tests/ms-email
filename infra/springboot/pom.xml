@@ -11,22 +11,45 @@
 	<name>Spring Boot</name>
 	<description />
 	
-	<properties>
-	</properties>
-
-	<modules>
-		<module>common</module>
-		<module>postgres-dataprovider</module>
-		<module>mongodb-dataprovider</module>
-		<module>rabbitmq</module>
-		<module>smtp</module>
-		<module>check-identification-number</module>
-		<module>rest-entrypoint</module>
-	</modules>
-	
-	<dependencies>		
-	</dependencies>
-
-	<build>	   
-	</build>
+	<profiles>
+		<profile>
+			<id>rest-rabbitmq-postgres</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>rest-rabbitmq-postgres</name>
+				</property>
+			</activation>
+			<modules>
+				<module>common</module>
+				<module>postgres-dataprovider</module>
+				<module>rabbitmq</module>
+				<module>smtp</module>
+				<module>check-identification-number</module>
+				<module>rest-entrypoint</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>rest-rabbitmq-mongodb</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>rest-rabbitmq-mongodb</name>
+				</property>
+			</activation>
+			<modules>
+				<module>common</module>
+				<module>mongodb-dataprovider</module>
+				<module>rabbitmq</module>
+				<module>smtp</module>
+				<module>check-identification-number</module>
+				<module>rest-entrypoint</module>
+			</modules>
+		</profile>		
+	</profiles>
 </project>
